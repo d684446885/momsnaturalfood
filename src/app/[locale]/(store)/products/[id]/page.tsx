@@ -62,7 +62,7 @@ export default async function ProductPage({
     }
   };
 
-  const serializedRelated = relatedProducts.map((p) => ({
+  const serializedRelated = relatedProducts.map((p: any) => ({
     ...p,
     price: Number(p.price),
     salePrice: p.salePrice ? Number(p.salePrice) : null,
