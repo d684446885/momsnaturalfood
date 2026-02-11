@@ -1,0 +1,303 @@
+{
+  "Navbar": {
+    "products": "Ürünler",
+    "categories": "Kategoriler",
+    "deals": "Fırsatlar",
+    "dashboard": "Panel"
+  },
+  "Hero": {
+    "title": "Sağlıklı",
+    "titleAccent": "Doğal Gıdalar",
+    "subtitle": "Sağlıklı Bir Yaşam İçin",
+    "description": "%100 doğal içerikler, sıfır katkı maddesi. Sevgi ve saflıkla hazırlanan granola, kurabiye ve yağ koleksiyonumuzu keşfedin.",
+    "shopNow": "Hemen Al",
+    "viewCollections": "Koleksiyonları Gör",
+    "newCollection": "✨ Yeni Koleksiyon 2024"
+  },
+  "Cart": {
+    "title": "Sepetiniz",
+    "checkout": "Ödemeye Geç",
+    "empty": "Sepetiniz boş",
+    "items": "ürün",
+    "total": "Toplam"
+  },
+  "Common": {
+    "freshlyBoxed": "Taze Paketlenmiş",
+    "soldOut": "Tükendi",
+    "addToBasket": "Sepete Ekle",
+    "viewAll": "Hepsini Gör",
+    "productsCount": "Ürün"
+  },
+  "Categories": {
+    "title": "Kategoriye Göre Alışveriş",
+    "subtitle": "Doğanın en seçkin koleksiyonları",
+    "products": "ürün",
+    "viewAll": "Hepsini Gör",
+    "noProducts": "Bu kategoride henüz ürün bulunmuyor",
+    "noCategories": "Henüz kategori bulunmuyor",
+    "noCategoriesDesc": "Kategoriler eklendiğinde burada görünecektir",
+    "exploreRange": "Çeşitli kategori yelpazemizi keşfedin ve tam olarak aradığınızı bulun"
+  },
+  "SeasonalSpecials": {
+    "title": "Mevsimlik Özeller",
+    "subtitle": "Topraktan taze, sofranıza"
+  },
+  "CTA": {
+    "title": "İlk Siparişinizde %20 İndirim Kazanın",
+    "subtitle": "Bültenimize kaydolun ve özel fırsatlar, yeni gelenler ve daha fazlasından haberdar olun!",
+    "placeholder": "E-postanızı girin",
+    "subscribe": "Abone Ol"
+  },
+  "ProductDetail": {
+    "backToProducts": "Ürünlere Dön",
+    "inStock": "Stokta Var",
+    "outOfStock": "Stokta Yok",
+    "quantity": "Adet",
+    "description": "Açıklama",
+    "addedToCart": "Sepete eklendi!",
+    "relatedProducts": "İlginizi Çekebilir",
+    "reviews": "doğrulanmış yorum",
+    "freeShipping": "Ücretsiz Kargo",
+    "freeShippingDesc": "50€ üzeri tüm siparişlerde",
+    "pure": "%100 Saf",
+    "pureDesc": "Her zaman sertifikalı organik",
+    "subtotal": "Ara Toplam",
+    "happinessGuarantee": "30 Gün Mutluluk Garantisi",
+    "happinessGuaranteeDesc": "Memnun kalmadınız mı? 30 gün içinde tam iade için geri gönderin.",
+    "viewCatalog": "Kataloğu görüntüle"
+  },
+  "Products": {
+    "title": "Tüm Ürünler",
+    "subtitle": "Premium ürün koleksiyonumuzun tamamını keşfedin",
+    "searchPlaceholder": "Ürün ara...",
+    "allCategories": "Tüm Kategoriler",
+    "sortBy": "Sıralama",
+    "newest": "En Yeni",
+    "priceAsc": "Fiyat: Düşükten Yükseğe",
+    "priceDesc": "Fiyat: Yüksekten Düşüğe",
+    "nameAsc": "İsim: A-Z",
+    "noProductsFound": "Ürün bulunamadı",
+    "adjustSearch": "Arama veya filtre kriterlerinizi düzenlemeyi deneyin",
+    "clearFilters": "Filtreleri Temizle",
+    "showing": "Gösterilen",
+    "of": "/"
+  },
+  "Dashboard": {
+    "overview": "Genel Bakış",
+    "products": "Ürünler",
+    "orders": "Siparişler",
+    "categories": "Kategoriler",
+    "customers": "Müşteriler",
+    "settings": "Ayarlar",
+    "search": "Panelde ara...",
+    "adminTitle": "MoM Panel",
+    "Welcome": {
+      "title": "Panel",
+      "subtitle": "Tekrar hoş geldiniz, işte bugün mağazanızda olanlar.",
+      "last30Days": "Son 30 Gün",
+      "downloadReport": "Raporu İndir"
+    },
+    "Stats": {
+      "totalRevenue": "Toplam Gelir",
+      "subscriptions": "Abonelikler",
+      "sales": "Satışlar",
+      "activeNow": "Şu An Aktif",
+      "fromLastMonth": "geçen aya göre",
+      "sinceLastHour": "son bir saatten beri"
+    },
+    "Revenue": {
+      "title": "Gelir Genel Bakış",
+      "subtitle": "Mağazanızın performansının görsel bir sunumu.",
+      "forecast": "Aylık Gelir Tahmini"
+    },
+    "RecentSales": {
+      "title": "Son Satışlar",
+      "subtitle": "Bu ay {count} satış yaptınız.",
+      "viewAll": "Tümünü Gör"
+    },
+    "Inventory": {
+      "title": "Ürün Envanteri",
+      "subtitle": "Düşük stok seviyelerine ulaşan {count} ürününüz var.",
+      "totalActive": "Toplam aktif ürün",
+      "manageStock": "Stoğu Yönet"
+    },
+    "QuickActions": {
+      "addStaff": "Yeni Personel Ekle",
+      "manageTeam": "Ekibinizin izinlerini yönetin",
+      "scaleBusiness": "İşinizi Büyütün",
+      "exploreTools": "Reklam ve büyüme araçlarını keşfedin"
+    }
+  },
+  "Checkout": {
+    "empty": "Sepetiniz boş",
+    "emptyDesc": "Henüz sepetinize herhangi bir doğal lezzet eklemediniz.",
+    "continueShopping": "Alışverişe Devam Et",
+    "success": "Teşekkür Ederiz!",
+    "successDesc": "Sağlıklı ürün siparişiniz başarıyla alındı. Doğal ürünlerinizi teslimat için hazırlıyoruz.",
+    "returnHome": "Ana Sayfaya Dön",
+    "secureCheckout": "Güvenli Ödeme",
+    "backToShopping": "Alışverişe Dön",
+    "shippingDetails": "Teslimat Bilgileri",
+    "paymentMethod": "Ödeme Yöntemi",
+    "fullName": "Ad Soyad",
+    "fullNamePlaceholder": "Adınızı ve soyadınızı girin",
+    "email": "E-posta Adresi",
+    "emailPlaceholder": "e-posta@ornek.com",
+    "address": "Adres",
+    "addressPlaceholder": "Sokak adı ve kapı numarası",
+    "city": "Şehir",
+    "cityPlaceholder": "Şehriniz",
+    "postalCode": "Posta Kodu",
+    "postalCodePlaceholder": "Posta kodu",
+    "card": "Kredi veya Banka Kartı",
+    "cardDesc": "Stripe üzerinden güvenli ödeme",
+    "paypal": "PayPal",
+    "paypalDesc": "Yakında",
+    "completePurchase": "Alışverişi Tamamla",
+    "processing": "Sipariş İşleniyor...",
+    "securePayments": "Güvenli Ödemeler",
+    "fastDelivery": "Hızlı Teslimat",
+    "summary": "Sipariş Özeti",
+    "qty": "Adet",
+    "shipping": "Kargo",
+    "free": "Ücretsiz",
+    "tax": "Tahmini Vergi",
+    "total": "Genel Toplam",
+    "guarantee": "Garantimiz",
+    "guaranteeDesc": "Doğal ürünlerimizin kalitesinin arkasındayız. Memnun kalmazsanız, 30 günlük para iade garantisi sunuyoruz.",
+    "Summary": {
+        "subtotal": "Ara Toplam"
+    }
+  },
+  "AdminOrders": {
+    "title": "Siparişler",
+    "subtitle": "Müşteri siparişlerini yönetin ve takip edin.",
+    "export": "Siparişleri Dışa Aktar",
+    "searchPlaceholder": "Siparişleri ID veya e-posta ile ara...",
+    "allStatuses": "Tüm Durumlar",
+    "table": {
+        "orderId": "Sipariş ID",
+        "customer": "Müşteri",
+        "date": "Tarih",
+        "total": "Toplam",
+        "status": "Durum",
+        "actions": "İşlemler"
+    },
+    "actions": {
+        "options": "Sipariş Seçenekleri",
+        "viewDetails": "Detayları Görüntüle",
+        "updateStatus": "Durumu Güncelle"
+    },
+    "noOrders": "Sipariş bulunamadı",
+    "noOrdersDesc": "Arama kriterlerinize uygun sipariş bulunmamaktadır.",
+    "statuses": {
+        "PENDING": "Beklemede",
+        "PROCESSING": "İşleniyor",
+        "SHIPPED": "Kargolandı",
+        "DELIVERED": "Teslim Edildi",
+        "CANCELLED": "İptal Edildi"
+    }
+  },
+  "AdminProducts": {
+    "title": "Ürünler",
+    "subtitle": "Mağazanızın envanterini ve ürün detaylarını yönetin.",
+    "export": "Dışa Aktar",
+    "addProduct": "Ürün Ekle",
+    "dialog": {
+        "title": "Yeni Ürün Ekle",
+        "description": "Mağazanız için yeni bir ürün oluşturun. Tüm gerekli ayrıntıları doldurun.",
+        "images": "Ürün Görselleri",
+        "cancel": "İptal",
+        "create": "Ürün Oluştur"
+    },
+    "form": {
+        "name": "Ad",
+        "namePlaceholder": "Ürün adı",
+        "description": "Açıklama",
+        "descriptionPlaceholder": "Kısa açıklama",
+        "category": "Kategori",
+        "selectCategory": "Kategori Seçin",
+        "price": "Fiyat",
+        "stock": "Stok"
+    },
+    "table": {
+        "image": "Görsel",
+        "name": "Ad",
+        "category": "Kategori",
+        "price": "Fiyat",
+        "stock": "Stok",
+        "status": "Durum",
+        "actions": "İşlemler",
+        "inStock": "Stokta Var",
+        "outOfStock": "Stokta Yok"
+    },
+    "searchPlaceholder": "Ürünleri ara...",
+    "allCategories": "Tüm Kategoriler",
+    "noProducts": "Ürün bulunamadı",
+    "noProductsDesc": "Aramanızı genişletmeyi deneyin veya aradığınızı bulmak için filtreleri değiştirin.",
+    "clearFilters": "Filtreleri Temizle",
+    "showing": "{total} üründen {count} tanesi gösteriliyor",
+    "required": "Lütfen tüm zorunlu alanları doldurun",
+    "successCreate": "Ürün başarıyla oluşturuldu",
+    "errorGeneric": "Bir şeyler yanlış gitti"
+  },
+  "Footer": {
+    "about": "Doğanın en saf lezzetlerini doğrudan evinize getiriyoruz. %100 doğal, sağlıklı ve sevgiyle üretildi.",
+    "quickLinks": {
+      "title": "Hızlı Bağlantılar",
+      "allProducts": "Tüm Ürünler",
+      "categories": "Kategoriler",
+      "specialDeals": "Özel Fırsatlar",
+      "aboutUs": "Hakkımızda"
+    },
+    "customerService": {
+      "title": "Müşteri Hizmetleri",
+      "contactUs": "Bize Ulaşın",
+      "faq": "S.S.S.",
+      "shippingInfo": "Kargo Bilgisi",
+      "returnsPolicy": "İade Politikası"
+    },
+    "newsletter": {
+      "title": "Bülten",
+      "description": "Özel teklifler, çekilişler ve özel fırsatlardan haberdar olmak için abone olun.",
+      "placeholder": "E-postanızı girin"
+    },
+    "rights": "© 2024 MoM's NaturalFood. Tüm hakları saklıdır.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları"
+  },
+  "Auth": {
+    "login": {
+      "title": "Tekrar Hoş Geldiniz",
+      "subtitle": "Hayatınızı beslemek için giriş yapın",
+      "email": "E-posta Adresi",
+      "password": "Şifre",
+      "forgotPassword": "Şifrenizi mi unuttunuz?",
+      "signIn": "Giriş Yap",
+      "noAccount": "Hesabınız yok mu?",
+      "register": "Buradan kayıt olun",
+      "success": "MoM's NaturalFood'a tekrar hoş geldiniz!",
+      "error": "Geçersiz kimlik bilgileri. Lütfen tekrar deneyin.",
+      "genericError": "Bir şeyler yanlış gitti"
+    },
+    "register": {
+      "title": "Bize Katılın",
+      "subtitle": "Daha doğal bir hayata yolculuğunuza başlayın",
+      "fullName": "Ad Soyad",
+      "placeholderName": "Adınız",
+      "email": "E-posta Adresi",
+      "placeholderEmail": "ad@ornek.com",
+      "password": "Şifre",
+      "signUp": "Hesap Oluştur",
+      "hasAccount": "Zaten hesabınız var mı?",
+      "login": "Buradan giriş yapın",
+      "success": "Hesap başarıyla oluşturuldu! Ailemize hoş geldiniz.",
+      "error": "Kayıt başarısız oldu. Lütfen tekrar deneyin."
+    },
+    "motto": "Saf • Doğal • Sevgiyle Üretildi"
+  },
+  "Metadata": {
+    "title": "MoM's NaturalFood",
+    "description": "Sağlıklı bir yaşam tarzı için premium doğal gıdalar"
+  }
+}

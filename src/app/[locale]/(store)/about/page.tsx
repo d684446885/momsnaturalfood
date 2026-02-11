@@ -1,0 +1,19 @@
+import { db } from "@/lib/db";
+import { AboutClient } from "./about-client";
+
+async function getAboutContent() {
+  try {
+    const aboutPage = await db.aboutPage.findUnique({
+      where: { id: "global" }
+    });
+    return aboutPage;
+  } catch (error) {
+    console.error("Error fetching about content:", error);
+    return null;
+  }
+}
+
+export default async function AboutPage() {
+  const content = await getAboutContent();
+  return <AboutClient content={content} />;
+}

@@ -1,0 +1,303 @@
+{
+  "Navbar": {
+    "products": "المنتجات",
+    "categories": "الفئات",
+    "deals": "العروض",
+    "dashboard": "لوحة التحكم"
+  },
+  "Hero": {
+    "title": "أطعمة",
+    "titleAccent": "طبيعية صحية",
+    "subtitle": "لحياة صحية أفضل",
+    "description": "مكونات طبيعية 100٪، بدون إضافات. اكتشف مجموعتنا المختارة من الجرانولا والكوكيز والزيوت المصنوعة بحب ونقاء.",
+    "shopNow": "تسوق الآن",
+    "viewCollections": "عرض المجموعات",
+    "newCollection": "✨ مجموعة جديدة 2024"
+  },
+  "Cart": {
+    "title": "سلتك",
+    "checkout": "اتمام الشراء",
+    "empty": "سلتك فارغة",
+    "items": "منتجات",
+    "total": "الإجمالي"
+  },
+  "Common": {
+    "freshlyBoxed": "معبأ طازجاً",
+    "soldOut": "نفذت الكمية",
+    "addToBasket": "أضف إلى السلة",
+    "viewAll": "عرض الكل",
+    "productsCount": "منتجات"
+  },
+  "Categories": {
+    "title": "تسوق حسب الفئة",
+    "subtitle": "أروع مجموعات الطبيعة",
+    "products": "منتجات",
+    "viewAll": "عرض الكل",
+    "noProducts": "لا توجد منتجات في هذه الفئة بعد",
+    "noCategories": "لا توجد فئات بعد",
+    "noCategoriesDesc": "ستظهر الفئات هنا بمجرد إضافتها",
+    "exploreRange": "استكشف مجموعتنا المتنوعة من الفئات وجد بالضبط ما تبحث عنه"
+  },
+  "SeasonalSpecials": {
+    "title": "عروض الموسم",
+    "subtitle": "طازجة من الأرض إلى مائدتك"
+  },
+  "CTA": {
+    "title": "احصل على خصم 20٪ على طلبك الأول",
+    "subtitle": "اشترك في نشرتنا الإخبارية واحصل على عروض حصرية، وأحدث المنتجات، وأكثر!",
+    "placeholder": "أدخل بريدك الإلكتروني",
+    "subscribe": "اشتراك"
+  },
+  "ProductDetail": {
+    "backToProducts": "العودة للمنتجات",
+    "inStock": "في المخزون",
+    "outOfStock": "نفذت الكمية",
+    "quantity": "الكمية",
+    "description": "الوصف",
+    "addedToCart": "تمت الإضافة للسلة!",
+    "relatedProducts": "منتجات ذات صلة",
+    "reviews": "تقييمات موثقة",
+    "freeShipping": "شحن مجاني",
+    "freeShippingDesc": "على جميع الطلبات فوق 50 يورو",
+    "pure": "100٪ نقي",
+    "pureDesc": "دائما عضوي معتمد",
+    "subtotal": "المجموع الفرعي",
+    "happinessGuarantee": "ضمان السعادة لمدة 30 يومًا",
+    "happinessGuaranteeDesc": "غير راضٍ؟ قم بإعادته خلال 30 يومًا لاسترداد أموالك بالكامل.",
+    "viewCatalog": "عرض الكتالوج"
+  },
+  "Products": {
+    "title": "جميع المنتجات",
+    "subtitle": "اكتشف مجموعتنا الكاملة من المنتجات المتميزة",
+    "searchPlaceholder": "ابحث عن المنتجات...",
+    "allCategories": "جميع الفئات",
+    "sortBy": "الترتيب حسب",
+    "newest": "الأحدث أولاً",
+    "priceAsc": "السعر: من الأقل للأعلى",
+    "priceDesc": "السعر: من الأعلى للأقل",
+    "nameAsc": "الاسم: أ-ي",
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "adjustSearch": "حاول تعديل معايير البحث أو التصفية",
+    "clearFilters": "مسح الفلاتر",
+    "showing": "عرض",
+    "of": "من"
+  },
+  "Dashboard": {
+    "overview": "نظرة عامة",
+    "products": "المنتجات",
+    "orders": "الطلبات",
+    "categories": "الفئات",
+    "customers": "العملاء",
+    "settings": "الإعدادات",
+    "search": "البحث في لوحة التحكم...",
+    "adminTitle": "MoM لوحة التحكم",
+    "Welcome": {
+      "title": "لوحة التحكم",
+      "subtitle": "مرحبًا بك مجددًا، إليك ما يحدث في متجرك اليوم.",
+      "last30Days": "آخر 30 يومًا",
+      "downloadReport": "تحميل التقرير"
+    },
+    "Stats": {
+      "totalRevenue": "إجمالي الإيرادات",
+      "subscriptions": "الاشتراكات",
+      "sales": "المبيعات",
+      "activeNow": "نشط الآن",
+      "fromLastMonth": "من الشهر الماضي",
+      "sinceLastHour": "منذ الساعة الماضية"
+    },
+    "Revenue": {
+      "title": "نظرة عامة على الإيرادات",
+      "subtitle": "تمثيل مرئي لأداء متجرك.",
+      "forecast": "توقعات الإيرادات الشهرية"
+    },
+    "RecentSales": {
+      "title": "المبيعات الأخيرة",
+      "subtitle": "لقد قمت بإجراء {count} عملية بيع هذا الشهر.",
+      "viewAll": "عرض الكل"
+    },
+    "Inventory": {
+      "title": "مخزون المنتجات",
+      "subtitle": "لديك {count} منتجات تقريبًا على وشك النفاد.",
+      "totalActive": "إجمالي المنتجات النشطة",
+      "manageStock": "إدارة المخزون"
+    },
+    "QuickActions": {
+      "addStaff": "إضافة موظف جديد",
+      "manageTeam": "إدارة صلاحيات فريقك",
+      "scaleBusiness": "توسيع نطاق عملك",
+      "exploreTools": "استكشف أدوات الإعلان والنمو"
+    }
+  },
+  "Checkout": {
+    "empty": "سلة التسوق فارغة",
+    "emptyDesc": "لم تقم بإضافة أي منتجات طبيعية إلى سلتك بعد.",
+    "continueShopping": "مواصلة التسوق",
+    "success": "شكرًا لك!",
+    "successDesc": "تم تقديم طلبك للمنتجات الصحية بنجاح. نحن نجهز منتجاتك الطبيعية للتوصيل.",
+    "returnHome": "العودة للرئيسية",
+    "secureCheckout": "الدفع الآمن",
+    "backToShopping": "العودة للتسوق",
+    "shippingDetails": "تفاصيل الشحن",
+    "paymentMethod": "طريقة الدفع",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "أدخل اسمك الكامل",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "email@example.com",
+    "address": "العنوان",
+    "addressPlaceholder": "اسم الشارع ورقم المنزل",
+    "city": "المدينة",
+    "cityPlaceholder": "مدينتك",
+    "postalCode": "الرمز البريدي",
+    "postalCodePlaceholder": "الرمز البريدي",
+    "card": "بطاقة ائتمان أو دفع",
+    "cardDesc": "دفع آمن عبر Stripe",
+    "paypal": "بايبال",
+    "paypalDesc": "قريبًا",
+    "completePurchase": "إتمام الشراء",
+    "processing": "جاري معالجة الطلب...",
+    "securePayments": "مدفوعات آمنة",
+    "fastDelivery": "توصيل سريع",
+    "summary": "ملخص الطلب",
+    "qty": "الكمية",
+    "shipping": "الشحن",
+    "free": "مجانًا",
+    "tax": "الضريبة التقديرية",
+    "total": "المجموع الكلي",
+    "guarantee": "ضماننا",
+    "guaranteeDesc": "نحن نضمن جودة منتجاتنا الطبيعية. إذا لم تكن راضيًا، فنحن نقدم ضمان استرداد الأموال لمدة 30 يومًا.",
+    "Summary": {
+        "subtotal": "المجموع الفرعي"
+    }
+  },
+  "AdminOrders": {
+    "title": "الطلبات",
+    "subtitle": "إدارة وتتبع طلبات العملاء.",
+    "export": "تصدير الطلبات",
+    "searchPlaceholder": "البحث عن الطلبات بالمعرف أو البريد الإلكتروني...",
+    "allStatuses": "جميع الحالات",
+    "table": {
+        "orderId": "معرف الطلب",
+        "customer": "العميل",
+        "date": "التاريخ",
+        "total": "المجموع",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+    },
+    "actions": {
+        "options": "خيارات الطلب",
+        "viewDetails": "عرض التفاصيل",
+        "updateStatus": "تحديث الحالة"
+    },
+    "noOrders": "لم يتم العثور على طلبات",
+    "noOrdersDesc": "لا توجد طلبات تطابق معايير البحث الحالية.",
+    "statuses": {
+        "PENDING": "قيد الانتظار",
+        "PROCESSING": "جاري المعالجة",
+        "SHIPPED": "تم الشحن",
+        "DELIVERED": "تم التوصيل",
+        "CANCELLED": "تم الإلغاء"
+    }
+  },
+  "AdminProducts": {
+    "title": "المنتجات",
+    "subtitle": "إدارة مخزون متجرك وتفاصيل المنتجات.",
+    "export": "تصدير",
+    "addProduct": "إضافة منتج",
+    "dialog": {
+        "title": "إضافة منتج جديد",
+        "description": "أنشئ منتجًا جديدًا لمتجرك. املأ جميع التفاصيل المطلوبة.",
+        "images": "صور المنتج",
+        "cancel": "إلغاء",
+        "create": "إنشاء منتج"
+    },
+    "form": {
+        "name": "الاسم",
+        "namePlaceholder": "اسم المنتج",
+        "description": "الوصف",
+        "descriptionPlaceholder": "وصف قصير",
+        "category": "الفئة",
+        "selectCategory": "اختر الفئة",
+        "price": "السعر",
+        "stock": "المخزون"
+    },
+    "table": {
+        "image": "الصورة",
+        "name": "الاسم",
+        "category": "الفئة",
+        "price": "السعر",
+        "stock": "المخزون",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "inStock": "في المخزون",
+        "outOfStock": "نفذ من المخزون"
+    },
+    "searchPlaceholder": "البحث عن المنتجات...",
+    "allCategories": "جميع الفئات",
+    "noProducts": "لم يتم العثور على منتجات",
+    "noProductsDesc": "جرّب توسيع نطاق بحثك أو تغيير المرشحات للعثور على ما تبحث عنه.",
+    "clearFilters": "مسح المرشحات",
+    "showing": "عرض {count} من {total} منتجات",
+    "required": "يرجى ملء جميع الحقول المطلوبة",
+    "successCreate": "تم إنشاء المنتج بنجاح",
+    "errorGeneric": "حدث خطأ ما"
+  },
+  "Footer": {
+    "about": "نقدم أنقى نكهات الطبيعة مباشرة إلى منزلك. طبيعي 100٪، صحي ومصنوع بحب.",
+    "quickLinks": {
+      "title": "روابط سريعة",
+      "allProducts": "جميع المنتجات",
+      "categories": "الفئات",
+      "specialDeals": "عروض خاصة",
+      "aboutUs": "من نحن"
+    },
+    "customerService": {
+      "title": "خدمة العملاء",
+      "contactUs": "اتصل بنا",
+      "faq": "الأسئلة الشائعة",
+      "shippingInfo": "معلومات الشحن",
+      "returnsPolicy": "سياسة الإرجاع"
+    },
+    "newsletter": {
+      "title": "النشرة الإخبارية",
+      "description": "اشترك للحصول على عروض خاصة وهدايا مجانية وعروض حصرية.",
+      "placeholder": "أدخل بريدك الإلكتروني"
+    },
+    "rights": "© 2024 MoM's NaturalFood. جميع الحقوق محفوظة.",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة"
+  },
+  "Auth": {
+    "login": {
+      "title": "مرحباً بك مجدداً",
+      "subtitle": "سجل الدخول لتغذية حياتك",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "forgotPassword": "هل نسيت كلمة المرور؟",
+      "signIn": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "سجل هنا",
+      "success": "مرحباً بك مجدداً في MoM's NaturalFood!",
+      "error": "بيانات الاعتماد غير صالحة. يرجى المحاولة مرة أخرى.",
+      "genericError": "حدث خطأ ما"
+    },
+    "register": {
+      "title": "انضم إلينا",
+      "subtitle": "ابدأ رحلتك نحو حياة أكثر طبيعية",
+      "fullName": "الاسم الكامل",
+      "placeholderName": "اسمك",
+      "email": "البريد الإلكتروني",
+      "placeholderEmail": "name@example.com",
+      "password": "كلمة المرور",
+      "signUp": "إنشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "login": "سجل دخولك هنا",
+      "success": "تم إنشاء الحساب بنجاح! مرحباً بك في العائلة.",
+      "error": "فشل التسجيل. يرجى المحاولة مرة أخرى."
+    },
+    "motto": "نقي • طبيعي • مصنوع بحب"
+  },
+  "Metadata": {
+    "title": "MoM's NaturalFood",
+    "description": "أطعمة طبيعية فاخرة لحياة صحية"
+  }
+}

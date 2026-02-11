@@ -1,0 +1,276 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  name          String?
+  password      String
+  role          Role      @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  orders        Order[]
+  cart          Cart?
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  description     String
+  price           Decimal
+  salePrice       Decimal?
+  weight          String?
+  stock           Int
+  images          String[]
+  categoryId      String
+  category        Category    @relation(fields: [categoryId], references: [id])
+  highlights      String[]
+  ingredients     String[]
+  nutritionFacts  Json?
+  perfectWith     String[]
+  orderCount      Int         @default(0)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  total     Decimal
+  status    OrderStatus @default(PENDING)
+  items     OrderItem[]
+  courierName String?
+  trackingLink String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+}
+
+model Settings {
+  id              String   @id @default("global")
+  primaryColor    String   @default("#8B5E3C")
+  secondaryColor  String   @default("#1E3A34")
+  backgroundColor String   @default("#FAF9F6")
+  accentColor     String   @default("#D4AF37")
+  
+  // Cloudflare R2 Storage Settings
+  r2AccountId     String?
+  r2AccessKeyId   String?
+  r2SecretAccessKey String?
+  r2BucketName    String?
+  r2PublicUrl     String?
+  
+  updatedAt       DateTime @updatedAt
+}
+
+model AboutPage {
+  id             String   @id @default("global")
+  
+  // Hero Section
+  heroTitle      String
+  heroDescription String
+  heroBackgroundUrl String?
+  heroBackgroundType String @default("image") // "image" or "video"
+  
+  // Story Section
+  storyTitle     String
+  storySubtitle  String
+  storyContent   String
+  storyImageUrl  String?
+  storyImageType String @default("image")
+  
+  // Mission Section
+  missionTitle   String
+  missionContent String
+  missionImageUrl String?
+  missionImageType String @default("image")
+  
+  // Quality Section
+  qualityTitle   String @default("Quality You Can Trust")
+  qualityDescription String @default("Pure. Natural. Authentic.")
+  qualityBackgroundUrl String?
+  qualityBackgroundType String @default("image")
+  
+  // Values Section (JSON for flexibility: title, description, icon)
+  values         Json?
+  
+  updatedAt      DateTime @updatedAt
+}
+
+model HomePage {
+  id             String   @id @default("global")
+  
+  // Hero Section
+  heroTitle         String
+  heroTitleAccent   String?
+  heroSubtitle      String?
+  heroDescription   String
+  heroPrimaryCtaText String @default("Shop Now")
+  heroPrimaryCtaLink String @default("/products")
+  heroSecondaryCtaText String @default("View Collections")
+  heroSecondaryCtaLink String @default("/categories")
+  heroBackgroundUrl String?
+  heroBackgroundType String @default("image") // "image" or "video"
+  
+  // Features Section (JSON: icon, title, description)
+  features          Json?
+  
+  // Categories Section
+  categoriesTitle   String @default("Shop by Category")
+  categoriesSubtitle String @default("Explore our diverse range")
+  
+  // Featured Section
+  featuredTitle     String @default("Seasonal Specials")
+  featuredSubtitle  String @default("Fresh from the earth to your table")
+  
+  // CTA Section
+  ctaTitle          String @default("Get 20% Off Your First Order")
+  ctaSubtitle       String @default("Sign up for our newsletter...")
+  
+  // Why Us Section
+  whyTitle          String @default("Why Mom's Naturals Foods?")
+  whyDescription    String @default("We create MOM'S Naturals Foods for people who want both health and taste — no compromises.\n\nOur products are free from chemical additives, coloring, flavoring, and sugar — only pure, natural ingredients.")
+  whyLearnMoreText  String @default("Learn More")
+  whyLearnMoreLink  String @default("/about")
+  whyBackgroundUrl  String?
+  whyCards          Json?  // Array of { type: 'image'|'video', url: string }
+  
+  updatedAt      DateTime @updatedAt
+}
+
+model ContactPage {
+  id             String   @id @default("global")
+  
+  // Hero Section
+  heroTitle      String
+  heroSubtitle   String?
+  heroDescription String
+  
+  // Contact Info
+  email          String
+  phone          String
+  address        String
+  hours          String?
+  
+  // Social Links (JSON: platform, url, icon)
+  socialLinks    Json?
+  
+  // Map Section
+  mapEmbedUrl    String?
+  
+  updatedAt      DateTime @updatedAt
+}
+
+model Deal {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  regularPrice    Decimal?
+  salePrice       Decimal?
+  discount        Int?     // Percentage
+  images          String[]
+  productIds      String[]
+  startDate       DateTime @default(now())
+  endDate         DateTime?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+
+
+model Coupon {
+  id              String      @id @default(cuid())
+  code            String      @unique
+  type            CouponType
+  value           Decimal     // Percentage or Fixed Amount
+  minPurchase     Decimal?    @default(0)
+  expiryDate      DateTime?
+  usageLimit      Int?
+  usageCount      Int         @default(0)
+  
+  // Scope settings
+  scope           CouponScope @default(GLOBAL)
+  productIds      String[]    // Applicable products if scope is PRODUCT
+  categoryIds     String[]    // Applicable categories if scope is CATEGORY
+  dealIds         String[]    // Applicable deals if scope is DEAL
+  
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+}
+
+enum CouponScope {
+  GLOBAL
+  PRODUCT
+  CATEGORY
+  DEAL
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}

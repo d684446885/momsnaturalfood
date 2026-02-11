@@ -1,0 +1,500 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "products": "Producten",
+    "categories": "Categorieën",
+    "about": "Over Ons",
+    "deals": "Aanbiedingen",
+    "contact": "Contact",
+    "dashboard": "Dashboard"
+  },
+  "Hero": {
+    "title": "Gezonde",
+    "titleAccent": "Natuurlijke Voeding",
+    "subtitle": "Voor Een Gezond Leven",
+    "description": "100% natuurlijke ingrediënten, zonder toevoegingen. Ontdek onze gecureerde collectie granola, koekjes en oliën gemaakt met liefde en puurheid.",
+    "shopNow": "Nu Winkelen",
+    "viewCollections": "Collecties Bekijken",
+    "newCollection": "✨ Nieuwe Collectie 2024"
+  },
+  "Cart": {
+    "title": "Jouw Mandje",
+    "checkout": "Doorgaan naar Afrekenen",
+    "empty": "Jouw mandje is leeg",
+    "items": "items",
+    "total": "Totaal"
+  },
+  "Common": {
+    "freshlyBoxed": "Vers Verpakt",
+    "soldOut": "Uitverkocht",
+    "addToBasket": "In Mandje",
+    "viewAll": "Alles Bekijken",
+    "productsCount": "Producten",
+    "cart": "Winkelmand",
+    "checkout": "Afrekenen"
+  },
+  "Categories": {
+    "title": "Winkelen op Categorie",
+    "subtitle": "De beste collecties van de natuur",
+    "products": "producten",
+    "viewAll": "Alles Bekijken",
+    "noProducts": "Nog geen producten in deze categorie",
+    "noCategories": "Nog geen categorieën gevonden",
+    "noCategoriesDesc": "Categorieën verschijnen hier zodra ze zijn toegevoegd",
+    "exploreRange": "Ontdek onze diverse reeksen van categorieën en vind precies wat u zoekt"
+  },
+  "SeasonalSpecials": {
+    "title": "Seizoensspecialiteiten",
+    "subtitle": "Vers van de aarde op uw tafel"
+  },
+  "CTA": {
+    "title": "Ontvang 20% Korting op Uw Eerste Bestelling",
+    "subtitle": "Meld u aan voor onze nieuwsbrief en ontvang exclusieve deals, nieuwe aanwinsten en meer!",
+    "placeholder": "Vul uw e-mailadres in",
+    "subscribe": "Abonneren"
+  },
+  "ProductDetail": {
+    "backToProducts": "Terug naar Producten",
+    "inStock": "Op Voorraad",
+    "outOfStock": "Niet op Voorraad",
+    "quantity": "Aantal",
+    "description": "Productbeschrijving",
+    "addedToCart": "Toegevoegd aan mandje!",
+    "relatedProducts": "Gerelateerde Producten",
+    "reviews": "geverifieerde beoordelingen",
+    "freeShipping": "Gratis lokale bezorging",
+    "freeShippingDesc": "Op alle bestellingen boven €50",
+    "pure": "100% Puur & Natuurlijk",
+    "pureDesc": "Geen conserveringsmiddelen of geraffineerde suikers",
+    "subtotal": "Subtotaal",
+    "happinessGuarantee": "30-Dagen Geluksgarantie",
+    "happinessGuaranteeDesc": "Niet tevreden? Retourneer het binnen 30 dagen voor een volledige terugbetaling.",
+    "viewCatalog": "Bekijk de volledige catalogus"
+  },
+  "Products": {
+    "title": "Alle Producten",
+    "subtitle": "Ontdek onze volledige collectie van premium producten",
+    "searchPlaceholder": "Producten zoeken...",
+    "allCategories": "Alle Categorieën",
+    "category": "Categorie",
+    "sortBy": "Sorteer op",
+    "newest": "Nieuwste",
+    "priceAsc": "Prijs: Laag naar Hoog",
+    "priceDesc": "Prijs: Hoog naar Laag",
+    "nameAsc": "Naam: A-Z",
+    "noProductsFound": "Geen producten gevonden",
+    "adjustSearch": "Probeer uw zoekopdracht of filters aan te passen.",
+    "clearFilters": "Filters Wissen",
+    "showingResults": "Toont {count} van {total} producten",
+    "of": "van",
+    "filters": "Filters",
+    "priceRange": "Prijsrange",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "showOnly": "Toon Alleen",
+    "dealsOnly": "Alleen Aanbiedingen",
+    "inStockOnly": "Alleen op Voorraad",
+    "apply": "Toepassen",
+    "reset": "Resetten"
+  },
+  "Dashboard": {
+    "overview": "Overzicht",
+    "products": "Producten",
+    "orders": "Bestellingen",
+    "categories": "Categorieën",
+    "deals": "Aanbiedingen",
+    "coupons": "Coupons",
+    "customers": "Klanten",
+    "settings": "Instellingen",
+    "aboutPage": "Over Ons Pagina",
+    "homePage": "Home Pagina",
+    "contactPage": "Contact Pagina",
+    "search": "Zoeken in dashboard...",
+    "adminTitle": "MoM's Admin",
+    "Welcome": {
+      "title": "Dashboard",
+      "subtitle": "Welkom terug, dit is wat er vandaag gebeurt in uw winkel.",
+      "last30Days": "Laatste 30 Dagen",
+      "downloadReport": "Rapport Downloaden"
+    },
+    "Stats": {
+      "totalRevenue": "Totale Omzet",
+      "subscriptions": "Abonnementen",
+      "sales": "Verkopen",
+      "activeNow": "Nu Actief",
+      "fromLastMonth": "vorig jaar",
+      "sinceLastHour": "sinds laatste uur"
+    },
+    "Revenue": {
+      "title": "Omzetoverzicht",
+      "subtitle": "Een visuele weergave van de prestaties van uw winkel.",
+      "forecast": "Maandelijkse Omzetprognose"
+    },
+    "RecentSales": {
+      "title": "Recente Verkopen",
+      "subtitle": "U heeft deze maand {count} verkopen gedaan.",
+      "viewAll": "Alles Bekijken"
+    },
+    "Inventory": {
+      "title": "Productvoorraad",
+      "subtitle": "U heeft {count} producten met een lage voorraad.",
+      "totalActive": "Totaal actieve producten",
+      "manageStock": "Voorraad Beheren"
+    },
+    "QuickActions": {
+      "addStaff": "Nieuw personeelslid toevoegen",
+      "manageTeam": "Beheer de rechten van uw team",
+      "scaleBusiness": "Uw bedrijf opschalen",
+      "exploreTools": "Ontdek advertentie- en groeihulpmiddelen"
+    }
+  },
+  "Checkout": {
+    "empty": "Uw mandje is leeg",
+    "emptyDesc": "Je hebt nog geen natuurlijke goedheid aan je winkelwagentje toegevoegd.",
+    "continueShopping": "Doorgaan met Winkelen",
+    "success": "Bedankt!",
+    "successDesc": "Uw bestelling van gezonde producten is succesvol geplaatst. We bereiden uw natuurlijke goedheid voor op de levering.",
+    "returnHome": "Terug naar Startpagina",
+    "secureCheckout": "Veilige Checkout",
+    "backToShopping": "Terug naar Winkelen",
+    "shippingDetails": "Verzendgegevens",
+    "paymentMethod": "Betaalmethode",
+    "fullName": "Volledige Naam",
+    "fullNamePlaceholder": "Voer uw volledige naam in",
+    "email": "E-mailadres",
+    "emailPlaceholder": "naam@voorbeeld.nl",
+    "address": "Adres",
+    "addressPlaceholder": "Straatnaam en huisnummer",
+    "city": "Stad",
+    "cityPlaceholder": "Uw stad",
+    "postalCode": "Postcode",
+    "postalCodePlaceholder": "Postcode",
+    "card": "Credit of Debit Kaart",
+    "cardDesc": "Veilige betaling via Stripe",
+    "paypal": "PayPal",
+    "paypalDesc": "Binnenkort beschikbaar",
+    "completePurchase": "Aankoop Voltooien",
+    "processing": "Bestelling verwerken...",
+    "securePayments": "Veilige Betalingen",
+    "fastDelivery": "Snelle Levering",
+    "summary": "Besteloverzicht",
+    "qty": "Aantal",
+    "shipping": "Verzending",
+    "free": "Gratis",
+    "tax": "Btw",
+    "total": "Totaal",
+    "guarantee": "Onze Garantie",
+    "guaranteeDesc": "Wij staan achter de kwaliteit van onze natuurlijke producten. Bent u niet tevreden, dan bieden wij een 30-dagen geld-terug-garantie.",
+    "Summary": {
+        "subtotal": "Subtotaal"
+    }
+  },
+  "AdminOrders": {
+    "title": "Bestellingen",
+    "subtitle": "Beheer en volg klantbestellingen.",
+    "export": "Bestellingen Exporteren",
+    "searchPlaceholder": "Zoek bestellingen op ID of e-mail...",
+    "allStatuses": "Alle Statussen",
+    "table": {
+        "orderId": "Order ID",
+        "customer": "Klant",
+        "date": "Datum",
+        "total": "Totaal",
+        "status": "Status",
+        "actions": "Acties"
+    },
+    "actions": {
+        "options": "Order Opties",
+        "viewDetails": "Details Bekijken",
+        "updateStatus": "Status Bijwerken"
+    },
+    "noOrders": "Geen bestellingen gevonden",
+    "noOrdersDesc": "Geen bestellingen komen overeen met uw huidige zoekcriteria.",
+    "statuses": {
+        "PENDING": "In afwachting",
+        "PROCESSING": "Verwerken",
+        "SHIPPED": "Verzonden",
+        "DELIVERED": "Geleverd",
+        "CANCELLED": "Geannuleerd"
+    },
+    "tracking": {
+        "title": "Trackinginformatie",
+        "courierName": "Koeriersbedrijf",
+        "trackingLink": "Tracking Link",
+        "updateTracking": "Tracking Bijwerken",
+        "trackingPlaceholder": "Voer tracking URL in",
+        "courierPlaceholder": "bijv. DHL, PostNL",
+        "successUpdate": "Trackinginformatie succesvol bijgewerkt"
+    }
+  },
+  "AdminProducts": {
+    "title": "Producten",
+    "subtitle": "Beheer uw voorraad en productdetails.",
+    "export": "Exporteren",
+    "addProduct": "Product Toevoegen",
+    "dialog": {
+        "title": "Nieuw Product Toevoegen",
+        "description": "Maak een nieuw product aan voor uw winkel. Vul alle verplichte gegevens in.",
+        "images": "Productafbeeldingen",
+        "cancel": "Annuleren",
+        "create": "Product Aanmaken"
+    },
+    "form": {
+        "name": "Naam",
+        "namePlaceholder": "Productnaam",
+        "description": "Beschrijving",
+        "descriptionPlaceholder": "Korte beschrijving",
+        "category": "Categorie",
+        "selectCategory": "Selecteer Categorie",
+        "price": "Prijs",
+        "stock": "Voorraad"
+    },
+    "table": {
+        "image": "Afbeelding",
+        "name": "Naam",
+        "category": "Categorie",
+        "price": "Prijs",
+        "stock": "Voorraad",
+        "status": "Status",
+        "actions": "Acties",
+        "inStock": "Op Voorraad",
+        "outOfStock": "Niet op Voorraad"
+    },
+    "searchPlaceholder": "Producten zoeken...",
+    "allCategories": "Alle Categorieën",
+    "noProducts": "Geen producten gevonden",
+    "noProductsDesc": "Probeer uw zoekopdracht te verruimen of wijzig de filters.",
+    "clearFilters": "Filters Wissen",
+    "showing": "Geraadpleegd {count} van {total} producten",
+    "required": "Vul a.u.b. alle verplichte velden in",
+    "successCreate": "Product succesvol aangemaakt",
+    "successUpdate": "Product succesvol bijgewerkt",
+    "successDelete": "Product succesvol verwijderd",
+    "errorGeneric": "Er is iets misgegaan",
+    "editProduct": "Product Bewerken",
+    "saveChanges": "Wijzigingen Opslaan",
+    "deleteConfirm": "Weet u zeker dat u dit product wilt verwijderen?",
+    "editDescription": "Werk de details van uw bestaande product hieronder bij."
+  },
+  "AdminCategories": {
+    "title": "Categorieën",
+    "subtitle": "Beheer uw productcategorieën",
+    "addCategory": "Categorie Toevoegen",
+    "editCategory": "Categorie Bewerken",
+    "newCategory": "Nieuwe Categorie Toevoegen",
+    "editDescription": "Werk de naam en slug voor deze categorie bij.",
+    "newDescription": "Maak een nieuwe categorie aan voor uw producten.",
+    "name": "Naam",
+    "namePlaceholder": "bijv. Ontbijtspecialiteiten",
+    "slug": "Slug (URL-vriendelijk)",
+    "slugPlaceholder": "bijv. ontbijtspecialiteiten",
+    "cancel": "Annuleren",
+    "create": "Categorie Aanmaken",
+    "save": "Wijzigingen Opslaan",
+    "table": {
+        "name": "Naam",
+        "slug": "Slug",
+        "products": "Producten",
+        "actions": "Acties",
+        "productsCount": "{count} Producten"
+    },
+    "searchPlaceholder": "Categorieën zoeken...",
+    "noCategories": "Geen categorieën gevonden",
+    "adjustSearch": "Probeer uw zoekopdracht aan te passen.",
+    "successCreate": "Categorie succesvol aangemaakt",
+    "successUpdate": "Categorie succesvol bijgewerkt",
+    "successDelete": "Categorie succesvol verwijderd",
+    "errorDeleteProducts": "Kan categorie met producten niet verwijderen",
+    "deleteConfirm": "Weet u zeker dat u \"{name}\" wilt verwijderen?",
+    "required": "Naam en slug zijn verplicht"
+  },
+  "Footer": {
+    "about": "De puurste smaken van de natuur rechtstreeks bij u thuis. 100% natuurlijk, gezond en met liefde gemaakt.",
+    "quickLinks": {
+      "title": "Snelle Links",
+      "allProducts": "Alle Producten",
+      "categories": "Categorieën",
+      "specialDeals": "Speciale Aanbiedingen",
+      "aboutUs": "Over Ons"
+    },
+    "customerService": {
+      "title": "Klantenservice",
+      "contactUs": "Contact",
+      "faq": "Veelgestelde Vragen",
+      "shippingInfo": "Verzendinformatie",
+      "returnsPolicy": "Retourbeleid"
+    },
+    "newsletter": {
+      "title": "Nieuwsbrief",
+      "description": "Schrijf u in voor speciale aanbiedingen, gratis weggevertjes en exclusieve deals.",
+      "placeholder": "Voer uw e-mail in"
+    },
+    "rights": "© 2024 MoM's NaturalFood. Alle rechten voorbehouden.",
+    "privacy": "Privacybeleid",
+    "terms": "Algemene Voorwaarden"
+  },
+  "Auth": {
+    "login": {
+      "title": "Welkom Terug",
+      "subtitle": "Log in om uw leven te voeden",
+      "email": "E-mailadres",
+      "password": "Wachtwoord",
+      "forgotPassword": "Wachtwoord vergeten?",
+      "signIn": "Inloggen",
+      "noAccount": "Nog geen account?",
+      "register": "Registreer hier",
+      "success": "Welkom terug bij MoM's NaturalFood!",
+      "error": "Ongeldige inloggegevens. Probeer het opnieuw.",
+      "genericError": "Er is iets misgegaan"
+    },
+    "register": {
+      "title": "Word Lid",
+      "subtitle": "Begin uw reis naar een natuurlijker leven",
+      "fullName": "Volledige Naam",
+      "placeholderName": "Uw naam",
+      "email": "E-mailadres",
+      "placeholderEmail": "naam@voorbeeld.nl",
+      "password": "Wachtwoord",
+      "signUp": "Account Aanmaken",
+      "hasAccount": "Heeft u al een account?",
+      "login": "Hier inloggen",
+      "success": "Account succesvol aangemaakt! Welkom bij de familie.",
+      "error": "Registratie mislukt. Probeer het opnieuw."
+    },
+    "motto": "Puur • Natuurlijk • Met Liefde Gemaakt"
+  },
+  "About": {
+    "title": "Ons Verhaal",
+    "subtitle": "Met liefde gemaakt, geworteld in de natuur",
+    "hero": {
+      "title": "Proef de Liefde in Elke Hap",
+      "description": "Bij MoM’s Natural Foods geloven we dat gezond eten een plezier moet zijn, geen compromis. Onze reis begon in een huiskeuken, gedreven door een passie voor pure ingrediënten."
+    },
+    "story": {
+      "title": "Hoe het Allemaal Begon",
+      "subtitle": "De Liefde van een Moeder",
+      "content1": "Het verhaal van MoM’s Natural Foods begon in 2012. Zoals veel ouders wilden we het beste voor onze pasgeboren dochter. Onze zelfgemaakte granola, met zorg bereid uit de fijnste natuurlijke ingrediënten, werd al snel haar favoriet.",
+      "content2": "Aangemoedigd door vrienden en familie die geen genoeg konden krijgen van ons 'crunchy eten', besloten we onze passie met de wereld te delen. Vandaag zetten we diezelfde traditie voort—elke batch wordt met dezelfde liefde gemaakt als die allereerste kom."
+    },
+    "mission": {
+      "title": "Onze Missie",
+      "subtitle": "Puurheid Zonder Compromis",
+      "description": "Wij zetten ons in om gezond eten toegankelijk en heerlijk te maken. Elk product dat we maken is een bewijs van onze toewijding aan uw welzijn.",
+      "point1": {
+        "title": "100% Natuurlijk",
+        "description": "Geen chemische toevoegingen, kunstmatige kleurstoffen of conserveringsmiddelen. Gewoon pure goedheid."
+      },
+      "point2": {
+        "title": "Geen Geraffineerde Suiker",
+        "description": "We zoeten onze producten op natuurlijke wijze, waardoor de ware smaak van de natuur behouden blijft."
+      },
+      "point3": {
+        "title": "Zorgvuldig Glutenvrij",
+        "description": "Zorgvuldige selectie van grondstoffen om de veiligheid voor iedereen te garanderen."
+      }
+    },
+    "quality": {
+      "title": "Kwaliteit Die U Kunt Vertrouwen",
+      "description": "Van ons huis naar het uwe, we handhaven de hoogste eisen bij de bereiding, zodat de voedingswaarde en smaak van onze ingrediënten nooit verloren gaan."
+    }
+  },
+  "Contact": {
+    "title": "Contact Ons",
+    "subtitle": "We Horen Graag Van U",
+    "description": "Vragen over onze producten? Wij zijn er om u te helpen.",
+    "form": {
+      "name": "Volledige Naam",
+      "email": "E-mailadres",
+      "subject": "Onderwerp",
+      "message": "Bericht",
+      "send": "Bericht Verzenden",
+      "sending": "Verzenden...",
+      "success": "Bericht succesvol verzonden!",
+      "error": "Bericht verzenden mislukt."
+    },
+    "info": {
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "address": "Adres",
+      "hours": "Openingstijden"
+    }
+  },
+  "AdminDeals": {
+    "title": "Aanbiedingen & Promoties",
+    "subtitle": "Beheer actieve aanbiedingen en seizoenskortingen.",
+    "addDeal": "Aanbieding Toevoegen",
+    "editDeal": "Aanbieding Bewerken",
+    "dialog": {
+        "title": "Nieuwe Aanbieding",
+        "description": "Maak een promotionele aanbieding voor uw producten."
+    },
+    "form": {
+        "title": "Titel van aanbieding",
+        "description": "Beschrijving",
+        "discount": "Korting (%)",
+        "regularPrice": "Normale Prijs ($)",
+        "salePrice": "Aanbiedingsprijs ($)",
+        "endDate": "Einddatum",
+        "isActive": "Is Actief",
+        "image": "Banner Afbeelding",
+        "images": "Aanbieding Afbeeldingen",
+        "selectProducts": "Selecteer Producten"
+    },
+    "table": {
+        "title": "Titel",
+        "discount": "Korting/Prijs",
+        "endDate": "Eindigt op",
+        "status": "Status",
+        "actions": "Acties"
+    },
+    "noDeals": "Geen aanbiedingen gevonden"
+  },
+  "AdminCoupons": {
+    "title": "Coupon Beheer",
+    "subtitle": "Maak en beheer kortingscodes voor uw klanten.",
+    "addCoupon": "Coupon Toevoegen",
+    "editCoupon": "Coupon Bewerken",
+    "autoGenerate": "Code Automatisch Genereren",
+    "dialog": {
+        "title": "Nieuwe Coupon",
+        "description": "Configureer een kortingscode met specifieke regels en vervaldatum."
+    },
+    "form": {
+        "code": "Couponcode",
+        "type": "Kortingstype",
+        "value": "Waarde",
+        "minPurchase": "Min. Aankoop ($)",
+        "expiryDate": "Vervaldatum",
+        "usageLimit": "Gebruikslimiet",
+        "scope": "Coupon Bereik",
+        "isActive": "Is Actief",
+        "selectProducts": "Selecteer Producten",
+        "selectCategories": "Selecteer Categorieën",
+        "selectDeals": "Selecteer Aanbiedingen"
+    },
+    "types": {
+        "PERCENTAGE": "Percentage (%)",
+        "FIXED": "Vast Bedrag ($)"
+    },
+    "scopes": {
+        "GLOBAL": "Globaal (Hele winkel)",
+        "PRODUCT": "Product Gebaseerd",
+        "CATEGORY": "Categorie Gebaseerd",
+        "DEAL": "Aanbieding Gebaseerd"
+    },
+    "table": {
+        "code": "Code",
+        "type": "Type",
+        "value": "Waarde",
+        "expiry": "Vervaldatum",
+        "usage": "Gebruik",
+        "status": "Status",
+        "actions": "Acties"
+    },
+    "noCoupons": "Geen coupons gevonden"
+  },
+  "Metadata": {
+    "title": "MoM's NaturalFood",
+    "description": "Premium natuurlijke voeding voor een gezonde levensstijl"
+  }
+}
