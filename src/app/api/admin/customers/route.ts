@@ -34,7 +34,7 @@ export async function GET() {
             ...allSpecialCustomers,
             orderCount: allSpecialCustomers.orders.length,
             totalSpend,
-            lastOrderDate: customer.orders[0]?.createdAt || null,
+            lastOrderDate: allSpecialCustomers.orders[0]?.createdAt || null,
         };
     });
 
