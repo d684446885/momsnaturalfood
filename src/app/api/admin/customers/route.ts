@@ -28,8 +28,8 @@ export async function GET() {
     });
 
     // Calculate total spend and order count for each customer
-    const customersWithStats = customers.map(customer => {
-        const totalSpend = customer.orders.reduce((acc, order) => acc + Number(order.total), 0);
+    const customersWithStats = customers.map((customer: any) => {
+        const totalSpend = customer.orders.reduce((acc: number, order: any) => acc + Number(order.total), 0);
         return {
             ...customer,
             orderCount: customer.orders.length,
