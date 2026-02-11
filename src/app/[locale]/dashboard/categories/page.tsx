@@ -23,7 +23,7 @@ export default async function AdminCategoriesPage() {
   const categories = await getCategories();
 
   // Convert to plain objects and handle Date types for serialization
-  const serializedCategories = categories.map((category) => ({
+  const serializedCategories = categories.map((category: any) => ({
     ...category,
     createdAt: category.createdAt.toISOString(),
     updatedAt: category.updatedAt.toISOString(),

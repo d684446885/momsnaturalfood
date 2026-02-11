@@ -15,7 +15,7 @@ export default async function DealsPage() {
   const deals = await getDeals();
 
   // Convert to plain objects and handle Decimal/Date types for serialization
-  const serializedDeals = deals.map((deal) => ({
+  const serializedDeals = deals.map((deal: any) => ({
     ...deal,
     discount: Number(deal.discount),
     endDate: deal.endDate ? deal.endDate.toISOString() : null,

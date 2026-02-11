@@ -38,7 +38,7 @@ export default async function AdminProductsPage() {
   ]);
 
   // Convert to plain objects and handle Decimal/Date types for serialization
-  const serializedProducts = products.map((product) => ({
+  const serializedProducts = products.map((product: any) => ({
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
@@ -51,7 +51,7 @@ export default async function AdminProductsPage() {
     },
   }));
 
-  const serializedCategories = categories.map((category) => ({
+  const serializedCategories = categories.map((category: any) => ({
     ...category,
     createdAt: category.createdAt.toISOString(),
     updatedAt: category.updatedAt.toISOString(),

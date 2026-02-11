@@ -31,12 +31,12 @@ export default async function AdminOrdersPage() {
   const orders = await getOrders();
 
   // Convert to plain objects and handle Decimal/Date types for serialization
-  const serializedOrders = orders.map((order) => ({
+  const serializedOrders = orders.map((order: any) => ({
     ...order,
     total: Number(order.total),
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
-    items: order.items.map((item) => ({
+    items: order.items.map((item: any) => ({
       ...item,
       price: Number(item.price),
       product: item.product ? {

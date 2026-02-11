@@ -30,14 +30,14 @@ async function getCustomers() {
       },
     });
 
-    return customers.map(customer => ({
+    return customers.map((customer: any) => ({
         id: customer.id,
         name: customer.name,
         email: customer.email,
         image: customer.image,
         createdAt: customer.createdAt.toISOString(),
         orderCount: customer.orders.length,
-        totalSpend: customer.orders.reduce((acc, order) => acc + Number(order.total), 0),
+        totalSpend: customer.orders.reduce((acc: number, order: any) => acc + Number(order.total), 0),
         lastOrderDate: customer.orders[0]?.createdAt.toISOString() || null,
     }));
   } catch (error) {
