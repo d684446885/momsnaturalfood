@@ -83,10 +83,34 @@ export function ContactClient({ content }: ContactClientProps) {
 
       {/* Hero Section */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-secondary z-0">
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent/50 via-transparent to-transparent" />
-          <div className="absolute inset-0 opacity-10 bg-[url('/grain_texture.png')] bg-repeat" />
-        </div>
+        {/* Dynamic Background */}
+        {content?.heroBackgroundUrl ? (
+          <>
+            {content.heroBackgroundType === "video" ? (
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover z-0"
+                src={content.heroBackgroundUrl}
+              />
+            ) : (
+              <div
+                className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+                style={{ backgroundImage: `url(${content.heroBackgroundUrl})` }}
+              />
+            )}
+            {/* Dark overlay for readability */}
+            <div className="absolute inset-0 bg-black/60 z-[1]" />
+          </>
+        ) : (
+          /* Fallback gradient */
+          <div className="absolute inset-0 bg-secondary z-0">
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent/50 via-transparent to-transparent" />
+            <div className="absolute inset-0 opacity-10 bg-[url('/grain_texture.png')] bg-repeat" />
+          </div>
+        )}
         
         <div className="container mx-auto px-6 relative z-10 text-center text-white">
           <motion.div

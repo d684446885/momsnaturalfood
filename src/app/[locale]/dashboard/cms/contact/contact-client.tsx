@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { 
   Save, 
   Loader2, 
@@ -11,7 +11,11 @@ import {
   Globe, 
   Plus, 
   Trash2,
-  Info
+  Info,
+  Upload,
+  Video,
+  ImageIcon,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +31,7 @@ interface ContactCMSClientProps {
 export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
   const [content, setContent] = useState(initialContent || {});
   const [isLoading, setIsLoading] = useState(false);
+  const heroFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = async () => {
     try {
@@ -46,6 +51,49 @@ export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
       toast.error("Failed to update contact page");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleHeroFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+    if (!isVideo && !isImage) {
+      toast.error("Please upload an image or video file");
+      return;
+    }
+
+    try {
+      const presignRes = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: file.name,
+          fileType: file.type,
+        }),
+      });
+
+      if (!presignRes.ok) throw new Error("Failed to get upload URL");
+
+      const { uploadUrl, fileUrl } = await presignRes.json();
+
+      await fetch(uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+
+      setContent({
+        ...content,
+        heroBackgroundUrl: fileUrl,
+        heroBackgroundType: isVideo ? "video" : "image",
+      });
+
+      toast.success(`${isVideo ? "Video" : "Image"} uploaded successfully`);
+    } catch (error) {
+      toast.error("Upload failed. You can paste a URL instead.");
     }
   };
 
@@ -73,7 +121,7 @@ export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Contact Page CMS</h2>
           <p className="text-muted-foreground">
-            Manage your store's contact information and page layout.
+            Manage your store&apos;s contact information and page layout.
           </p>
         </div>
         <Button onClick={handleSave} disabled={isLoading} className="gap-2">
@@ -121,6 +169,90 @@ export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
                   rows={4}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Background Media */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Video className="h-5 w-5" />
+                Hero Background Media
+              </CardTitle>
+              <CardDescription>Set a background image or video for the hero section. Leave empty for the default gradient style.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Media Type</label>
+                  <select
+                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    value={content?.heroBackgroundType || "image"}
+                    onChange={(e) => setContent({ ...content, heroBackgroundType: e.target.value })}
+                  >
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Upload or Paste URL</label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={content?.heroBackgroundUrl || ""}
+                      onChange={(e) => setContent({ ...content, heroBackgroundUrl: e.target.value })}
+                      placeholder="https://... or upload a file"
+                    />
+                    <input
+                      ref={heroFileInputRef}
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={handleHeroFileUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => heroFileInputRef.current?.click()}
+                    >
+                      <Upload className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preview */}
+              {content?.heroBackgroundUrl && (
+                <div className="relative rounded-xl overflow-hidden border bg-zinc-100">
+                  {content.heroBackgroundType === "video" ? (
+                    <video
+                      src={content.heroBackgroundUrl}
+                      className="w-full h-48 object-cover"
+                      autoPlay muted loop playsInline
+                    />
+                  ) : (
+                    <img
+                      src={content.heroBackgroundUrl}
+                      alt="Hero Background"
+                      className="w-full h-48 object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setContent({ ...content, heroBackgroundUrl: "", heroBackgroundType: "image" })}
+                      className="gap-2"
+                    >
+                      <X className="h-4 w-4" /> Remove
+                    </Button>
+                  </div>
+                  <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    {content.heroBackgroundType === "video" ? <Video className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
+                    {content.heroBackgroundType === "video" ? "Video" : "Image"}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -236,7 +368,7 @@ export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
                     <li>Go to Google Maps and find your address.</li>
                     <li>Click <strong>Share</strong>.</li>
                     <li>Select the <strong>Embed a map</strong> tab.</li>
-                    <li>Copy only the URL within the <code>src="..."</code> attribute.</li>
+                    <li>Copy only the URL within the <code>src=&quot;...&quot;</code> attribute.</li>
                   </ol>
                 </div>
               </div>
