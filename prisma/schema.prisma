@@ -176,6 +176,8 @@ model HomePage {
   // CTA Section
   ctaTitle          String @default("Get 20% Off Your First Order")
   ctaSubtitle       String @default("Sign up for our newsletter...")
+  ctaMediaUrl       String?  // Image or video URL for CTA section right side
+  ctaMediaType      String @default("image")  // "image" or "video"
   
   // Why Us Section
   whyTitle          String @default("Why Mom's Naturals Foods?")

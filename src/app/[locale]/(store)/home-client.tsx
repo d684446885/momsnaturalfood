@@ -78,6 +78,8 @@ export function HomeClient({ content }: HomeClientProps) {
   
   const ctaTitle = content?.ctaTitle || tCta('title');
   const ctaSubtitle = content?.ctaSubtitle || tCta('subtitle');
+  const ctaMediaUrl = content?.ctaMediaUrl || "";
+  const ctaMediaType = content?.ctaMediaType || "image";
 
   const promoCards = content?.promoCards || [];
   const promoSectionBgUrl = content?.promoSectionBgUrl || "";
@@ -433,8 +435,26 @@ export function HomeClient({ content }: HomeClientProps) {
           <div className="absolute inset-0 z-0">
              <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent z-10" />
              <div className="absolute inset-0 opacity-10 bg-[url('/grain_texture.png')] bg-repeat" />
-             {/* Imagine a beautiful background image here of nature */}
-             <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80')] bg-cover bg-center" />
+             {/* Dynamic right-side media */}
+             {ctaMediaUrl ? (
+               ctaMediaType === "video" ? (
+                 <video
+                   src={ctaMediaUrl}
+                   autoPlay
+                   loop
+                   muted
+                   playsInline
+                   className="absolute right-0 top-0 bottom-0 w-1/2 object-cover"
+                 />
+               ) : (
+                 <div
+                   className="absolute right-0 top-0 bottom-0 w-1/2 bg-cover bg-center"
+                   style={{ backgroundImage: `url('${ctaMediaUrl}')` }}
+                 />
+               )
+             ) : (
+               <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80')] bg-cover bg-center" />
+             )}
           </div>
 
           <div className="relative z-10 max-w-2xl px-12 md:px-20 py-20 text-white space-y-8">

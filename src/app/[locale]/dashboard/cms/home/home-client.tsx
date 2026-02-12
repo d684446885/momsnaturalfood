@@ -39,6 +39,8 @@ interface HomePageContent {
   featuredSubtitle: string;
   ctaTitle: string;
   ctaSubtitle: string;
+  ctaMediaUrl: string | null;
+  ctaMediaType: "image" | "video";
   whyTitle: string;
   whyDescription: string;
   whyLearnMoreText: string;
@@ -454,6 +456,17 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                 <Textarea
                   value={content.ctaSubtitle}
                   onChange={(e) => setContent({ ...content, ctaSubtitle: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2 pt-4 border-t">
+                <label className="text-sm font-medium">Right Side Media (Image or Video)</label>
+                <SingleMediaUpload
+                  value={content.ctaMediaUrl || ""}
+                  type={content.ctaMediaType || "image"}
+                  onChange={(url) => setContent({ ...content, ctaMediaUrl: url })}
+                  onTypeChange={(type) => setContent({ ...content, ctaMediaType: type as "image" | "video" })}
+                  label="Upload CTA Section Media"
                 />
               </div>
              </CardContent>
