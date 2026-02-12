@@ -278,3 +278,14 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
 }
+
+model PaymentGateway {
+  id          String   @id @default(cuid())
+  provider    String   @unique  // "mollie", "stripe", "paypal"
+  enabled     Boolean  @default(false)
+  mode        String   @default("test")  // "test" or "live"
+  credentials Json     @default("{}")     // Encrypted gateway credentials
+  settings    Json?    // Additional provider-specific settings
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
