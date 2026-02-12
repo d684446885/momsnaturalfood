@@ -80,6 +80,7 @@ export function HomeClient({ content }: HomeClientProps) {
   const ctaSubtitle = content?.ctaSubtitle || tCta('subtitle');
 
   const promoCards = content?.promoCards || [];
+  const promoSectionBgUrl = content?.promoSectionBgUrl || "";
 
   // Features logic
   const defaultFeatures = [
@@ -329,8 +330,24 @@ export function HomeClient({ content }: HomeClientProps) {
 
       {/* Promo Cards Section - Dynamic Video Squares */}
       {promoCards && promoCards.length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="container mx-auto px-6">
+        <section className="relative py-24 overflow-hidden">
+          {/* Section Background Video */}
+          {promoSectionBgUrl ? (
+            <>
+              <video
+                src={promoSectionBgUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover z-0"
+              />
+              <div className="absolute inset-0 bg-black/50 z-[1]" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-white z-0" />
+          )}
+          <div className="container mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {promoCards.slice(0, 2).map((card: any, idx: number) => (
                 <motion.div

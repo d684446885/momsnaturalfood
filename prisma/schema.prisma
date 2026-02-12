@@ -185,6 +185,7 @@ model HomePage {
   whyBackgroundUrl  String?
   whyCards          Json?  // Array of { type: 'image'|'video', url: string }
   promoCards        Json?  // Array of { title, description, videoUrl }
+  promoSectionBgUrl String?  // Background video URL for the promo cards section
   
   updatedAt      DateTime @updatedAt
 }

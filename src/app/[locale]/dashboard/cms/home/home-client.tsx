@@ -53,6 +53,7 @@ interface HomePageContent {
     description: string;
     videoUrl: string;
   }[];
+  promoSectionBgUrl: string | null;
 }
 
 interface HomeCMSClientProps {
@@ -361,6 +362,25 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                   </div>
                 );
               })}
+            </CardContent>
+          </Card>
+
+          {/* Section Background Video */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Section Background Video</CardTitle>
+              <CardDescription>
+                This video plays behind the entire Promo Cards section for a cinematic effect.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SingleMediaUpload
+                value={content.promoSectionBgUrl || ""}
+                type="video"
+                onChange={(url) => setContent({ ...content, promoSectionBgUrl: url })}
+                onTypeChange={() => {}}
+                label="Upload Section Background Video"
+              />
             </CardContent>
           </Card>
         </TabsContent>

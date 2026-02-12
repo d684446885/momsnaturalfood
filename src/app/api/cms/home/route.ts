@@ -46,7 +46,8 @@ export async function GET() {
         promoCards: [
           { title: "Pure Ingredients", description: "Only the best from nature.", videoUrl: "" },
           { title: "Baked with Love", description: "Small batches, big heart.", videoUrl: "" }
-        ]
+        ],
+        promoSectionBgUrl: ""
       });
     }
 
@@ -84,7 +85,8 @@ export async function PATCH(request: Request) {
       whyBackgroundUrl,
       whyCards,
       features,
-      promoCards
+      promoCards,
+      promoSectionBgUrl
     } = body;
 
     const homePage = await db.homePage.upsert({
@@ -113,7 +115,8 @@ export async function PATCH(request: Request) {
         whyBackgroundUrl: whyBackgroundUrl || null,
         whyCards: whyCards || [],
         features: features || [],
-        promoCards: promoCards || []
+        promoCards: promoCards || [],
+        promoSectionBgUrl: promoSectionBgUrl || null
       },
       create: {
         id: "global",
@@ -140,7 +143,8 @@ export async function PATCH(request: Request) {
         whyBackgroundUrl: whyBackgroundUrl || null,
         whyCards: whyCards || [],
         features: features || [],
-        promoCards: promoCards || []
+        promoCards: promoCards || [],
+        promoSectionBgUrl: promoSectionBgUrl || null
       }
     });
 
