@@ -245,14 +245,21 @@ export function ContactClient({ content }: ContactClientProps) {
       </section>
 
       {/* Map Section */}
-      {content?.mapEmbedUrl && (
+      {content?.mapEmbedUrl && (() => {
+        // Extract src from iframe HTML if accidentally stored as full embed code
+        let mapSrc = content.mapEmbedUrl;
+        const srcMatch = mapSrc.match(/src=["']([^"']+)["']/i);
+        if (srcMatch && srcMatch[1]) {
+          mapSrc = srcMatch[1];
+        }
+        return (
         <section className="py-24 px-6">
           <motion.div 
             {...fadeIn}
              className="container mx-auto h-[500px] rounded-[4rem] overflow-hidden shadow-2xl border-4 border-white"
           >
             <iframe 
-              src={content.mapEmbedUrl}
+              src={mapSrc}
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
@@ -262,7 +269,8 @@ export function ContactClient({ content }: ContactClientProps) {
             />
           </motion.div>
         </section>
-      )}
+        );
+      })()}
 
       {/* FAQs Highlight */}
       <section className="py-24 bg-white border-y border-zinc-100">

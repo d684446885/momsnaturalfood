@@ -348,30 +348,67 @@ export function ContactCMSClient({ initialContent }: ContactCMSClientProps) {
         <TabsContent value="map" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Google Maps Integration</CardTitle>
-              <CardDescription>Embed a map showing your location.</CardDescription>
+              <CardTitle>Google Maps Embed</CardTitle>
+              <CardDescription>Paste the full embed code from Google Maps. We'll extract the map URL automatically.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Embed URL (iframe src)</label>
-                <Input 
+                <label className="text-sm font-medium">Paste Google Maps Embed Code or URL</label>
+                <textarea
+                  className="w-full min-h-[100px] rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={content?.mapEmbedUrl || ""}
-                  onChange={(e) => setContent({ ...content, mapEmbedUrl: e.target.value })}
-                  placeholder="https://www.google.com/maps/embed?..."
+                  onChange={(e) => {
+                    let val = e.target.value.trim();
+                    // If user pasted full <iframe> HTML, extract the src attribute
+                    const srcMatch = val.match(/src=["']([^"']+)["']/i);
+                    if (srcMatch && srcMatch[1]) {
+                      val = srcMatch[1];
+                    }
+                    setContent({ ...content, mapEmbedUrl: val });
+                  }}
+                  placeholder={'Paste full <iframe> embed code or just the src URL\ne.g. <iframe src="https://www.google.com/maps/embed?pb=..."></iframe>'}
                 />
               </div>
+
+              {/* Extracted URL display */}
+              {content?.mapEmbedUrl && (
+                <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                  <p className="text-xs font-medium text-green-800 mb-1">✅ Extracted Embed URL:</p>
+                  <p className="text-xs text-green-700 break-all font-mono">{content.mapEmbedUrl}</p>
+                </div>
+              )}
+
               <div className="p-4 bg-blue-50 rounded-lg flex items-start gap-3">
-                <Info className="h-5 w-5 text-blue-500 mt-0.5" />
+                <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-blue-700">
-                  <p className="font-bold">How to get the embed URL:</p>
+                  <p className="font-bold">How to get the embed code:</p>
                   <ol className="list-decimal ml-4 space-y-1 mt-1">
-                    <li>Go to Google Maps and find your address.</li>
-                    <li>Click <strong>Share</strong>.</li>
-                    <li>Select the <strong>Embed a map</strong> tab.</li>
-                    <li>Copy only the URL within the <code>src=&quot;...&quot;</code> attribute.</li>
+                    <li>Go to <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="underline font-medium">Google Maps</a> and search your address.</li>
+                    <li>Click the <strong>Share</strong> button (or the hamburger menu → Share or embed map).</li>
+                    <li>Select the <strong>"Embed a map"</strong> tab.</li>
+                    <li>Click <strong>"Copy HTML"</strong> and paste the entire code here.</li>
                   </ol>
+                  <p className="mt-2 text-xs opacity-80">You can paste the full <code className="bg-blue-100 px-1 rounded">&lt;iframe&gt;</code> code — we'll extract the URL automatically.</p>
                 </div>
               </div>
+
+              {/* Live Preview */}
+              {content?.mapEmbedUrl && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Live Preview</label>
+                  <div className="h-[350px] rounded-2xl overflow-hidden border shadow-inner bg-muted">
+                    <iframe
+                      src={content.mapEmbedUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
