@@ -353,62 +353,6 @@ export function HomeClient({ content }: HomeClientProps) {
         </div>
       </section>
 
-      {/* Categories Section - Modern Grid */}
-      <section className="py-24 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center text-center mb-16 space-y-4"
-          >
-            <h2 className="font-serif text-4xl md:text-6xl font-bold text-zinc-900 tracking-tight italic">
-              {categoriesTitle}
-            </h2>
-            <div className="h-1.5 w-24 bg-accent rounded-full" />
-            <p className="text-xl text-zinc-500 font-light italic max-w-2xl">{categoriesSubtitle}</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {categories.map((category, index) => (
-              <motion.div
-                key={category.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <Link href={`/categories/${category.name.toLowerCase()}`}>
-                  <div className="group relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-all duration-500 border border-zinc-100">
-                    <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/20 to-transparent z-10 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    
-                    {/* Floating Icon */}
-                    <div className="absolute inset-0 flex items-center justify-center z-0">
-                       <span className="text-8xl opacity-10 blur-sm scale-150 group-hover:scale-110 transition-transform duration-700">
-                         {category.icon}
-                       </span>
-                    </div>
-
-                    <div className="absolute bottom-0 left-0 right-0 p-8 z-20 transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                      <p className="text-accent text-sm font-bold uppercase tracking-widest mb-2">
-                        {category.count} Products
-                      </p>
-                      <h3 className="text-3xl font-serif font-bold text-white italic">
-                        {category.name}
-                      </h3>
-                      <div className="mt-4 flex items-center text-white/0 group-hover:text-white transition-colors">
-                         <span className="text-sm font-medium">Explore Collection</span>
-                         <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Featured Products - High End Product Cards */}
       <section className="py-24 bg-secondary/5 backdrop-blur-sm rounded-[4rem] mx-6">
