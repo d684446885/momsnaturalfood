@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SingleMediaUpload } from "@/components/single-media-upload";
 import { toast } from "sonner";
-import { Loader2, Save, X, Plus } from "lucide-react";
+import { Loader2, Save, X, Plus, PlaySquare } from "lucide-react";
 
 interface HomePageContent {
   heroTitle: string;
@@ -47,6 +47,11 @@ interface HomePageContent {
   whyCards: {
     type: "image" | "video";
     url: string;
+  }[];
+  promoCards: {
+    title: string;
+    description: string;
+    videoUrl: string;
   }[];
 }
 
@@ -81,6 +86,18 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
     }
   };
 
+  const updatePromoCard = (index: number, field: string, value: string) => {
+    const newPromoCards = [...(content.promoCards || [])];
+    
+    // Initialize if needed
+    for (let i = 0; i <= index; i++) {
+        if (!newPromoCards[i]) newPromoCards[i] = { title: "", description: "", videoUrl: "" };
+    }
+    
+    (newPromoCards[index] as any)[field] = value;
+    setContent({ ...content, promoCards: newPromoCards });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -100,7 +117,8 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
         <TabsList>
           <TabsTrigger value="hero">Hero Section</TabsTrigger>
           <TabsTrigger value="why">Why Us Section</TabsTrigger>
-          <TabsTrigger value="sections">Sections (Categories/Featured)</TabsTrigger>
+          <TabsTrigger value="promo">Promo Cards</TabsTrigger>
+          <TabsTrigger value="sections">Sections (Headers)</TabsTrigger>
           <TabsTrigger value="cta">CTA Banner</TabsTrigger>
         </TabsList>
 
@@ -256,7 +274,6 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                 <label className="text-sm font-medium">Grid Media (4 items)</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[0, 1, 2, 3].map((index) => {
-                    // Ensure the card object exists
                     const currentCards = content.whyCards || [];
                     const card = currentCards[index] || { type: "video", url: "" };
                     
@@ -268,7 +285,6 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                             type={card.type || "video"}
                             onChange={(url) => {
                               const newCards = [...(content.whyCards || [])];
-                              // Fill gaps if any
                               for (let i = 0; i <= index; i++) {
                                 if (!newCards[i]) newCards[i] = { type: "video", url: "" };
                               }
@@ -277,7 +293,6 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                             }}
                             onTypeChange={(type) => {
                               const newCards = [...(content.whyCards || [])];
-                              // Fill gaps if any
                               for (let i = 0; i <= index; i++) {
                                 if (!newCards[i]) newCards[i] = { type: "video", url: "" };
                               }
@@ -295,51 +310,109 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
           </Card>
         </TabsContent>
 
-        {/* Sections */}
-        <TabsContent value="sections" className="space-y-4">
+        {/* Promo Cards Section */}
+        <TabsContent value="promo" className="space-y-4">
           <Card>
-             <CardHeader>
-              <CardTitle>Categories Section Headers</CardTitle>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <PlaySquare className="h-5 w-5" />
+                Promo Cards Section
+              </CardTitle>
+              <CardDescription>
+                Two square promotional cards shown after the Why Us section.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Section Title</label>
-                <Input
-                  value={content.categoriesTitle}
-                  onChange={(e) => setContent({ ...content, categoriesTitle: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Section Subtitle</label>
-                <Input
-                  value={content.categoriesSubtitle}
-                  onChange={(e) => setContent({ ...content, categoriesSubtitle: e.target.value })}
-                />
-              </div>
+            <CardContent className="space-y-6">
+              {[0, 1].map((index) => {
+                const promo = (content.promoCards || [])[index] || { title: "", description: "", videoUrl: "" };
+                return (
+                  <div key={index} className="p-6 border rounded-[1.5rem] space-y-4 bg-muted/20">
+                    <h3 className="font-bold text-lg">Promo Card {index + 1}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Card Title</label>
+                          <Input
+                            value={promo.title}
+                            onChange={(e) => updatePromoCard(index, "title", e.target.value)}
+                            placeholder="e.g. Pure Ingredients"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Card Description</label>
+                          <Textarea
+                            value={promo.description}
+                            onChange={(e) => updatePromoCard(index, "description", e.target.value)}
+                            placeholder="Brief promotional text"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Background Video</label>
+                        <SingleMediaUpload
+                          value={promo.videoUrl || ""}
+                          type="video"
+                          onChange={(url) => updatePromoCard(index, "videoUrl", url)}
+                          onTypeChange={() => {}} // Locked to video for these specific cards
+                          label={`Promo Video ${index + 1}`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
+        </TabsContent>
 
-          <Card>
+        {/* Sections Headers */}
+        <TabsContent value="sections" className="space-y-4">
+           <Card>
              <CardHeader>
-              <CardTitle>Featured Products Headers</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Section Title</label>
-                <Input
-                  value={content.featuredTitle}
-                  onChange={(e) => setContent({ ...content, featuredTitle: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Section Subtitle</label>
-                <Input
-                  value={content.featuredSubtitle}
-                  onChange={(e) => setContent({ ...content, featuredSubtitle: e.target.value })}
-                />
-              </div>
-            </CardContent>
-          </Card>
+                <CardTitle>Global Section Headers</CardTitle>
+             </CardHeader>
+             <CardContent className="space-y-6">
+                <div className="space-y-4 border-b pb-4">
+                    <h4 className="font-bold text-secondary">Categories Section</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-normal">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Title</label>
+                            <Input
+                            value={content.categoriesTitle}
+                            onChange={(e) => setContent({ ...content, categoriesTitle: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Subtitle</label>
+                            <Input
+                            value={content.categoriesSubtitle}
+                            onChange={(e) => setContent({ ...content, categoriesSubtitle: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <h4 className="font-bold text-secondary">Featured Products Section</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-normal">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Title</label>
+                            <Input
+                            value={content.featuredTitle}
+                            onChange={(e) => setContent({ ...content, featuredTitle: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Subtitle</label>
+                            <Input
+                            value={content.featuredSubtitle}
+                            onChange={(e) => setContent({ ...content, featuredSubtitle: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                </div>
+             </CardContent>
+           </Card>
         </TabsContent>
 
         {/* CTA Banner */}

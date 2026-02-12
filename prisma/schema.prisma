@@ -184,6 +184,7 @@ model HomePage {
   whyLearnMoreLink  String @default("/about")
   whyBackgroundUrl  String?
   whyCards          Json?  // Array of { type: 'image'|'video', url: string }
+  promoCards        Json?  // Array of { title, description, videoUrl }
   
   updatedAt      DateTime @updatedAt
 }

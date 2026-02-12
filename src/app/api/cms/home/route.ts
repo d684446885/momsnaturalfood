@@ -42,6 +42,10 @@ export async function GET() {
           { icon: "Heart", title: "Baked with Love", description: "Handcrafted in small batches." },
           { icon: "Sparkles", title: "No Added Sugar", description: "Naturally sweetened goodness." },
           { icon: "Shield", title: "Quality Guaranteed", description: "Only the finest ingredients." }
+        ],
+        promoCards: [
+          { title: "Pure Ingredients", description: "Only the best from nature.", videoUrl: "" },
+          { title: "Baked with Love", description: "Small batches, big heart.", videoUrl: "" }
         ]
       });
     }
@@ -79,7 +83,8 @@ export async function PATCH(request: Request) {
       whyLearnMoreLink,
       whyBackgroundUrl,
       whyCards,
-      features
+      features,
+      promoCards
     } = body;
 
     const homePage = await db.homePage.upsert({
@@ -107,7 +112,8 @@ export async function PATCH(request: Request) {
         whyLearnMoreLink: whyLearnMoreLink || "/about",
         whyBackgroundUrl: whyBackgroundUrl || null,
         whyCards: whyCards || [],
-        features: features || []
+        features: features || [],
+        promoCards: promoCards || []
       },
       create: {
         id: "global",
@@ -133,7 +139,8 @@ export async function PATCH(request: Request) {
         whyLearnMoreLink: whyLearnMoreLink || "/about",
         whyBackgroundUrl: whyBackgroundUrl || null,
         whyCards: whyCards || [],
-        features: features || []
+        features: features || [],
+        promoCards: promoCards || []
       }
     });
 
