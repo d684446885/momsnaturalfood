@@ -105,6 +105,7 @@
     "coupons": "Coupons",
     "customers": "Customers",
     "payments": "Payments",
+    "messages": "Messages",
     "settings": "Settings",
     "aboutPage": "About Page",
     "homePage": "Home Page",
@@ -405,8 +406,10 @@
     "form": {
       "name": "Full Name",
       "email": "Email Address",
+      "phone": "Phone Number",
       "subject": "Subject",
       "message": "Message",
+      "captcha": "Security Question",
       "send": "Send Message",
       "sending": "Sending...",
       "success": "Message sent successfully!",

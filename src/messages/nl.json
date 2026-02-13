@@ -106,6 +106,7 @@
     "coupons": "Coupons",
     "customers": "Klanten",
     "payments": "Betalingen",
+    "messages": "Berichten",
     "settings": "Instellingen",
     "aboutPage": "Over Ons Pagina",
     "homePage": "Home Pagina",
@@ -406,8 +407,10 @@
     "form": {
       "name": "Volledige Naam",
       "email": "E-mailadres",
+      "phone": "Telefoonnummer",
       "subject": "Onderwerp",
       "message": "Bericht",
+      "captcha": "Beveiligingsvraag",
       "send": "Bericht Verzenden",
       "sending": "Verzenden...",
       "success": "Bericht succesvol verzonden!",

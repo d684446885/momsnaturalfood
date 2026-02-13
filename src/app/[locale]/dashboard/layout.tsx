@@ -17,7 +17,8 @@ import {
   Mail,
   Tag,
   Ticket,
-  CreditCard
+  CreditCard,
+  MessageCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ const sidebarLinks = [
   { icon: ShoppingBag, label: "categories", href: "/dashboard/categories" },
   { icon: Users, label: "customers", href: "/dashboard/customers" },
   { icon: CreditCard, label: "payments", href: "/dashboard/payments" },
+  { icon: MessageCircle, label: "messages", href: "/dashboard/messages" },
   { icon: Settings, label: "settings", href: "/dashboard/settings" },
   { icon: Menu, label: "aboutPage", href: "/dashboard/cms/about" },
   { icon: LayoutDashboard, label: "homePage", href: "/dashboard/cms/home" },

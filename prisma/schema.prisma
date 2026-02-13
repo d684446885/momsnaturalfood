@@ -211,6 +211,10 @@ model ContactPage {
   // Social Links (JSON: platform, url, icon)
   socialLinks    Json?
   
+  // Form Settings
+  formTitle          String?
+  formSuccessMessage String?
+  
   // Map Section
   mapEmbedUrl    String?
   
@@ -289,5 +293,20 @@ model PaymentGateway {
   credentials Json     @default("{}")     // Encrypted gateway credentials
   settings    Json?    // Additional provider-specific settings
   updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  subject     String
+  message     String
+  adminReply  String?
+  repliedAt   DateTime?
+  ipAddress   String?
+  location    String?
+  isRead      Boolean  @default(false)
   createdAt   DateTime @default(now())
 }

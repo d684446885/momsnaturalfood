@@ -27,6 +27,53 @@ interface ContactClientProps {
 export function ContactClient({ content }: ContactClientProps) {
   const t = useTranslations("Contact");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  // Math captcha state
+  const [captchaA, setCaptchaA] = useState(0);
+  const [captchaB, setCaptchaB] = useState(0);
+  const [captchaOp, setCaptchaOp] = useState<"+" | "-" | "*">("+");
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+
+  const generateCaptcha = () => {
+    const ops: Array<"+" | "-" | "*"> = ["+", "-", "*"];
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    let a, b;
+    
+    if (op === "*") {
+      a = Math.floor(Math.random() * 10) + 1;
+      b = Math.floor(Math.random() * 5) + 1;
+    } else {
+      a = Math.floor(Math.random() * 20) + 1;
+      b = Math.floor(Math.random() * 10) + 1;
+    }
+
+    // Ensure subtraction doesn't go negative
+    if (op === "-" && b > a) {
+      [a, b] = [b, a];
+    }
+    setCaptchaA(a);
+    setCaptchaB(b);
+    setCaptchaOp(op);
+    setCaptchaAnswer("");
+  };
+
+  // Generate captcha on mount
+  useState(() => {
+    generateCaptcha();
+  });
+
+  const getCorrectAnswer = () => {
+    if (captchaOp === "+") return captchaA + captchaB;
+    if (captchaOp === "-") return captchaA - captchaB;
+    return captchaA * captchaB;
+  };
 
   const heroTitle = content?.heroTitle || t('title');
   const heroSubtitle = content?.heroSubtitle || t('subtitle');
@@ -61,14 +108,36 @@ export function ContactClient({ content }: ContactClientProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate captcha
+    if (parseInt(captchaAnswer) !== getCorrectAnswer()) {
+      toast.error("Incorrect answer. Please try again.");
+      generateCaptcha();
+      return;
+    }
+
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast.success(t('form.success'));
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      toast.success(t('form.success'));
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      generateCaptcha();
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fadeIn = {
@@ -151,6 +220,8 @@ export function ContactClient({ content }: ContactClientProps) {
                       <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider">{t('form.name')}</label>
                       <Input 
                         required 
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="John Doe" 
                         className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all"
                       />
@@ -160,28 +231,68 @@ export function ContactClient({ content }: ContactClientProps) {
                       <Input 
                         required 
                         type="email" 
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="john@example.com" 
+                        className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider">{t('form.phone')}</label>
+                      <Input 
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+31 612345678" 
+                        className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider">{t('form.subject')}</label>
+                      <Input 
+                        required 
+                        value={formData.subject}
+                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                        placeholder="How can we help?" 
                         className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all"
                       />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider">{t('form.subject')}</label>
-                    <Input 
-                      required 
-                      placeholder="How can we help?" 
-                      className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
                     <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider">{t('form.message')}</label>
                     <Textarea 
                       required 
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Your message here..." 
                       className="min-h-[200px] rounded-3xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all p-6"
                     />
+                  </div>
+
+                  {/* Math Captcha */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-zinc-700 uppercase tracking-wider flex items-center gap-2">
+                      🔒 {t('form.captcha')}
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0 h-14 px-6 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                        <span className="text-lg font-bold text-secondary font-mono">
+                          {captchaA} {captchaOp === "*" ? "x" : captchaOp} {captchaB} = ?
+                        </span>
+                      </div>
+                      <Input
+                        required
+                        type="number"
+                        value={captchaAnswer}
+                        onChange={(e) => setCaptchaAnswer(e.target.value)}
+                        placeholder="Your answer"
+                        className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 focus:ring-accent transition-all max-w-[150px]"
+                      />
+                    </div>
                   </div>
                   
                   <Button 

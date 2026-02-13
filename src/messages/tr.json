@@ -89,6 +89,7 @@
     "categories": "Kategoriler",
     "customers": "Müşteriler",
     "payments": "Ödemeler",
+    "messages": "Mesajlar",
     "settings": "Ayarlar",
     "search": "Panelde ara...",
     "adminTitle": "MoM Panel",
@@ -296,6 +297,29 @@
       "error": "Kayıt başarısız oldu. Lütfen tekrar deneyin."
     },
     "motto": "Saf • Doğal • Sevgiyle Üretildi"
+  },
+  "Contact": {
+    "title": "Bize Ulaşın",
+    "subtitle": "Sizden Haber Almak İsteriz",
+    "description": "Ürünlerimiz hakkında sorularınız mı var? Yardımcı olmak için buradayız.",
+    "form": {
+      "name": "Ad Soyad",
+      "email": "E-posta Adresi",
+      "phone": "Telefon Numarası",
+      "subject": "Konu",
+      "message": "Mesaj",
+      "captcha": "Güvenlik Sorusu",
+      "send": "Mesaj Gönder",
+      "sending": "Gönderiliyor...",
+      "success": "Mesajınız başarıyla gönderildi!",
+      "error": "Mesaj gönderilemedi."
+    },
+    "info": {
+      "email": "E-posta",
+      "phone": "Telefon",
+      "address": "Adres",
+      "hours": "Çalışma Saatleri"
+    }
   },
   "Metadata": {
     "title": "MoM's NaturalFood",
