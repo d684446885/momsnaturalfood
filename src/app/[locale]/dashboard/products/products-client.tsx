@@ -1,7 +1,3 @@
-"use client";
-
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
   Search, 
@@ -15,11 +11,14 @@ import {
   CheckCircle2,
   Loader2,
   X,
-  PlusCircle
+  PlusCircle,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { R2ImageUpload } from "@/components/r2-image-upload";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/routing";
+import { usePathname, useSearchParams } from "next/navigation";
 import { 
   Table, 
   TableBody, 
@@ -95,13 +94,25 @@ interface Category {
 interface AdminProductsClientProps {
   products: Product[];
   categories: Category[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
 }
 
-export function AdminProductsClient({ products, categories }: AdminProductsClientProps) {
+export function AdminProductsClient({ 
+  products, 
+  categories, 
+  totalCount, 
+  currentPage, 
+  pageSize 
+}: AdminProductsClientProps) {
   const t = useTranslations("AdminProducts");
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get("category") || "all");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -122,6 +133,37 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
     perfectWith: [""] as string[],
     orderCount: "0"
   });
+
+  const createQueryString = (params: Record<string, string | number | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (value === null || value === "" || value === "all") {
+        newSearchParams.delete(key);
+      } else {
+        newSearchParams.set(key, String(value));
+      }
+    }
+    
+    return newSearchParams.toString();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    const query = createQueryString({ search: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    const query = createQueryString({ category: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    const query = createQueryString({ page });
+    router.push(`${pathname}?${query}`);
+  };
 
   const onSubmit = async () => {
     try {
@@ -224,13 +266,6 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
     });
   };
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || product.category.id === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
   const formatPrice = (price: any) => {
     const val = typeof price === 'object' ? parseFloat(price.toString()) : parseFloat(String(price));
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -270,6 +305,8 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
     updated[index] = { ...updated[index], [key]: value };
     setFormData({ ...formData, nutritionFacts: updated });
   };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="space-y-6">
@@ -547,12 +584,12 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
               <Input
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-9 bg-gray-50/50 border-none focus-visible:ring-1"
               />
             </div>
             <div className="flex items-center gap-2">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select value={selectedCategory} onValueChange={handleCategoryChange}>
                     <SelectTrigger className="w-[180px] border-none bg-gray-50/50">
                         <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
                         <SelectValue placeholder={t('allCategories')} />
@@ -585,7 +622,7 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
               </TableHeader>
               <TableBody>
                 <AnimatePresence>
-                  {filteredProducts.map((product) => (
+                  {products.map((product) => (
                     <TableRow key={product.id} className="hover:bg-gray-50/50 transition-colors group">
                       <TableCell className="pl-6">
                         <div className="h-12 w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden border">
@@ -661,7 +698,7 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
                 </AnimatePresence>
               </TableBody>
             </Table>
-            {filteredProducts.length === 0 && (
+            {products.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-4">
                   <Search className="h-10 w-10 text-muted-foreground/30" />
@@ -670,7 +707,7 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
                 <p className="text-muted-foreground max-w-sm mt-2">
                   {t('noProductsDesc')}
                 </p>
-                <Button variant="outline" className="mt-6" onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}>
+                <Button variant="outline" className="mt-6" onClick={() => { handleSearchChange(""); handleCategoryChange("all"); }}>
                   {t('clearFilters')}
                 </Button>
               </div>
@@ -679,8 +716,64 @@ export function AdminProductsClient({ products, categories }: AdminProductsClien
         </CardContent>
       </Card>
       
-      <div className="text-sm text-muted-foreground text-center">
-        {t('showing', { count: filteredProducts.length, total: products.length })}
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between px-2">
+        <div className="text-sm text-muted-foreground">
+          {t('showing', { 
+            count: products.length, 
+            total: totalCount 
+          })}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="gap-1"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </Button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              // Simple pagination logic to show current +/- 2 pages
+              let pageNum = i + 1;
+              if (totalPages > 5) {
+                if (currentPage > 3) {
+                  pageNum = currentPage - 3 + i + 1;
+                }
+                if (pageNum > totalPages) {
+                  pageNum = totalPages - (5 - i - 1);
+                }
+              }
+              if (pageNum <= 0) return null;
+              if (pageNum > totalPages) return null;
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  size="sm"
+                  className="w-9"
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            className="gap-1"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

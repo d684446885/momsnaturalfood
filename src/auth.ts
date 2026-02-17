@@ -1,40 +1,75 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
-import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
+import Google from "next-auth/providers/google";
+import { authConfig } from "./auth.config";
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: Role;
+    } & DefaultSession["user"]
+  }
+
+  interface User {
+    role: Role;
+  }
+}
+
+import { DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: Role;
+  }
+}
+
+const config = {
+  adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" as const },
+  ...authConfig,
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    Credentials({
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const user = await db.user.findUnique({
+          where: { email: credentials.email as string },
+        });
+
+        if (!user || !user.password) return null;
+
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.password as string,
+          user.password
+        );
+
+        if (!isPasswordCorrect) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      },
+    }),
+  ],
+};
 
 export const { 
   handlers: { GET, POST }, 
   auth, 
   signIn, 
   signOut 
-} = NextAuth({
-  ...authConfig,
-  adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
-  providers: [
-    Credentials({
-      async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
-
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          const user = await db.user.findUnique({ where: { email } });
-          
-          if (!user) return null;
-          
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-
-          if (passwordsMatch) return user;
-        }
-
-        return null;
-      },
-    }),
-  ],
-});
+} = NextAuth(config);

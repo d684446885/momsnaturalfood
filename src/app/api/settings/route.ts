@@ -1,7 +1,14 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 export async function GET() {
+  const session = await auth();
+
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const settings = await db.settings.findUnique({
       where: { id: "global" }
@@ -27,6 +34,12 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  const session = await auth();
+
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { 
@@ -38,7 +51,10 @@ export async function PATCH(request: Request) {
       r2AccessKeyId,
       r2SecretAccessKey,
       r2BucketName,
-      r2PublicUrl
+      r2PublicUrl,
+      googleClientId,
+      googleClientSecret,
+      authSecret
     } = body;
 
     const settings = await db.settings.upsert({
@@ -52,7 +68,10 @@ export async function PATCH(request: Request) {
         r2AccessKeyId,
         r2SecretAccessKey,
         r2BucketName,
-        r2PublicUrl
+        r2PublicUrl,
+        googleClientId,
+        googleClientSecret,
+        authSecret
       },
       create: { 
         id: "global", 
@@ -64,7 +83,10 @@ export async function PATCH(request: Request) {
         r2AccessKeyId,
         r2SecretAccessKey,
         r2BucketName,
-        r2PublicUrl
+        r2PublicUrl,
+        googleClientId,
+        googleClientSecret,
+        authSecret
       }
     });
 

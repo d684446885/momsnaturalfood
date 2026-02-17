@@ -31,6 +31,9 @@ interface Settings {
   r2SecretAccessKey: string | null;
   r2BucketName: string | null;
   r2PublicUrl: string | null;
+  googleClientId: string | null;
+  googleClientSecret: string | null;
+  authSecret: string | null;
 }
 
 interface SettingsClientProps {
@@ -42,9 +45,12 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [settings, setSettings] = useState(initialSettings);
   const [isLoading, setIsLoading] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
-  const [activeTab, setActiveTab] = useState<'appearance' | 'storage'>('appearance');
+  const [showGoogleSecret, setShowGoogleSecret] = useState(false);
+  const [showAuthSecret, setShowAuthSecret] = useState(false);
+  const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth'>('appearance');
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
+  const isAuthConfigured = settings.googleClientId && settings.googleClientSecret && settings.authSecret;
 
   const onSave = async () => {
     try {
@@ -154,6 +160,26 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
             <Badge variant="secondary" className="ml-1 bg-amber-100 text-amber-700">
               <AlertCircle className="h-3 w-3 mr-1" />
               Not Set
+            </Badge>
+          )}
+        </Button>
+        <Button 
+          variant={activeTab === 'auth' ? 'default' : 'ghost'} 
+          size="sm"
+          onClick={() => setActiveTab('auth')}
+          className="gap-2"
+        >
+          <Shield className="h-4 w-4" />
+          Authentication
+          {isAuthConfigured ? (
+            <Badge variant="secondary" className="ml-1 bg-emerald-100 text-emerald-700">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              Ready
+            </Badge>
+          ) : (
+            <Badge variant="secondary" className="ml-1 bg-amber-100 text-amber-700">
+              <AlertCircle className="h-3 w-3 mr-1" />
+              Incomplete
             </Badge>
           )}
         </Button>
@@ -342,17 +368,119 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
           </Card>
         )}
 
-        <Card className="border-none shadow-sm opacity-60">
-          <CardHeader>
-             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-blue-500" />
-              <div>
-                <CardTitle>Security & Permissions</CardTitle>
-                <CardDescription>Coming soon: Advanced security settings.</CardDescription>
+        {/* Authentication Tab */}
+        {activeTab === 'auth' && (
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="bg-muted/50 pb-6">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-emerald-500" />
+                <div>
+                  <CardTitle>Authentication Settings</CardTitle>
+                  <CardDescription>Manage Google OAuth credentials and NextAuth security tokens.</CardDescription>
+                </div>
               </div>
-            </div>
-          </CardHeader>
-        </Card>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Google Client ID</label>
+                  <Input 
+                    placeholder="xxxx-xxxx.apps.googleusercontent.com"
+                    value={settings.googleClientId || ""}
+                    onChange={(e) => setSettings({ ...settings, googleClientId: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    From Google Cloud Console → APIs & Services → Credentials
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Google Client Secret</label>
+                  <div className="relative">
+                    <Input 
+                      type={showGoogleSecret ? "text" : "password"}
+                      placeholder="GOCSPX-xxxxxxxxxxxx"
+                      value={settings.googleClientSecret || ""}
+                      onChange={(e) => setSettings({ ...settings, googleClientSecret: e.target.value })}
+                      className="pr-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                      onClick={() => setShowGoogleSecret(!showGoogleSecret)}
+                    >
+                      {showGoogleSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Keep this secret! Paired with Client ID
+                  </p>
+                </div>
+
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-sm font-semibold">Authentication Secret (AUTH_SECRET)</label>
+                  <div className="relative">
+                    <Input 
+                      type={showAuthSecret ? "text" : "password"}
+                      placeholder="Random secure string"
+                      value={settings.authSecret || ""}
+                      onChange={(e) => setSettings({ ...settings, authSecret: e.target.value })}
+                      className="pr-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                      onClick={() => setShowAuthSecret(!showAuthSecret)}
+                    >
+                      {showAuthSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Required for JWT signing. You can generate one with <code className="bg-muted px-1 rounded">openssl rand -base64 32</code>
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  {isAuthConfigured ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      <span>Auth dynamic settings populated</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="h-4 w-4 text-amber-500" />
+                      <span>OAuth won't work unless credentials are set</span>
+                    </>
+                  )}
+                </div>
+                <Button 
+                    className="gap-2 px-8" 
+                    onClick={onSave}
+                    disabled={isLoading}
+                >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    Save Auth Settings
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Info Card */}
+        {!activeTab && (
+          <Card className="border-none shadow-sm opacity-60 text-center p-12">
+             <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground/30" />
+             <CardTitle>Select a tab above to manage settings</CardTitle>
+          </Card>
+        )}
       </div>
     </div>
   );

@@ -17,7 +17,8 @@ import {
   ChevronRight,
   Printer,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  ChevronLeft
 } from "lucide-react";
 import { 
   Table, 
@@ -50,6 +51,8 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import Image from "next/image";
+import { useRouter } from "@/i18n/routing";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface Order {
   id: string;
@@ -67,6 +70,10 @@ interface Order {
 
 interface AdminOrdersClientProps {
   orders: Order[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  statusCounts: Record<string, number>;
 }
 
 const statusColors: Record<string, { border: string, text: string, bg: string, icon: any, label: string }> = {
@@ -77,22 +84,54 @@ const statusColors: Record<string, { border: string, text: string, bg: string, i
   CANCELLED: { border: "border-rose-200", text: "text-rose-700", bg: "bg-rose-50", icon: XCircle, label: "Cancelled" },
 };
 
-export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientProps) {
+export function AdminOrdersClient({ 
+  orders, 
+  totalCount, 
+  currentPage, 
+  pageSize, 
+  statusCounts 
+}: AdminOrdersClientProps) {
   const t = useTranslations("AdminOrders");
-  const [orders, setOrders] = useState(initialOrders);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [selectedStatus, setSelectedStatus] = useState<string>(searchParams.get("status") || "all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
-  const filteredOrders = orders.filter((order) => {
-    const matchesSearch = order.user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (order.user.name?.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesStatus = selectedStatus === "all" || order.status === selectedStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const createQueryString = (params: Record<string, string | number | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (value === null || value === "" || value === "all") {
+        newSearchParams.delete(key);
+      } else {
+        newSearchParams.set(key, String(value));
+      }
+    }
+    
+    return newSearchParams.toString();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    const query = createQueryString({ search: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setSelectedStatus(value);
+    const query = createQueryString({ status: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    const query = createQueryString({ page });
+    router.push(`${pathname}?${query}`);
+  };
 
   const updateStatus = async (orderId: string, newStatus: string) => {
     try {
@@ -105,14 +144,8 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
 
       if (!res.ok) throw new Error("Failed to update status");
 
-      const updatedOrder = await res.json();
-      setOrders(prev => prev.map(o => o.id === orderId ? updatedOrder : o));
-      
-      if (selectedOrder?.id === orderId) {
-          setSelectedOrder(updatedOrder);
-      }
-
       toast.success(`${t('statuses.' + newStatus)} updated successfully`);
+      router.refresh();
     } catch (error) {
       toast.error("Failed to update order status");
     } finally {
@@ -161,16 +194,17 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
 
       if (!res.ok) throw new Error("Failed to update tracking");
 
-      const updatedOrder = await res.json();
-      setOrders(prev => prev.map(o => o.id === selectedOrder.id ? updatedOrder : o));
-      setSelectedOrder(updatedOrder);
       toast.success(t('tracking.successUpdate'));
+      router.refresh();
+      setIsDetailsOpen(false);
     } catch (error) {
       toast.error("Failed to update tracking information");
     } finally {
       setIsUpdating(null);
     }
   };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -202,7 +236,10 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
       {/* Stats Quick View */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 overflow-x-auto pb-4 scrollbar-hide">
           {Object.entries(statusColors).map(([status, style]) => (
-              <Card key={status} className="border-none bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group min-w-[200px] cursor-pointer" onClick={() => setSelectedStatus(status)}>
+              <Card key={status} className={cn(
+                "border-none bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group min-w-[200px] cursor-pointer",
+                selectedStatus === status && "ring-2 ring-accent"
+              )} onClick={() => handleStatusChange(status)}>
                   <CardContent className="pt-6">
                       <div className="flex items-center justify-between">
                           <div className="space-y-1">
@@ -210,14 +247,14 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
                                 {t(`statuses.${status}`)}
                               </p>
                               <h4 className="text-3xl font-serif font-bold text-secondary italic">
-                                  {orders.filter(o => o.status === status).length}
+                                  {statusCounts[status] || 0}
                               </h4>
                           </div>
                           <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110", style.bg, style.text)}>
                               <style.icon className="h-6 w-6" />
                           </div>
                       </div>
-                      <div className={cn("h-1 w-0 group-hover:w-full transition-all duration-500 mt-4 rounded-full opacity-30", style.bg.replace('bg-', 'bg-'))} />
+                      <div className={cn("h-1 w-0 group-hover:w-full transition-all duration-500 mt-4 rounded-full opacity-30", style.text.replace('text-', 'bg-'))} />
                   </CardContent>
               </Card>
           ))}
@@ -232,7 +269,7 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
               <Input
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-12 h-12 rounded-2xl bg-white border-zinc-100 focus-visible:ring-accent transition-all shadow-sm"
               />
             </div>
@@ -240,7 +277,7 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
                 <select 
                     className="h-12 w-[220px] rounded-2xl bg-white border border-zinc-100 px-4 text-sm font-medium focus:ring-2 ring-accent outline-none shadow-sm cursor-pointer hover:border-accent/30 transition-all"
                     value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    onChange={(e) => handleStatusChange(e.target.value)}
                 >
                     <option value="all">All Statuses</option>
                     {Object.keys(statusColors).map(s => (
@@ -264,7 +301,7 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredOrders.length === 0 ? (
+                {orders.length === 0 ? (
                     <TableRow>
                         <TableCell colSpan={6} className="h-64 text-center">
                             <div className="flex flex-col items-center justify-center opacity-40 grayscale">
@@ -273,7 +310,7 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
                             </div>
                         </TableCell>
                     </TableRow>
-                ) : filteredOrders.map((order) => {
+                ) : orders.map((order) => {
                   const style = statusColors[order.status] || { border: "border-zinc-200", text: "text-zinc-600", bg: "bg-zinc-50", icon: Clock };
                   const isUpdatingThis = isUpdating === order.id;
                   
@@ -362,6 +399,60 @@ export function AdminOrdersClient({ orders: initialOrders }: AdminOrdersClientPr
           </div>
         </CardContent>
       </Card>
+
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between px-10">
+        <div className="text-sm text-zinc-500 italic">
+          {t('showing', { 
+            count: orders.length, 
+            total: totalCount 
+          })}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="rounded-xl px-4 border-zinc-200"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Previous
+          </Button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum = i + 1;
+              if (totalPages > 5) {
+                if (currentPage > 3) pageNum = currentPage - 3 + i + 1;
+                if (pageNum > totalPages) pageNum = totalPages - (5 - i - 1);
+              }
+              if (pageNum <= 0 || pageNum > totalPages) return null;
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  className={cn(
+                    "w-10 h-10 rounded-xl font-bold",
+                    currentPage === pageNum ? "bg-secondary text-white shadow-lg shadow-secondary/20" : "border-zinc-200 text-zinc-500"
+                  )}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+          <Button
+            variant="outline"
+            className="rounded-xl px-4 border-zinc-200"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-2" />
+          </Button>
+        </div>
+      </div>
 
       {/* Order Details Sheet */}
       <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>

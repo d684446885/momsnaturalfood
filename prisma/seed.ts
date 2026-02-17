@@ -121,27 +121,53 @@ async function main() {
   console.log("✅ Products created");
 
   // Create a demo user
-  await prisma.user.upsert({
+  const demoUser = await prisma.user.upsert({
     where: { email: "demo@example.com" },
     update: {},
     create: {
       email: "demo@example.com",
       name: "Demo User",
-      password: "demo123",
       role: "CUSTOMER",
     },
   });
 
+  await prisma.account.upsert({
+    where: { id: "demo-account" },
+    update: {},
+    create: {
+      id: "demo-account",
+      userId: demoUser.id,
+      accountId: "demo@example.com",
+      providerId: "credential",
+      password: "demo123", // Better Auth usually hashes this, but for seed we might need to hash it manually if using raw prisma
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+  });
+
   // Create an admin user
-  await prisma.user.upsert({
+  const adminUser = await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},
     create: {
       email: "admin@example.com",
       name: "Admin User",
-      password: "admin123",
       role: "ADMIN",
     },
+  });
+
+  await prisma.account.upsert({
+    where: { id: "admin-account" },
+    update: {},
+    create: {
+      id: "admin-account",
+      userId: adminUser.id,
+      accountId: "admin@example.com",
+      providerId: "credential",
+      password: "admin123",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
   });
 
   console.log("✅ Users created");

@@ -3,27 +3,28 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import * as LucideIcons from "lucide-react";
-import { ShoppingCart, Truck, Shield, RefreshCw, Star, ArrowRight, Sparkles, Leaf, Zap, ShieldCheck, Target } from "lucide-react";
+import { Sparkles, Leaf, Zap, ShieldCheck, Target } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
-const featuredProducts = [
-  { id: 1, name: "Premium Wireless Headphones", price: 299.99, category: "Electronics" },
-  { id: 2, name: "Smart Watch Pro", price: 449.99, category: "Electronics" },
-  { id: 3, name: "Designer Leather Jacket", price: 599.99, category: "Clothing" },
-  { id: 4, name: "Cashmere Sweater", price: 249.99, category: "Clothing" },
-];
+// Dynamic imports for sections below the fold
+const WhyUsSection = dynamic(() => import("@/components/home/why-us-section"), {
+  loading: () => <div className="min-h-screen animate-pulse bg-muted" />,
+});
 
-const categories = [
-  { name: "Electronics", count: 120, icon: "⚡" },
-  { name: "Clothing", count: 85, icon: "👔" },
-  { name: "Accessories", count: 64, icon: "👜" },
-  { name: "Home & Decor", count: 42, icon: "🏠" },
-];
+const PromoCardsSection = dynamic(() => import("@/components/home/promo-cards-section"), {
+  loading: () => <div className="min-h-[500px] animate-pulse bg-muted" />,
+});
+
+const FeaturesSection = dynamic(() => import("@/components/home/features-section"), {
+  loading: () => <div className="py-20 animate-pulse bg-muted" />,
+});
+
+const CTASection = dynamic(() => import("@/components/home/cta-section"), {
+  loading: () => <div className="h-[500px] animate-pulse bg-muted" />,
+});
 
 interface HomeClientProps {
   content: any;
@@ -37,12 +38,6 @@ export function HomeClient({ content }: HomeClientProps) {
   const tCta = useTranslations("CTA");
   const tDetail = useTranslations("ProductDetail");
 
-  // Helper to get icon component
-  const getIcon = (iconName: string) => {
-    const IconComponent = (LucideIcons as any)[iconName] || Star;
-    return IconComponent;
-  };
-
   // Content Mapping with Fallbacks
   const heroTitle = content?.heroTitle || t('title');
   const heroAccent = content?.heroTitleAccent || t('titleAccent');
@@ -50,8 +45,6 @@ export function HomeClient({ content }: HomeClientProps) {
   const heroDesc = content?.heroDescription || t('description');
   const heroCta1Text = content?.heroPrimaryCtaText || t('shopNow');
   const heroCta1Link = content?.heroPrimaryCtaLink || "/products";
-  const heroCta2Text = content?.heroSecondaryCtaText || t('viewCollections');
-  const heroCta2Link = content?.heroSecondaryCtaLink || "/categories";
   
   const heroBg = content?.heroBackgroundUrl;
   const isVideoExtension = typeof heroBg === 'string' && (
@@ -157,12 +150,19 @@ export function HomeClient({ content }: HomeClientProps) {
               <p className="text-xl md:text-2xl text-white/90 font-light max-w-2xl leading-relaxed font-serif italic">
                 {heroDesc}
               </p>
+              
+              <div className="pt-4">
+                 <Link href={heroCta1Link}>
+                    <Button size="lg" className="h-14 px-8 rounded-full bg-accent text-secondary hover:bg-white transition-all font-bold text-lg">
+                       {heroCta1Text}
+                    </Button>
+                 </Link>
+              </div>
             </motion.div>
           </div>
         </div>
 
         {/* Floating Quality Tag Cards */}
-        
         {/* Top Left - Organic */}
         <div className="absolute top-32 left-10 z-20 hidden xl:flex">
              <motion.div 
@@ -236,249 +236,31 @@ export function HomeClient({ content }: HomeClientProps) {
         </div>
       </section>
 
-      {/* Why Us Section - Cinematic Grid */}
-      <section className="relative min-h-screen py-24 flex items-center overflow-hidden">
-        {/* Section Background Video */}
-        <div className="absolute inset-0 z-0">
-          {whyBackgroundUrl ? (
-            <video 
-              src={whyBackgroundUrl} 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="w-full h-full object-cover opacity-30 grayscale-[0.2]"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-secondary/5" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-        </div>
+      {/* Lazy Loaded Sections */}
+      <WhyUsSection 
+        whyTitle={whyTitle}
+        whyDescription={whyDescription}
+        whyLearnMoreText={whyLearnMoreText}
+        whyLearnMoreLink={whyLearnMoreLink}
+        whyBackgroundUrl={whyBackgroundUrl}
+        whyCards={whyCards}
+      />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="space-y-8"
-            >
-              <h2 className="font-serif text-5xl md:text-7xl font-bold text-secondary leading-tight italic">
-                {whyTitle}
-              </h2>
-              <div className="space-y-6">
-                {whyDescription.split('\n\n').map((para: string, i: number) => (
-                  <p key={i} className="text-lg md:text-xl text-zinc-600 font-light leading-relaxed font-serif italic max-w-xl">
-                    {para}
-                  </p>
-                ))}
-              </div>
-              <Link href={whyLearnMoreLink}>
-                <Button 
-                  size="lg" 
-                  className="h-14 px-10 rounded-full bg-secondary text-white hover:bg-accent transition-all duration-300 text-lg font-bold shadow-xl"
-                >
-                  {whyLearnMoreText}
-                </Button>
-              </Link>
-            </motion.div>
+      <PromoCardsSection 
+        promoCards={promoCards}
+        promoSectionBgUrl={promoSectionBgUrl}
+      />
 
-            {/* Right Grid */}
-            <div className="grid grid-cols-2 gap-4 md:gap-6">
-              {[0, 1, 2, 3].map((idx) => {
-                const card = whyCards?.[idx];
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.15, duration: 0.8 }}
-                    className="relative aspect-square rounded-[2rem] overflow-hidden shadow-2xl border border-white/20 group"
-                  >
-                    {card?.url ? (
-                      card.type === "video" ? (
-                        <video 
-                          src={card.url} 
-                          autoPlay 
-                          loop 
-                          muted 
-                          playsInline 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                      ) : (
-                        <Image 
-                          src={card.url} 
-                          alt="" 
-                          fill 
-                          className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                        />
-                      )
-                    ) : (
-                      <div className="w-full h-full bg-secondary/10 flex items-center justify-center text-secondary/30">
-                         {idx + 1}
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeaturesSection featuresList={featuresList} />
 
-      {/* Promo Cards Section - Dynamic Video Squares */}
-      {promoCards && promoCards.length > 0 && (
-        <section className="relative py-24 overflow-hidden">
-          {/* Section Background Video */}
-          {promoSectionBgUrl ? (
-            <>
-              <video
-                src={promoSectionBgUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover z-0"
-              />
-              <div className="absolute inset-0 bg-black/50 z-[1]" />
-            </>
-          ) : (
-            <div className="absolute inset-0 bg-white z-0" />
-          )}
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {promoCards.slice(0, 2).map((card: any, idx: number) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.2 }}
-                  className="relative group aspect-square rounded-[3rem] overflow-hidden shadow-2xl bg-zinc-100"
-                >
-                  {/* Video Background */}
-                  {card.videoUrl ? (
-                    <video
-                      src={card.videoUrl}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-secondary/10" />
-                  )}
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-
-                  {/* Content */}
-                  <div className="absolute inset-0 p-10 flex flex-col justify-end z-20 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-3xl font-serif font-bold text-white italic mb-3">
-                      {card.title}
-                    </h3>
-                    <p className="text-white/80 font-light italic font-serif leading-relaxed line-clamp-2">
-                      {card.description}
-                    </p>
-                    <div className="mt-6 w-12 h-1 bg-accent rounded-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Features Section - Premium Minimalism */}
-      <section className="py-20 bg-white border-y border-zinc-100">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            {featuresList.map((feature: any, index: number) => {
-              const Icon = getIcon(feature.icon);
-              return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="flex flex-col items-center text-center space-y-4 group"
-              >
-                <div className="h-16 w-16 rounded-3xl bg-secondary/5 text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-sm border border-secondary/10">
-                  <Icon className="h-8 w-8" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-serif text-xl font-bold text-zinc-900 italic">{feature.title}</h3>
-                  <p className="text-sm text-zinc-500 font-light leading-relaxed max-w-[200px]">{feature.description}</p>
-                </div>
-              </motion.div>
-            )})}
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* CTA Section - Earthy & Impactful */}
-      <section className="py-24 container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative min-h-[500px] flex items-center rounded-[4rem] overflow-hidden bg-secondary"
-        >
-          <div className="absolute inset-0 z-0">
-             <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent z-10" />
-             <div className="absolute inset-0 opacity-10 bg-[url('/grain_texture.png')] bg-repeat" />
-             {/* Dynamic right-side media */}
-             {ctaMediaUrl ? (
-               ctaMediaType === "video" ? (
-                 <video
-                   src={ctaMediaUrl}
-                   autoPlay
-                   loop
-                   muted
-                   playsInline
-                   className="absolute right-0 top-0 bottom-0 w-1/2 object-cover"
-                 />
-               ) : (
-                 <div
-                   className="absolute right-0 top-0 bottom-0 w-1/2 bg-cover bg-center"
-                   style={{ backgroundImage: `url('${ctaMediaUrl}')` }}
-                 />
-               )
-             ) : (
-               <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80')] bg-cover bg-center" />
-             )}
-          </div>
-
-          <div className="relative z-10 max-w-2xl px-12 md:px-20 py-20 text-white space-y-8">
-            <h2 className="text-5xl md:text-7xl font-serif font-bold italic leading-tight">
-              {ctaTitle}
-            </h2>
-            <p className="text-xl text-white/80 font-light italic leading-relaxed">
-              {ctaSubtitle}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md">
-              <input
-                type="email"
-                placeholder={tCta('placeholder')}
-                className="flex-1 h-16 px-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-              />
-              <Button className="h-16 px-10 rounded-2xl bg-accent hover:bg-white text-secondary transition-all font-bold text-lg shadow-xl shadow-accent/20">
-                {tCta('subscribe')}
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
+      <CTASection 
+        ctaTitle={ctaTitle}
+        ctaSubtitle={ctaSubtitle}
+        ctaMediaUrl={ctaMediaUrl}
+        ctaMediaType={ctaMediaType}
+        placeholderText={tCta('placeholder')}
+        subscribeText={tCta('subscribe')}
+      />
     </div>
-
   );
 }

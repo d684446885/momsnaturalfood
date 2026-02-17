@@ -13,7 +13,8 @@ import {
   ArrowUpRight,
   Filter,
   Download,
-  Users
+  Users,
+  ChevronLeft
 } from "lucide-react";
 import { 
   Table, 
@@ -39,6 +40,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
+import { useRouter } from "@/i18n/routing";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface Customer {
   id: string;
@@ -53,20 +56,53 @@ interface Customer {
 
 interface CustomersClientProps {
   initialData: Customer[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  stats: {
+    totalSpend: number;
+    activeThisMonth: number;
+  };
 }
 
-export function CustomersClient({ initialData }: CustomersClientProps) {
+export function CustomersClient({ 
+  initialData: customers, 
+  totalCount, 
+  currentPage, 
+  pageSize, 
+  stats 
+}: CustomersClientProps) {
   const t = useTranslations("Dashboard");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [customers] = useState(initialData);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const filteredCustomers = customers.filter((customer) => {
-    return (
-      customer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+
+  const createQueryString = (params: Record<string, string | number | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (value === null || value === "" || value === "all") {
+        newSearchParams.delete(key);
+      } else {
+        newSearchParams.set(key, String(value));
+      }
+    }
+    
+    return newSearchParams.toString();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    const query = createQueryString({ search: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    const query = createQueryString({ page });
+    router.push(`${pathname}?${query}`);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR' }).format(price);
@@ -75,6 +111,8 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
   const formatDate = (date: any) => {
     return format(new Date(date), "MMM dd, yyyy");
   };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -106,7 +144,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
                   <div className="flex items-center justify-between">
                       <div className="space-y-1">
                           <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Total Customers</p>
-                          <h4 className="text-3xl font-serif font-bold text-secondary italic">{customers.length}</h4>
+                          <h4 className="text-3xl font-serif font-bold text-secondary italic">{totalCount}</h4>
                       </div>
                       <div className="h-12 w-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center">
                           <Users className="h-6 w-6" />
@@ -120,7 +158,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
                       <div className="space-y-1">
                           <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Average Value</p>
                           <h4 className="text-3xl font-serif font-bold text-secondary italic">
-                              {formatPrice(customers.length ? customers.reduce((acc, c) => acc + c.totalSpend, 0) / customers.length : 0)}
+                              {formatPrice(totalCount ? stats.totalSpend / totalCount : 0)}
                           </h4>
                       </div>
                       <div className="h-12 w-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">
@@ -135,7 +173,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
                       <div className="space-y-1">
                           <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Active This Month</p>
                           <h4 className="text-3xl font-serif font-bold text-secondary italic">
-                              {customers.filter(c => c.lastOrderDate && new Date(c.lastOrderDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}
+                              {stats.activeThisMonth}
                           </h4>
                       </div>
                       <div className="h-12 w-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
@@ -155,7 +193,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
               <Input
                 placeholder="Search by name, email or ID..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-12 h-12 rounded-2xl bg-white border-zinc-100 focus-visible:ring-accent transition-all shadow-sm"
               />
             </div>
@@ -175,7 +213,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCustomers.length === 0 ? (
+                {customers.length === 0 ? (
                     <TableRow>
                         <TableCell colSpan={6} className="h-64 text-center">
                            <div className="flex flex-col items-center justify-center opacity-40 grayscale">
@@ -184,7 +222,7 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
                             </div>
                         </TableCell>
                     </TableRow>
-                ) : filteredCustomers.map((customer) => (
+                ) : customers.map((customer) => (
                   <TableRow key={customer.id} className="hover:bg-zinc-50/80 transition-all duration-300 group cursor-pointer">
                     <TableCell className="pl-10">
                       <div className="flex items-center gap-3">
@@ -250,6 +288,57 @@ export function CustomersClient({ initialData }: CustomersClientProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between px-10">
+        <div className="text-sm text-zinc-500 italic">
+          Showing {customers.length} of {totalCount} customers
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="rounded-xl px-4 border-zinc-200"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Previous
+          </Button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum = i + 1;
+              if (totalPages > 5) {
+                if (currentPage > 3) pageNum = currentPage - 3 + i + 1;
+                if (pageNum > totalPages) pageNum = totalPages - (5 - i - 1);
+              }
+              if (pageNum <= 0 || pageNum > totalPages) return null;
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  className={cn(
+                    "w-10 h-10 rounded-xl font-bold",
+                    currentPage === pageNum ? "bg-secondary text-white shadow-lg shadow-secondary/20" : "border-zinc-200 text-zinc-500"
+                  )}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+          <Button
+            variant="outline"
+            className="rounded-xl px-4 border-zinc-200"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-2" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

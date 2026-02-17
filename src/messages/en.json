@@ -96,8 +96,23 @@
     "apply": "Apply",
     "reset": "Reset"
   },
+  "Account": {
+    "overview": "Overview",
+    "orders": "My Orders",
+    "profile": "Profile",
+    "addresses": "Addresses",
+    "wishlist": "Wishlist",
+    "settings": "Settings",
+    "logout": "Log Out",
+    "welcome": "Welcome back,",
+    "recentOrders": "Recent Orders",
+    "noOrders": "You haven't placed any orders yet.",
+    "startShopping": "Start Shopping",
+    "editProfile": "Edit Profile"
+  },
   "Dashboard": {
     "overview": "Overview",
+    "logout": "Log Out",
     "products": "Products",
     "orders": "Orders",
     "categories": "Categories",
@@ -450,7 +465,11 @@
         "status": "Status",
         "actions": "Actions"
     },
-    "noDeals": "No deals found"
+    "noDeals": "No deals found",
+    "searchPlaceholder": "Search deals...",
+    "allStatus": "All Status",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "AdminCoupons": {
     "title": "Coupon Management",

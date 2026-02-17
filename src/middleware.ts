@@ -2,19 +2,11 @@ import createMiddleware from 'next-intl/middleware';
 import {routing} from './i18n/routing';
 import NextAuth from 'next-auth';
 import {authConfig} from './auth.config';
-import {NextRequest} from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
-
 const { auth } = NextAuth(authConfig);
 
-export default auth((req: NextRequest & { auth: any }) => {
-  const isLoggedIn = !!req.auth;
-  const isOnDashboard = req.nextUrl.pathname.split('/')[2] === 'dashboard' || req.nextUrl.pathname.split('/')[1] === 'dashboard';
-  
-  // If user is not logged in and trying to access dashboard, next-auth handles redirect in authConfig.authorized?
-  // Actually, next-auth's `auth` wrapper will call `authorized`.
-  
+export default auth((req) => {
   return intlMiddleware(req);
 });
 

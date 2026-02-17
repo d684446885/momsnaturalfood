@@ -18,7 +18,8 @@ import {
   Tag,
   Ticket,
   CreditCard,
-  MessageCircle
+  MessageCircle,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { signOut } from "next-auth/react";
 
 const sidebarLinks = [
   { icon: LayoutDashboard, label: "overview", href: "/dashboard" },
@@ -120,7 +122,18 @@ export default function DashboardLayout({
           </nav>
         </ScrollArea>
 
-        <div className="p-4 border-t">
+        <div className="p-4 border-t space-y-2">
+          <Button 
+            variant="ghost" 
+            className={cn(
+              "w-full flex items-center gap-3 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20",
+              !isSidebarOpen && "justify-center px-0"
+            )}
+            onClick={() => signOut({ callbackUrl: "/" })}
+          >
+            <LogOut className="h-5 w-5" />
+            {isSidebarOpen && <span className="text-sm font-medium">{t('logout')}</span>}
+          </Button>
           <Button 
             variant="ghost" 
             size="icon" 

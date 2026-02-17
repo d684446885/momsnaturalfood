@@ -1,17 +1,17 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+  const session = await auth();
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
-    }
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
+  try {
 
     let cart = await db.cart.findUnique({
       where: { userId },
@@ -50,9 +50,17 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const session = await auth();
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const body = await request.json();
-    const { userId, productId, quantity } = body;
+    const { productId, quantity } = body;
 
     let cart = await db.cart.findUnique({
       where: { userId },
@@ -108,6 +116,12 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const session = await auth();
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const cartItemId = searchParams.get("cartItemId");
@@ -117,6 +131,16 @@ export async function DELETE(request: Request) {
         { error: "Cart item ID is required" },
         { status: 400 }
       );
+    }
+
+    // Verify ownership
+    const cartItem = await db.cartItem.findUnique({
+      where: { id: cartItemId },
+      include: { cart: true }
+    });
+
+    if (!cartItem || cartItem.cart.userId !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await db.cartItem.delete({

@@ -1,7 +1,18 @@
-"use client";
-
-import React, { useState } from "react";
-import { Plus, Trash, Edit, Loader2, Tag, Calendar, CheckCircle, XCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { 
+  Plus, 
+  Trash, 
+  Edit, 
+  Loader2, 
+  Tag, 
+  Calendar, 
+  CheckCircle, 
+  XCircle, 
+  Search, 
+  Filter,
+  ChevronLeft,
+  ChevronRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -20,6 +31,13 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -29,19 +47,37 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ImageUpload } from "@/components/image-upload";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "@/i18n/routing";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface DealsClientProps {
   initialData: any[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
 }
 
-export function DealsClient({ initialData }: DealsClientProps) {
+export function DealsClient({ 
+  initialData, 
+  totalCount, 
+  currentPage, 
+  pageSize 
+}: DealsClientProps) {
   const t = useTranslations("AdminDeals");
+  const tp = useTranslations("AdminProducts"); // For some shared keys if needed
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [deals, setDeals] = useState(initialData);
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<any>(null);
+
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "all");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -54,6 +90,11 @@ export function DealsClient({ initialData }: DealsClientProps) {
     images: [] as string[],
     productIds: [] as string[]
   });
+
+  // Sync state when initialData changes (from router.refresh())
+  useEffect(() => {
+    setDeals(initialData);
+  }, [initialData]);
 
   const fetchProducts = async () => {
     try {
@@ -69,9 +110,40 @@ export function DealsClient({ initialData }: DealsClientProps) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, []);
+
+  const createQueryString = (params: Record<string, string | number | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (value === null || value === "" || value === "all") {
+        newSearchParams.delete(key);
+      } else {
+        newSearchParams.set(key, String(value));
+      }
+    }
+    
+    return newSearchParams.toString();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    const query = createQueryString({ search: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    const query = createQueryString({ status: value, page: 1 });
+    router.push(`${pathname}?${query}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    const query = createQueryString({ page });
+    router.push(`${pathname}?${query}`);
+  };
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -130,16 +202,8 @@ export function DealsClient({ initialData }: DealsClientProps) {
         throw new Error(err || "Failed to save deal");
       }
 
-      const savedDeal = await response.json();
-      
-      if (editingDeal) {
-        setDeals(deals.map(d => d.id === savedDeal.id ? savedDeal : d));
-        toast.success("Deal updated successfully");
-      } else {
-        setDeals([savedDeal, ...deals]);
-        toast.success("Deal created successfully");
-      }
-      
+      toast.success(editingDeal ? "Deal updated successfully" : "Deal created successfully");
+      router.refresh();
       handleOpenChange(false);
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
@@ -155,14 +219,16 @@ export function DealsClient({ initialData }: DealsClientProps) {
       const response = await fetch(`/api/deals/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete deal");
       
-      setDeals(deals.filter(d => d.id !== id));
       toast.success("Deal deleted successfully");
+      router.refresh();
     } catch (error) {
       toast.error("Failed to delete deal");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="space-y-6">
@@ -316,7 +382,32 @@ export function DealsClient({ initialData }: DealsClientProps) {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg bg-white overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t('searchPlaceholder')}
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="pl-9 bg-white border-none focus-visible:ring-1 shadow-sm"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Select value={statusFilter} onValueChange={handleStatusChange}>
+            <SelectTrigger className="w-[180px] border-none bg-white shadow-sm">
+              <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
+              <SelectValue placeholder={t('allStatus')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allStatus')}</SelectItem>
+              <SelectItem value="active">{t('active')}</SelectItem>
+              <SelectItem value="inactive">{t('inactive')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="border rounded-lg bg-white overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
@@ -387,6 +478,65 @@ export function DealsClient({ initialData }: DealsClientProps) {
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-between px-2">
+        <div className="text-sm text-muted-foreground">
+          {tp('showing', { 
+            count: deals.length, 
+            total: totalCount 
+          })}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="gap-1"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </Button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum = i + 1;
+              if (totalPages > 5) {
+                if (currentPage > 3) {
+                  pageNum = currentPage - 3 + i + 1;
+                }
+                if (pageNum > totalPages) {
+                  pageNum = totalPages - (5 - i - 1);
+                }
+              }
+              if (pageNum <= 0) return null;
+              if (pageNum > totalPages) return null;
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  size="sm"
+                  className="w-9"
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            className="gap-1"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

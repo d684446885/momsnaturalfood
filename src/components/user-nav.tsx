@@ -12,12 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { signOut, useSession } from "next-auth/react";
 import { Link } from "@/i18n/routing";
+import { signOut, useSession } from "next-auth/react";
 import { 
   User, 
   Settings, 
-  CreditCard, 
   LogOut, 
   LayoutDashboard,
   ShoppingBag
@@ -37,7 +36,7 @@ export function UserNav() {
   }
 
   const initials = session.user.name
-    ? session.user.name.split(" ").map((n) => n[0]).join("")
+    ? session.user.name.split(" ").map((n: string) => n[0]).join("")
     : session.user.email?.charAt(0).toUpperCase();
 
   return (
@@ -65,19 +64,28 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href="/dashboard">
-            <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
-              <LayoutDashboard className="h-4 w-4 text-primary" />
-              <span>Dashboard</span>
-            </DropdownMenuItem>
-          </Link>
-          <Link href="/orders">
+          {session.user.role === "ADMIN" ? (
+            <Link href="/dashboard">
+              <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
+                <LayoutDashboard className="h-4 w-4 text-primary" />
+                <span>Dashboard</span>
+              </DropdownMenuItem>
+            </Link>
+          ) : (
+            <Link href="/account">
+              <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
+                <LayoutDashboard className="h-4 w-4 text-primary" />
+                <span>Account</span>
+              </DropdownMenuItem>
+            </Link>
+          )}
+          <Link href="/account/orders">
             <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
               <ShoppingBag className="h-4 w-4 text-secondary" />
               <span>My Orders</span>
             </DropdownMenuItem>
           </Link>
-          <Link href="/settings">
+          <Link href="/account/settings">
             <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
               <Settings className="h-4 w-4" />
               <span>Settings</span>
@@ -87,7 +95,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           className="cursor-pointer gap-2 text-rose-600 focus:bg-rose-50"
-          onClick={() => signOut()}
+          onClick={() => signOut({ callbackUrl: "/" })}
         >
           <LogOut className="h-4 w-4" />
           <span>Log out</span>

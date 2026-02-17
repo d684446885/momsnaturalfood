@@ -21,8 +21,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSession } from "next-auth/react";
 
 export default function CheckoutPage() {
+  const { data: session, status } = useSession();
   const cart = useCart();
   const router = useRouter();
   const t = useTranslations("Checkout");
@@ -30,11 +32,50 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    address: "",
+    city: "",
+    postalCode: "",
+  });
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (session?.user) {
+      const user = session.user;
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.name || "",
+        email: user.email || "",
+      }));
+    }
+  }, [session]);
 
-  if (!mounted) return null;
+  if (!mounted || status === "loading") return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  );
+
+  // Redirect to login if not authenticated
+  if (!session) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+        <ShieldCheck className="h-16 w-16 text-muted-foreground/20 mb-4" />
+        <h1 className="text-2xl font-serif text-secondary mb-2">Login Required</h1>
+        <p className="text-muted-foreground mb-8 text-center max-w-sm">
+          Please log in to your account to complete your purchase securely.
+        </p>
+        <Link href={`/login?callbackUrl=/checkout`}>
+          <Button size="lg" className="rounded-full px-8">
+            Login to Continue
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   if (cart.items.length === 0 && !isSuccess) {
     return (
@@ -56,17 +97,34 @@ export default function CheckoutPage() {
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!session?.user?.email) return;
+
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: (session.user as any).id,
+          items: cart.items.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price
+          })),
+          shippingInfo: formData
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to place order");
+      }
       
       setIsSuccess(true);
       cart.clearCart();
       toast.success("Order placed successfully!");
     } catch (error) {
-      toast.error("Failed to place order");
+      toast.error("Failed to place order. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -134,26 +192,52 @@ export default function CheckoutPage() {
                     <div className="h-8 w-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold">1</div>
                     <h2 className="text-2xl font-serif text-secondary font-bold">{t('shippingDetails')}</h2>
                  </div>
-                 <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleCheckout}>
+                  <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleCheckout}>
                     <div className="space-y-2">
                        <label className="text-sm font-medium">{t('fullName')}</label>
-                       <Input placeholder={t('fullNamePlaceholder')} required />
+                       <Input 
+                        placeholder={t('fullNamePlaceholder')} 
+                        required 
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                       />
                     </div>
                     <div className="space-y-2">
                        <label className="text-sm font-medium">{t('email')}</label>
-                       <Input type="email" placeholder={t('emailPlaceholder')} required />
+                       <Input 
+                        type="email" 
+                        placeholder={t('emailPlaceholder')} 
+                        required 
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                       />
                     </div>
                     <div className="sm:col-span-2 space-y-2">
                        <label className="text-sm font-medium">{t('address')}</label>
-                       <Input placeholder={t('addressPlaceholder')} required />
+                       <Input 
+                        placeholder={t('addressPlaceholder')} 
+                        required 
+                        value={formData.address}
+                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                       />
                     </div>
                     <div className="space-y-2">
                        <label className="text-sm font-medium">{t('city')}</label>
-                       <Input placeholder={t('cityPlaceholder')} required />
+                       <Input 
+                        placeholder={t('cityPlaceholder')} 
+                        required 
+                        value={formData.city}
+                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                       />
                     </div>
                     <div className="space-y-2">
                        <label className="text-sm font-medium">{t('postalCode')}</label>
-                       <Input placeholder={t('postalCodePlaceholder')} required />
+                       <Input 
+                        placeholder={t('postalCodePlaceholder')} 
+                        required 
+                        value={formData.postalCode}
+                        onChange={(e) => setFormData({...formData, postalCode: e.target.value})}
+                       />
                     </div>
                     
                     <div className="sm:col-span-2 pt-8">
@@ -164,26 +248,26 @@ export default function CheckoutPage() {
                        <div className="grid gap-4">
                           <div className="border-2 border-primary bg-primary/5 p-4 rounded-xl flex items-center justify-between cursor-pointer group">
                              <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
-                                   <CreditCard className="h-6 w-6 text-primary" />
-                                </div>
-                                <div>
-                                   <p className="font-bold">{t('card')}</p>
-                                   <p className="text-sm text-muted-foreground">{t('cardDesc')}</p>
-                                </div>
+                                 <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
+                                    <CreditCard className="h-6 w-6 text-primary" />
+                                 </div>
+                                 <div>
+                                    <p className="font-bold">{t('card')}</p>
+                                    <p className="text-sm text-muted-foreground">{t('cardDesc')}</p>
+                                 </div>
                              </div>
                              <div className="h-4 w-4 rounded-full border-4 border-primary" />
                           </div>
                           
                           <div className="border border-border p-4 rounded-xl flex items-center justify-between opacity-50 cursor-not-allowed grayscale">
                              <div className="flex items-center gap-4">
-                                <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
-                                   <ShoppingBag className="h-6 w-6 text-muted-foreground" />
-                                </div>
-                                <div>
-                                   <p className="font-bold">{t('paypal')}</p>
-                                   <p className="text-sm text-muted-foreground">{t('paypalDesc')}</p>
-                                </div>
+                                 <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
+                                    <ShoppingBag className="h-6 w-6 text-muted-foreground" />
+                                 </div>
+                                 <div>
+                                    <p className="font-bold">{t('paypal')}</p>
+                                    <p className="text-sm text-muted-foreground">{t('paypalDesc')}</p>
+                                 </div>
                              </div>
                              <div className="h-4 w-4 rounded-full border border-border" />
                           </div>

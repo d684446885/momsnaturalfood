@@ -1,20 +1,48 @@
 import { db } from "@/lib/db";
 import { AdminProductsClient } from "./products-client";
 
-async function getProducts() {
+async function getProducts(params: { 
+  page: number; 
+  pageSize: number; 
+  search?: string; 
+  categoryId?: string; 
+}) {
+  const { page, pageSize, search, categoryId } = params;
+  const skip = (page - 1) * pageSize;
+
   try {
-    const products = await db.product.findMany({
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return products;
+    const where: any = {};
+    
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (categoryId && categoryId !== 'all') {
+      where.categoryId = categoryId;
+    }
+
+    const [products, totalCount] = await Promise.all([
+      db.product.findMany({
+        where,
+        include: {
+          category: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: pageSize,
+      }),
+      db.product.count({ where })
+    ]);
+
+    return { products, totalCount };
   } catch (error) {
     console.error("Error fetching products:", error);
-    return [];
+    return { products: [], totalCount: 0 };
   }
 }
 
@@ -31,9 +59,25 @@ async function getCategories() {
     return [];
   }
 }
-export default async function AdminProductsPage() {
-  const [products, categories] = await Promise.all([
-    getProducts(),
+
+interface PageProps {
+  searchParams: Promise<{ 
+    page?: string; 
+    pageSize?: string; 
+    search?: string; 
+    category?: string; 
+  }>;
+}
+
+export default async function AdminProductsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const pageSize = Number(params.pageSize) || 10;
+  const search = params.search;
+  const categoryId = params.category;
+
+  const [{ products, totalCount }, categories] = await Promise.all([
+    getProducts({ page, pageSize, search, categoryId }),
     getCategories(),
   ]);
 
@@ -51,16 +95,13 @@ export default async function AdminProductsPage() {
     },
   }));
 
-  const serializedCategories = categories.map((category: any) => ({
-    ...category,
-    createdAt: category.createdAt.toISOString(),
-    updatedAt: category.updatedAt.toISOString(),
-  }));
-
   return (
     <AdminProductsClient 
       products={serializedProducts as any} 
-      categories={serializedCategories as any} 
+      categories={categories as any} 
+      totalCount={totalCount}
+      currentPage={page}
+      pageSize={pageSize}
     />
   );
 }

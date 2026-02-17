@@ -1,18 +1,65 @@
 import { db } from "@/lib/db";
 import { DealsClient } from "./deals-client";
 
-async function getDeals() {
+async function getDeals(params: {
+  page: number;
+  pageSize: number;
+  search?: string;
+  status?: string;
+}) {
+  const { page, pageSize, search, status } = params;
+  const skip = (page - 1) * pageSize;
+
   try {
-    const deals = await db.deal.findMany({
-      orderBy: { createdAt: "desc" }
-    });
-    return deals;
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (status === 'active') {
+      where.isActive = true;
+    } else if (status === 'inactive') {
+      where.isActive = false;
+    }
+
+    const [deals, totalCount] = await Promise.all([
+      db.deal.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: pageSize,
+      }),
+      db.deal.count({ where })
+    ]);
+
+    return { deals, totalCount };
   } catch (error) {
-    return [];
+    console.error("Error fetching deals:", error);
+    return { deals: [], totalCount: 0 };
   }
 }
-export default async function DealsPage() {
-  const deals = await getDeals();
+
+interface PageProps {
+  searchParams: Promise<{
+    page?: string;
+    pageSize?: string;
+    search?: string;
+    status?: string;
+  }>;
+}
+
+export default async function DealsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const pageSize = Number(params.pageSize) || 10;
+  const search = params.search;
+  const status = params.status;
+
+  const { deals, totalCount } = await getDeals({ page, pageSize, search, status });
 
   // Convert to plain objects and handle Decimal/Date types for serialization
   const serializedDeals = deals.map((deal: any) => ({
@@ -25,7 +72,12 @@ export default async function DealsPage() {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <DealsClient initialData={serializedDeals as any} />
+      <DealsClient 
+        initialData={serializedDeals as any} 
+        totalCount={totalCount}
+        currentPage={page}
+        pageSize={pageSize}
+      />
     </div>
   );
 }

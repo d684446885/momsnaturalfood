@@ -1,17 +1,22 @@
 import { db } from "@/lib/db";
 import { HomeClient } from "./home-client";
+import { unstable_cache } from "next/cache";
 
-async function getHomeContent() {
-  try {
-    const homePage = await db.homePage.findUnique({
-      where: { id: "global" }
-    });
-    return homePage;
-  } catch (error) {
-    console.error("Error fetching home content:", error);
-    return null;
-  }
-}
+const getHomeContent = unstable_cache(
+  async () => {
+    try {
+      const homePage = await db.homePage.findUnique({
+        where: { id: "global" }
+      });
+      return homePage;
+    } catch (error) {
+      console.error("Error fetching home content:", error);
+      return null;
+    }
+  },
+  ["home-content"],
+  { revalidate: 3600, tags: ["home-content"] }
+);
 
 export default async function Home() {
   const content = await getHomeContent();
@@ -19,8 +24,7 @@ export default async function Home() {
   // Serialize Date objects and ensure plain object
   const serializedContent = content ? {
     ...content,
-    updatedAt: content.updatedAt.toISOString(),
-    // features is already Json, which is serializable
+    updatedAt: (content.updatedAt as Date).toISOString(),
   } : null;
 
   return <HomeClient content={serializedContent} />;

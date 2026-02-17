@@ -1,40 +1,50 @@
 import { db } from "@/lib/db";
 import { ProductsClient } from "./products-client";
+import { unstable_cache } from "next/cache";
 
-async function getProducts() {
-  try {
-    const products = await db.product.findMany({
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return products;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return [];
-  }
-}
+const getCachedProducts = unstable_cache(
+  async () => {
+    try {
+      const products = await db.product.findMany({
+        include: {
+          category: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      return products;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+  },
+  ["products-list"],
+  { revalidate: 3600, tags: ["products-list"] }
+);
 
-async function getCategories() {
-  try {
-    const categories = await db.category.findMany({
-      orderBy: {
-        name: "asc",
-      },
-    });
-    return categories;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-}
+const getCachedCategories = unstable_cache(
+  async () => {
+    try {
+      const categories = await db.category.findMany({
+        orderBy: {
+          name: "asc",
+        },
+      });
+      return categories;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return [];
+    }
+  },
+  ["categories-list"],
+  { revalidate: 3600, tags: ["categories-list"] }
+);
+
 export default async function ProductsPage() {
   const [products, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
+    getCachedProducts(),
+    getCachedCategories(),
   ]);
 
   // Convert to plain objects and handle Decimal/Date types for serialization
@@ -42,19 +52,19 @@ export default async function ProductsPage() {
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
-    createdAt: product.createdAt.toISOString(),
-    updatedAt: product.updatedAt.toISOString(),
+    createdAt: (product.createdAt as Date).toISOString(),
+    updatedAt: (product.updatedAt as Date).toISOString(),
     category: {
       ...product.category,
-      createdAt: product.category.createdAt.toISOString(),
-      updatedAt: product.category.updatedAt.toISOString(),
+      createdAt: (product.category.createdAt as Date).toISOString(),
+      updatedAt: (product.category.updatedAt as Date).toISOString(),
     },
   }));
 
   const serializedCategories = categories.map((category: any) => ({
     ...category,
-    createdAt: category.createdAt.toISOString(),
-    updatedAt: category.updatedAt.toISOString(),
+    createdAt: (category.createdAt as Date).toISOString(),
+    updatedAt: (category.updatedAt as Date).toISOString(),
   }));
 
   return (
