@@ -296,7 +296,9 @@
       "success": "Hesap başarıyla oluşturuldu! Ailemize hoş geldiniz.",
       "error": "Kayıt başarısız oldu. Lütfen tekrar deneyin."
     },
-    "motto": "Saf • Doğal • Sevgiyle Üretildi"
+    "motto": "Saf • Doğal • Sevgiyle Üretildi",
+    "or": "veya",
+    "continueWithGoogle": "Google ile Devam Et"
   },
   "Contact": {
     "title": "Bize Ulaşın",

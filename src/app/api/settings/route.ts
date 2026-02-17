@@ -61,44 +61,31 @@ export async function PATCH(request: Request) {
       authSecret
     } = body;
 
-    const settings = await db.settings.upsert({
+    const data = {
+      primaryColor: primaryColor || "#8B5E3C",
+      secondaryColor: secondaryColor || "#1E3A34",
+      backgroundColor: backgroundColor || "#FAF9F6",
+      accentColor: accentColor || "#D4AF37",
+      uploadProvider: uploadProvider || "r2",
+      r2AccountId,
+      r2AccessKeyId,
+      r2SecretAccessKey,
+      r2BucketName,
+      r2PublicUrl,
+      cloudinaryCloudName,
+      cloudinaryApiKey,
+      cloudinaryApiSecret,
+      googleClientId,
+      googleClientSecret,
+      authSecret
+    };
+
+    const settings = await (db.settings as any).upsert({
       where: { id: "global" },
-      update: { 
-        primaryColor, 
-        secondaryColor, 
-        backgroundColor, 
-        accentColor,
-        uploadProvider,
-        r2AccountId,
-        r2AccessKeyId,
-        r2SecretAccessKey,
-        r2BucketName,
-        r2PublicUrl,
-        cloudinaryCloudName,
-        cloudinaryApiKey,
-        cloudinaryApiSecret,
-        googleClientId,
-        googleClientSecret,
-        authSecret
-      },
-      create: { 
-        id: "global", 
-        primaryColor: primaryColor || "#8B5E3C", 
-        secondaryColor: secondaryColor || "#1E3A34", 
-        backgroundColor: backgroundColor || "#FAF9F6", 
-        accentColor: accentColor || "#D4AF37",
-        uploadProvider: uploadProvider || "r2",
-        r2AccountId,
-        r2AccessKeyId,
-        r2SecretAccessKey,
-        r2BucketName,
-        r2PublicUrl,
-        cloudinaryCloudName,
-        cloudinaryApiKey,
-        cloudinaryApiSecret,
-        googleClientId,
-        googleClientSecret,
-        authSecret
+      update: data,
+      create: {
+        id: "global",
+        ...data
       }
     });
 

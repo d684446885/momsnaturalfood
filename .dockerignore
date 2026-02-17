@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.env*
+build_output.log
+build_output_utf8.log
+README.md
+docker-compose.yml
+Dockerfile
+.dockerignore
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.agent
+.gemini

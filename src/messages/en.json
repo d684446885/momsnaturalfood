@@ -377,7 +377,9 @@
       "success": "Account created successfully! Welcome to the family.",
       "error": "Registration failed. Please try again."
     },
-    "motto": "Pure • Natural • Crafted with Love"
+    "motto": "Pure • Natural • Crafted with Love",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google"
   },
   "About": {
     "title": "Our Story",

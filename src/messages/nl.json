@@ -363,7 +363,9 @@
       "success": "Account succesvol aangemaakt! Welkom bij de familie.",
       "error": "Registratie mislukt. Probeer het opnieuw."
     },
-    "motto": "Puur • Natuurlijk • Met Liefde Gemaakt"
+    "motto": "Puur • Natuurlijk • Met Liefde Gemaakt",
+    "or": "of",
+    "continueWithGoogle": "Doorgaan met Google"
   },
   "About": {
     "title": "Ons Verhaal",
