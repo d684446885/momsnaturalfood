@@ -11,7 +11,13 @@ import {
   Eye, 
   EyeOff,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Building2,
+  Image as ImageIcon,
+  Mail,
+  Phone,
+  MapPin,
+  Upload
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -32,12 +38,15 @@ interface Settings {
   r2SecretAccessKey: string | null;
   r2BucketName: string | null;
   r2PublicUrl: string | null;
-  cloudinaryCloudName: string | null;
-  cloudinaryApiKey: string | null;
-  cloudinaryApiSecret: string | null;
   googleClientId: string | null;
   googleClientSecret: string | null;
   authSecret: string | null;
+  businessName: string | null;
+  logoUrl: string | null;
+  businessEmail: string | null;
+  businessPhone: string | null;
+  businessAddress: string | null;
+  vercelBlobToken: string | null;
 }
 
 interface SettingsClientProps {
@@ -49,14 +58,20 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [settings, setSettings] = useState(initialSettings);
   const [isLoading, setIsLoading] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
-  const [showCloudinarySecret, setShowCloudinarySecret] = useState(false);
-  const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth'>('appearance');
+  const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth' | 'business'>('business');
+  const [isUploading, setIsUploading] = useState(false);
+  const [showDriveSecret, setShowDriveSecret] = useState(false);
+  const [showDriveRefresh, setShowDriveRefresh] = useState(false);
+  const [showBlobToken, setShowBlobToken] = useState(false);
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
-  const isCloudinaryConfigured = settings.cloudinaryCloudName && settings.cloudinaryApiKey && settings.cloudinaryApiSecret;
+  const isBlobConfigured = !!settings.vercelBlobToken;
   const isAuthConfigured = settings.googleClientId && settings.googleClientSecret && settings.authSecret;
 
-  const isUploadConfigured = settings.uploadProvider === 'r2' ? isR2Configured : isCloudinaryConfigured;
+  const isUploadConfigured = 
+    settings.uploadProvider === 'r2' ? isR2Configured : 
+    settings.uploadProvider === 'vercel' ? isBlobConfigured :
+    true; // Local is always considered configured
 
   const onSave = async () => {
     try {
@@ -131,6 +146,32 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     </div>
   );
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Upload failed");
+
+      const data = await response.json();
+      setSettings({ ...settings, logoUrl: data.url });
+      toast.success("Logo uploaded successfully");
+    } catch (error) {
+      toast.error("Failed to upload logo");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -148,6 +189,15 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
         >
           <Palette className="h-4 w-4" />
           Appearance
+        </Button>
+        <Button 
+          variant={activeTab === 'business' ? 'default' : 'ghost'} 
+          size="sm"
+          onClick={() => setActiveTab('business')}
+          className="gap-2"
+        >
+          <Building2 className="h-4 w-4" />
+          Business Profile
         </Button>
         <Button 
           variant={activeTab === 'storage' ? 'default' : 'ghost'} 
@@ -192,6 +242,149 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       </div>
 
       <div className="grid gap-6">
+        {/* Business Profile Tab */}
+        {activeTab === 'business' && (
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="bg-muted/50 pb-6">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" />
+                <div>
+                  <CardTitle>Business Profile</CardTitle>
+                  <CardDescription>Configure your store identification and contact details.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              {/* Logo Section */}
+              <div className="space-y-4">
+                <label className="text-sm font-semibold">Store Logo</label>
+                <div className="flex items-start gap-6">
+                  <div className="relative h-32 w-32 rounded-2xl border-2 border-dashed border-muted-foreground/20 flex items-center justify-center overflow-hidden bg-muted/30">
+                    {settings.logoUrl ? (
+                      <img 
+                        src={settings.logoUrl} 
+                        alt="Logo Preview" 
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <div className="text-center p-4">
+                        <ImageIcon className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" />
+                        <p className="text-[10px] text-muted-foreground uppercase font-bold">No Logo</p>
+                      </div>
+                    )}
+                    {isUploading && (
+                      <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center">
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-3 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="relative overflow-hidden"
+                        disabled={isUploading}
+                      >
+                        <input
+                          type="file"
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                          onChange={handleLogoUpload}
+                          accept="image/*"
+                        />
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload New Logo
+                      </Button>
+                      {settings.logoUrl && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setSettings({ ...settings, logoUrl: null })}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Recommended: Transparent PNG, min 500x500px. <br />
+                      This logo will appear on your website header and invoice.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Contact Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    Business Name
+                  </label>
+                  <Input 
+                    placeholder="MoM's NaturalFood"
+                    value={settings.businessName || ""}
+                    onChange={(e) => setSettings({ ...settings, businessName: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    Business Email
+                  </label>
+                  <Input 
+                    type="email"
+                    placeholder="contact@momsnatural.com"
+                    value={settings.businessEmail || ""}
+                    onChange={(e) => setSettings({ ...settings, businessEmail: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    Phone Number
+                  </label>
+                  <Input 
+                    placeholder="+1 (234) 567-890"
+                    value={settings.businessPhone || ""}
+                    onChange={(e) => setSettings({ ...settings, businessPhone: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    Physical Address
+                  </label>
+                  <Input 
+                    placeholder="123 Natural St, Green City, 90210"
+                    value={settings.businessAddress || ""}
+                    onChange={(e) => setSettings({ ...settings, businessAddress: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-end">
+                <Button 
+                    className="gap-2 px-8" 
+                    onClick={onSave}
+                    disabled={isLoading || isUploading}
+                >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    Save Business Profile
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Appearance Tab */}
         {activeTab === 'appearance' && (
           <Card className="overflow-hidden border-none shadow-sm">
@@ -273,7 +466,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               {/* Provider Selection */}
               <div className="space-y-4">
                 <label className="text-sm font-semibold">Active Upload Provider</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div 
                     onClick={() => setSettings({ ...settings, uploadProvider: 'r2' })}
                     className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
@@ -295,23 +488,43 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   </div>
 
                   <div 
-                    onClick={() => setSettings({ ...settings, uploadProvider: 'cloudinary' })}
+                    onClick={() => setSettings({ ...settings, uploadProvider: 'local' })}
                     className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
-                      settings.uploadProvider === 'cloudinary' 
+                      settings.uploadProvider === 'local' 
                         ? 'border-primary bg-primary/5 shadow-md' 
                         : 'border-muted hover:border-muted-foreground'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'cloudinary' ? 'bg-primary text-white' : 'bg-muted'}`}>
+                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'local' ? 'bg-primary text-white' : 'bg-muted'}`}>
                         <Cloud className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="font-bold">Cloudinary</p>
-                        <p className="text-xs text-muted-foreground">End-to-end image management</p>
+                        <p className="font-bold">Local Storage</p>
+                        <p className="text-xs text-muted-foreground">Internal container storage (Persistent)</p>
                       </div>
                     </div>
-                    {settings.uploadProvider === 'cloudinary' && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                    {settings.uploadProvider === 'local' && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                  </div>
+
+                  <div 
+                    onClick={() => setSettings({ ...settings, uploadProvider: 'vercel' })}
+                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                      settings.uploadProvider === 'vercel' 
+                        ? 'border-primary bg-primary/5 shadow-md' 
+                        : 'border-muted hover:border-muted-foreground'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'vercel' ? 'bg-primary text-white' : 'bg-muted'}`}>
+                        <Cloud className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold">Vercel Blob</p>
+                        <p className="text-xs text-muted-foreground">Fast & simple edge storage</p>
+                      </div>
+                    </div>
+                    {settings.uploadProvider === 'vercel' && <CheckCircle2 className="h-5 w-5 text-primary" />}
                   </div>
                 </div>
               </div>
@@ -394,57 +607,52 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
 
               <Separator />
 
-              {/* Cloudinary Section */}
-              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'cloudinary' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+              {/* Local Storage Section */}
+              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'local' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={settings.uploadProvider === 'cloudinary' ? "bg-primary/10" : ""}>Option 2</Badge>
-                  <h3 className="font-bold">Cloudinary Settings</h3>
+                  <Badge variant="outline" className={settings.uploadProvider === 'local' ? "bg-primary/10" : ""}>Option 2</Badge>
+                  <h3 className="font-bold">Local Storage Settings</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Local storage uses the server&apos;s file system. No additional configuration is typically needed here.
+                  Ensure your server has sufficient disk space and appropriate file permissions for uploads.
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* Vercel Blob Section */}
+              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'vercel' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={settings.uploadProvider === 'vercel' ? "bg-primary/10" : ""}>Option 4</Badge>
+                  <h3 className="font-bold">Vercel Blob Settings</h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">Cloud Name</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Blob Read/Write Token</label>
+                  <div className="relative">
                     <Input 
-                      placeholder="Your Cloudinary Cloud Name"
-                      value={settings.cloudinaryCloudName || ""}
-                      onChange={(e) => setSettings({ ...settings, cloudinaryCloudName: e.target.value })}
-                      disabled={settings.uploadProvider !== 'cloudinary'}
+                      type={showBlobToken ? "text" : "password"}
+                      placeholder="BLOB_READ_WRITE_TOKEN"
+                      value={settings.vercelBlobToken || ""}
+                      onChange={(e) => setSettings({ ...settings, vercelBlobToken: e.target.value })}
+                      className="pr-10"
+                      disabled={settings.uploadProvider !== 'vercel'}
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                      onClick={() => setShowBlobToken(!showBlobToken)}
+                      disabled={settings.uploadProvider !== 'vercel'}
+                    >
+                      {showBlobToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
                   </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">API Key</label>
-                    <Input 
-                      placeholder="Cloudinary API Key"
-                      value={settings.cloudinaryApiKey || ""}
-                      onChange={(e) => setSettings({ ...settings, cloudinaryApiKey: e.target.value })}
-                      disabled={settings.uploadProvider !== 'cloudinary'}
-                    />
-                  </div>
-
-                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-semibold">API Secret</label>
-                    <div className="relative">
-                      <Input 
-                        type={showCloudinarySecret ? "text" : "password"}
-                        placeholder="Cloudinary API Secret"
-                        value={settings.cloudinaryApiSecret || ""}
-                        onChange={(e) => setSettings({ ...settings, cloudinaryApiSecret: e.target.value })}
-                        className="pr-10"
-                        disabled={settings.uploadProvider !== 'cloudinary'}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                        onClick={() => setShowCloudinarySecret(!showCloudinarySecret)}
-                        disabled={settings.uploadProvider !== 'cloudinary'}
-                      >
-                        {showCloudinarySecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Copy the &quot;Read/Write Token&quot; from your Vercel Blob dashboard.
+                  </p>
                 </div>
               </div>
 
@@ -455,12 +663,16 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   {isUploadConfigured ? (
                     <>
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>{settings.uploadProvider.toUpperCase()} is configured and active</span>
+                      <span>{settings.uploadProvider.toUpperCase().replace('_', ' ')} is configured and active</span>
                     </>
                   ) : (
                     <>
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      <span>Fill in credentials for {settings.uploadProvider === 'r2' ? 'Cloudflare R2' : 'Cloudinary'}</span>
+                      <span>Fill in credentials for {
+                        settings.uploadProvider === 'r2' ? 'Cloudflare R2' : 
+                        settings.uploadProvider === 'vercel' ? 'Vercel Blob' :
+                        'Local Storage'
+                      }</span>
                     </>
                   )}
                 </div>
@@ -566,7 +778,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   ) : (
                     <>
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      <span>OAuth won't work unless credentials are set</span>
+                       <span>OAuth won&apos;t work unless credentials are set</span>
                     </>
                   )}
                 </div>

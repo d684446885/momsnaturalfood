@@ -1,4 +1,4 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v2
+// Refresh comment to force Next.js to reload the DB client with new models - v5
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";

@@ -50,12 +50,7 @@ export function Navbar() {
             >
               {t('about')}
             </Link>
-            <Link
-              className="transition-colors hover:text-foreground/80 text-foreground"
-              href="/deals"
-            >
-              {t('deals')}
-            </Link>
+
             <Link
               className="transition-colors hover:text-foreground/80 text-foreground"
               href="/contact"
@@ -110,9 +105,7 @@ export function Navbar() {
                   <Link href="/about" className="text-lg font-medium">
                     {t('about')}
                   </Link>
-                  <Link href="/deals" className="text-lg font-medium">
-                    {t('deals')}
-                  </Link>
+
                   <Link href="/contact" className="text-lg font-medium">
                     {t('contact')}
                   </Link>

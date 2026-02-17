@@ -24,7 +24,7 @@ export default async function Home() {
   // Serialize Date objects and ensure plain object
   const serializedContent = content ? {
     ...content,
-    updatedAt: (content.updatedAt as Date).toISOString(),
+    updatedAt: content.updatedAt ? new Date(content.updatedAt).toISOString() : new Date().toISOString(),
   } : null;
 
   return <HomeClient content={serializedContent} />;

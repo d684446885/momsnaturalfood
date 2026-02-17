@@ -52,19 +52,19 @@ export default async function ProductsPage() {
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
-    createdAt: (product.createdAt as Date).toISOString(),
-    updatedAt: (product.updatedAt as Date).toISOString(),
+    createdAt: new Date(product.createdAt).toISOString(),
+    updatedAt: new Date(product.updatedAt).toISOString(),
     category: {
       ...product.category,
-      createdAt: (product.category.createdAt as Date).toISOString(),
-      updatedAt: (product.category.updatedAt as Date).toISOString(),
+      createdAt: new Date(product.category.createdAt).toISOString(),
+      updatedAt: new Date(product.category.updatedAt).toISOString(),
     },
   }));
 
   const serializedCategories = categories.map((category: any) => ({
     ...category,
-    createdAt: (category.createdAt as Date).toISOString(),
-    updatedAt: (category.updatedAt as Date).toISOString(),
+    createdAt: new Date(category.createdAt).toISOString(),
+    updatedAt: new Date(category.updatedAt).toISOString(),
   }));
 
   return (

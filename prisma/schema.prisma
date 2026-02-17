@@ -148,8 +148,14 @@ model Settings {
   backgroundColor String   @default("#FAF9F6")
   accentColor     String   @default("#D4AF37")
   
+  // Business Settings
+  businessName    String?
+  logoUrl         String?
+  businessEmail   String?
+  businessPhone   String?
+  businessAddress String?
   // File Upload Settings
-  uploadProvider  String   @default("r2") // "r2" or "cloudinary"
+  uploadProvider  String   @default("r2") // "r2", "local", or "vercel"
   
   // Cloudflare R2 Storage Settings
   r2AccountId     String?
@@ -158,10 +164,8 @@ model Settings {
   r2BucketName    String?
   r2PublicUrl     String?
   
-  // Cloudinary Settings
-  cloudinaryCloudName String?
-  cloudinaryApiKey    String?
-  cloudinaryApiSecret String?
+  // Vercel Blob Settings
+  vercelBlobToken          String?
   
   // NextAuth / Google OAuth Settings
   googleClientId     String?

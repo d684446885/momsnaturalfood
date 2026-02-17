@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 export async function GET() {
@@ -33,7 +33,7 @@ export async function GET() {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   const session = await auth();
 
   if (!session || session.user.role !== "ADMIN") {
@@ -53,12 +53,15 @@ export async function PATCH(request: Request) {
       r2SecretAccessKey,
       r2BucketName,
       r2PublicUrl,
-      cloudinaryCloudName,
-      cloudinaryApiKey,
-      cloudinaryApiSecret,
       googleClientId,
       googleClientSecret,
-      authSecret
+      authSecret,
+      businessName,
+      logoUrl,
+      businessEmail,
+      businessPhone,
+      businessAddress,
+      vercelBlobToken
     } = body;
 
     const data = {
@@ -72,20 +75,24 @@ export async function PATCH(request: Request) {
       r2SecretAccessKey,
       r2BucketName,
       r2PublicUrl,
-      cloudinaryCloudName,
-      cloudinaryApiKey,
-      cloudinaryApiSecret,
       googleClientId,
       googleClientSecret,
-      authSecret
+      authSecret,
+      businessName,
+      logoUrl,
+      businessEmail,
+      businessPhone,
+      businessAddress,
+      vercelBlobToken
     };
 
-    const settings = await (db.settings as any).upsert({
+    console.log("Saving settings to DB:", JSON.stringify(data, (k, v) => k.includes('Token') || k.includes('Secret') || k.includes('Key') ? '***' : v));
+    const settings = await db.settings.upsert({
       where: { id: "global" },
-      update: data,
+      update: data as any,
       create: {
         id: "global",
-        ...data
+        ...(data as any)
       }
     });
 

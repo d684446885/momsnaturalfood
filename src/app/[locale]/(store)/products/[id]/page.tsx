@@ -53,12 +53,12 @@ export default async function ProductPage({
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
-    createdAt: product.createdAt.toISOString(),
-    updatedAt: product.updatedAt.toISOString(),
+    createdAt: new Date(product.createdAt).toISOString(),
+    updatedAt: new Date(product.updatedAt).toISOString(),
     category: {
         ...product.category,
-        createdAt: product.category.createdAt.toISOString(),
-        updatedAt: product.category.updatedAt.toISOString(),
+        createdAt: new Date(product.category.createdAt).toISOString(),
+        updatedAt: new Date(product.category.updatedAt).toISOString(),
     }
   };
 
@@ -66,12 +66,12 @@ export default async function ProductPage({
     ...p,
     price: Number(p.price),
     salePrice: p.salePrice ? Number(p.salePrice) : null,
-    createdAt: p.createdAt.toISOString(),
-    updatedAt: p.updatedAt.toISOString(),
+    createdAt: new Date(p.createdAt).toISOString(),
+    updatedAt: new Date(p.updatedAt).toISOString(),
     category: {
         ...p.category,
-        createdAt: p.category.createdAt.toISOString(),
-        updatedAt: p.category.updatedAt.toISOString(),
+        createdAt: new Date(p.category.createdAt).toISOString(),
+        updatedAt: new Date(p.category.updatedAt).toISOString(),
     }
   }));
 

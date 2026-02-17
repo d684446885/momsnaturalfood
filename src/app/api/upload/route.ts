@@ -1,21 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { db } from "@/lib/db";
-import { v2 as cloudinary } from "cloudinary";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { put } from "@vercel/blob";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("file");
 
-    if (!file) {
+    if (!file || typeof file === 'string') {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    const fileObject = file as File;
+
     // Validate file type
-    if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+    if (!fileObject.type.startsWith("image/") && !fileObject.type.startsWith("video/")) {
       return NextResponse.json(
         { error: "Invalid file type. Only image and video files are allowed." },
         { status: 400 }
@@ -24,7 +26,7 @@ export async function POST(request: Request) {
 
     // Validate file size (max 50MB)
     const maxSize = 50 * 1024 * 1024;
-    if (file.size > maxSize) {
+    if (fileObject.size > maxSize) {
       return NextResponse.json(
         { error: "File too large. Maximum size is 50MB." },
         { status: 400 }
@@ -32,38 +34,14 @@ export async function POST(request: Request) {
     }
 
     // Get settings
-    const settings = await db.settings.findUnique({
+    const settings = (await db.settings.findUnique({
       where: { id: "global" }
-    });
+    })) as any;
 
     const provider = settings?.uploadProvider || "local";
-    const bytes = await file.arrayBuffer();
+    const bytes = await fileObject.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    if (provider === "cloudinary") {
-      if (!settings?.cloudinaryCloudName || !settings?.cloudinaryApiKey || !settings?.cloudinaryApiSecret) {
-        throw new Error("Cloudinary configuration missing in settings");
-      }
-
-      cloudinary.config({
-        cloud_name: settings.cloudinaryCloudName,
-        api_key: settings.cloudinaryApiKey,
-        api_secret: settings.cloudinaryApiSecret,
-      });
-
-      const result = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "momsfood" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-        uploadStream.end(buffer);
-      });
-
-      return NextResponse.json({ url: (result as any).secure_url });
-    } 
     
     if (provider === "r2") {
       if (!settings?.r2AccountId || !settings?.r2AccessKeyId || !settings?.r2SecretAccessKey || !settings?.r2BucketName) {
@@ -79,13 +57,13 @@ export async function POST(request: Request) {
         },
       });
 
-      const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+      const fileName = `${Date.now()}-${fileObject.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
       await s3Client.send(
         new PutObjectCommand({
           Bucket: settings.r2BucketName,
           Key: fileName,
           Body: buffer,
-          ContentType: file.type,
+          ContentType: fileObject.type,
         })
       );
 
@@ -95,12 +73,28 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ url: publicUrl });
     }
+    
+    if (provider === "vercel") {
+      if (!settings?.vercelBlobToken) {
+        throw new Error("Vercel Blob token missing in settings");
+      }
+
+      console.log(`Uploading to Vercel Blob with token: ${settings.vercelBlobToken?.substring(0, 15)}...`);
+      const fileName = `${Date.now()}-${fileObject.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+      const blob = await put(fileName, buffer, {
+        access: 'public',
+        token: settings.vercelBlobToken || undefined,
+        contentType: fileObject.type,
+      });
+
+      return NextResponse.json({ url: blob.url });
+    }
 
     // Local storage fallback
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     await mkdir(uploadsDir, { recursive: true });
 
-    const ext = file.name.split(".").pop() || "jpg";
+    const ext = fileObject.name.split(".").pop() || "jpg";
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
     const filePath = path.join(uploadsDir, uniqueName);
 
