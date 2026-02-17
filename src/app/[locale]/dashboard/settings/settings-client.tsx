@@ -26,11 +26,15 @@ interface Settings {
   secondaryColor: string;
   backgroundColor: string;
   accentColor: string;
+  uploadProvider: string;
   r2AccountId: string | null;
   r2AccessKeyId: string | null;
   r2SecretAccessKey: string | null;
   r2BucketName: string | null;
   r2PublicUrl: string | null;
+  cloudinaryCloudName: string | null;
+  cloudinaryApiKey: string | null;
+  cloudinaryApiSecret: string | null;
   googleClientId: string | null;
   googleClientSecret: string | null;
   authSecret: string | null;
@@ -45,12 +49,14 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [settings, setSettings] = useState(initialSettings);
   const [isLoading, setIsLoading] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
-  const [showGoogleSecret, setShowGoogleSecret] = useState(false);
-  const [showAuthSecret, setShowAuthSecret] = useState(false);
+  const [showCloudinarySecret, setShowCloudinarySecret] = useState(false);
   const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth'>('appearance');
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
+  const isCloudinaryConfigured = settings.cloudinaryCloudName && settings.cloudinaryApiKey && settings.cloudinaryApiSecret;
   const isAuthConfigured = settings.googleClientId && settings.googleClientSecret && settings.authSecret;
+
+  const isUploadConfigured = settings.uploadProvider === 'r2' ? isR2Configured : isCloudinaryConfigured;
 
   const onSave = async () => {
     try {
@@ -151,7 +157,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
         >
           <Cloud className="h-4 w-4" />
           File Storage
-          {isR2Configured ? (
+          {isUploadConfigured ? (
             <Badge variant="secondary" className="ml-1 bg-emerald-100 text-emerald-700">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Connected
@@ -258,100 +264,203 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               <div className="flex items-center gap-2">
                 <Cloud className="h-5 w-5 text-blue-500" />
                 <div>
-                  <CardTitle>Cloudflare R2 Storage</CardTitle>
-                  <CardDescription>Configure your Cloudflare R2 bucket for media uploads (product images, etc.).</CardDescription>
+                  <CardTitle>File Storage Configuration</CardTitle>
+                  <CardDescription>Select and configure your preferred cloud storage provider for media uploads.</CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Account ID</label>
-                  <Input 
-                    placeholder="Your Cloudflare Account ID"
-                    value={settings.r2AccountId || ""}
-                    onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Found in Cloudflare Dashboard → R2 → Overview
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Bucket Name</label>
-                  <Input 
-                    placeholder="my-bucket"
-                    value={settings.r2BucketName || ""}
-                    onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    The name of your R2 bucket
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Access Key ID</label>
-                  <Input 
-                    placeholder="R2 Access Key ID"
-                    value={settings.r2AccessKeyId || ""}
-                    onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Create via R2 → Manage API Tokens
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Secret Access Key</label>
-                  <div className="relative">
-                    <Input 
-                      type={showSecretKey ? "text" : "password"}
-                      placeholder="R2 Secret Access Key"
-                      value={settings.r2SecretAccessKey || ""}
-                      onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
-                      className="pr-10"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                      onClick={() => setShowSecretKey(!showSecretKey)}
-                    >
-                      {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
+            <CardContent className="pt-6 space-y-8">
+              {/* Provider Selection */}
+              <div className="space-y-4">
+                <label className="text-sm font-semibold">Active Upload Provider</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div 
+                    onClick={() => setSettings({ ...settings, uploadProvider: 'r2' })}
+                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                      settings.uploadProvider === 'r2' 
+                        ? 'border-primary bg-primary/5 shadow-md' 
+                        : 'border-muted hover:border-muted-foreground'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'r2' ? 'bg-primary text-white' : 'bg-muted'}`}>
+                        <Cloud className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold">Cloudflare R2</p>
+                        <p className="text-xs text-muted-foreground">S3-compatible object storage</p>
+                      </div>
+                    </div>
+                    {settings.uploadProvider === 'r2' && <CheckCircle2 className="h-5 w-5 text-primary" />}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Keep this secret! Created with Access Key ID
-                  </p>
+
+                  <div 
+                    onClick={() => setSettings({ ...settings, uploadProvider: 'cloudinary' })}
+                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                      settings.uploadProvider === 'cloudinary' 
+                        ? 'border-primary bg-primary/5 shadow-md' 
+                        : 'border-muted hover:border-muted-foreground'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'cloudinary' ? 'bg-primary text-white' : 'bg-muted'}`}>
+                        <Cloud className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold">Cloudinary</p>
+                        <p className="text-xs text-muted-foreground">End-to-end image management</p>
+                      </div>
+                    </div>
+                    {settings.uploadProvider === 'cloudinary' && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-semibold">Public URL (Optional)</label>
-                <Input 
-                  placeholder="https://cdn.yourdomain.com"
-                  value={settings.r2PublicUrl || ""}
-                  onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Custom domain for public access. Leave blank to use R2's default URL.
-                </p>
+              <Separator />
+
+              {/* R2 Section */}
+              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'r2' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={settings.uploadProvider === 'r2' ? "bg-primary/10" : ""}>Option 1</Badge>
+                  <h3 className="font-bold">Cloudflare R2 Settings</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Account ID</label>
+                    <Input 
+                      placeholder="Your Cloudflare Account ID"
+                      value={settings.r2AccountId || ""}
+                      onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
+                      disabled={settings.uploadProvider !== 'r2'}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Bucket Name</label>
+                    <Input 
+                      placeholder="my-bucket"
+                      value={settings.r2BucketName || ""}
+                      onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
+                      disabled={settings.uploadProvider !== 'r2'}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Access Key ID</label>
+                    <Input 
+                      placeholder="R2 Access Key ID"
+                      value={settings.r2AccessKeyId || ""}
+                      onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
+                      disabled={settings.uploadProvider !== 'r2'}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Secret Access Key</label>
+                    <div className="relative">
+                      <Input 
+                        type={showSecretKey ? "text" : "password"}
+                        placeholder="R2 Secret Access Key"
+                        value={settings.r2SecretAccessKey || ""}
+                        onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
+                        className="pr-10"
+                        disabled={settings.uploadProvider !== 'r2'}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                        onClick={() => setShowSecretKey(!showSecretKey)}
+                        disabled={settings.uploadProvider !== 'r2'}
+                      >
+                        {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Public URL (Optional)</label>
+                  <Input 
+                    placeholder="https://cdn.yourdomain.com"
+                    value={settings.r2PublicUrl || ""}
+                    onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
+                    disabled={settings.uploadProvider !== 'r2'}
+                  />
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Cloudinary Section */}
+              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'cloudinary' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={settings.uploadProvider === 'cloudinary' ? "bg-primary/10" : ""}>Option 2</Badge>
+                  <h3 className="font-bold">Cloudinary Settings</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Cloud Name</label>
+                    <Input 
+                      placeholder="Your Cloudinary Cloud Name"
+                      value={settings.cloudinaryCloudName || ""}
+                      onChange={(e) => setSettings({ ...settings, cloudinaryCloudName: e.target.value })}
+                      disabled={settings.uploadProvider !== 'cloudinary'}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">API Key</label>
+                    <Input 
+                      placeholder="Cloudinary API Key"
+                      value={settings.cloudinaryApiKey || ""}
+                      onChange={(e) => setSettings({ ...settings, cloudinaryApiKey: e.target.value })}
+                      disabled={settings.uploadProvider !== 'cloudinary'}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-sm font-semibold">API Secret</label>
+                    <div className="relative">
+                      <Input 
+                        type={showCloudinarySecret ? "text" : "password"}
+                        placeholder="Cloudinary API Secret"
+                        value={settings.cloudinaryApiSecret || ""}
+                        onChange={(e) => setSettings({ ...settings, cloudinaryApiSecret: e.target.value })}
+                        className="pr-10"
+                        disabled={settings.uploadProvider !== 'cloudinary'}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                        onClick={() => setShowCloudinarySecret(!showCloudinarySecret)}
+                        disabled={settings.uploadProvider !== 'cloudinary'}
+                      >
+                        {showCloudinarySecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <Separator />
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  {isR2Configured ? (
+                  {isUploadConfigured ? (
                     <>
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>R2 storage is configured and ready</span>
+                      <span>{settings.uploadProvider.toUpperCase()} is configured and active</span>
                     </>
                   ) : (
                     <>
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      <span>Fill in all required fields to enable file uploads</span>
+                      <span>Fill in credentials for {settings.uploadProvider === 'r2' ? 'Cloudflare R2' : 'Cloudinary'}</span>
                     </>
                   )}
                 </div>

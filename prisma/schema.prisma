@@ -153,12 +153,20 @@ model Settings {
   backgroundColor String   @default("#FAF9F6")
   accentColor     String   @default("#D4AF37")
   
+  // File Upload Settings
+  uploadProvider  String   @default("r2") // "r2" or "cloudinary"
+  
   // Cloudflare R2 Storage Settings
   r2AccountId     String?
   r2AccessKeyId   String?
   r2SecretAccessKey String?
   r2BucketName    String?
   r2PublicUrl     String?
+  
+  // Cloudinary Settings
+  cloudinaryCloudName String?
+  cloudinaryApiKey    String?
+  cloudinaryApiSecret String?
   
   // NextAuth / Google OAuth Settings
   googleClientId     String?
