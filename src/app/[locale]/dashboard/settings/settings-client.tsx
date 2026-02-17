@@ -63,6 +63,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [showDriveSecret, setShowDriveSecret] = useState(false);
   const [showDriveRefresh, setShowDriveRefresh] = useState(false);
   const [showBlobToken, setShowBlobToken] = useState(false);
+  const [showGoogleSecret, setShowGoogleSecret] = useState(false);
+  const [showAuthSecret, setShowAuthSecret] = useState(false);
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
   const isBlobConfigured = !!settings.vercelBlobToken;

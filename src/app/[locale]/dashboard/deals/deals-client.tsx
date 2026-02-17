@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { 
   Plus, 
@@ -47,8 +48,8 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ImageUpload } from "@/components/image-upload";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useRouter } from "@/i18n/routing";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 
 interface DealsClientProps {
   initialData: any[];

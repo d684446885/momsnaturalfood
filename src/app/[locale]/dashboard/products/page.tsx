@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import { db } from "@/lib/db";
 import { AdminProductsClient } from "./products-client";
 
@@ -96,12 +98,14 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
   }));
 
   return (
-    <AdminProductsClient 
-      products={serializedProducts as any} 
-      categories={categories as any} 
-      totalCount={totalCount}
-      currentPage={page}
-      pageSize={pageSize}
-    />
+    <Suspense fallback={<div className="flex items-center justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <AdminProductsClient 
+        products={serializedProducts as any} 
+        categories={categories as any} 
+        totalCount={totalCount}
+        currentPage={page}
+        pageSize={pageSize}
+      />
+    </Suspense>
   );
 }

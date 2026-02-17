@@ -1,3 +1,6 @@
+"use client";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
   Search, 
@@ -17,8 +20,8 @@ import {
 } from "lucide-react";
 import { R2ImageUpload } from "@/components/r2-image-upload";
 import { toast } from "sonner";
-import { useRouter } from "@/i18n/routing";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import { 
   Table, 
   TableBody, 

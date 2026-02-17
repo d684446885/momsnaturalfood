@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { type DefaultSession, type NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import Credentials from "next-auth/providers/credentials";
@@ -6,6 +6,7 @@ import Google from "next-auth/providers/google";
 import { authConfig } from "./auth.config";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
+import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
@@ -20,9 +21,6 @@ declare module "next-auth" {
   }
 }
 
-import { DefaultSession } from "next-auth";
-import { JWT } from "next-auth/jwt";
-
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
@@ -30,8 +28,8 @@ declare module "next-auth/jwt" {
   }
 }
 
-const config = {
-  adapter: PrismaAdapter(db),
+const config: NextAuthConfig = {
+  adapter: PrismaAdapter(db) as any,
   session: { strategy: "jwt" as const },
   ...authConfig,
   providers: [

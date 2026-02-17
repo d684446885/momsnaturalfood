@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import { db } from "@/lib/db";
 import { DealsClient } from "./deals-client";
 
@@ -72,12 +74,14 @@ export default async function DealsPage({ searchParams }: PageProps) {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <DealsClient 
-        initialData={serializedDeals as any} 
-        totalCount={totalCount}
-        currentPage={page}
-        pageSize={pageSize}
-      />
+      <Suspense fallback={<div className="flex items-center justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+        <DealsClient 
+          initialData={serializedDeals as any} 
+          totalCount={totalCount}
+          currentPage={page}
+          pageSize={pageSize}
+        />
+      </Suspense>
     </div>
   );
 }
