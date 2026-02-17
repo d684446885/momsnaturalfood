@@ -436,8 +436,8 @@
         "title": "Titel van aanbieding",
         "description": "Beschrijving",
         "discount": "Korting (%)",
-        "regularPrice": "Normale Prijs ($)",
-        "salePrice": "Aanbiedingsprijs ($)",
+        "regularPrice": "Normale Prijs (€)",
+        "salePrice": "Aanbiedingsprijs (€)",
         "endDate": "Einddatum",
         "isActive": "Is Actief",
         "image": "Banner Afbeelding",
@@ -467,7 +467,7 @@
         "code": "Couponcode",
         "type": "Kortingstype",
         "value": "Waarde",
-        "minPurchase": "Min. Aankoop ($)",
+        "minPurchase": "Min. Aankoop (€)",
         "expiryDate": "Vervaldatum",
         "usageLimit": "Gebruikslimiet",
         "scope": "Coupon Bereik",
@@ -478,7 +478,7 @@
     },
     "types": {
         "PERCENTAGE": "Percentage (%)",
-        "FIXED": "Vast Bedrag ($)"
+        "FIXED": "Vast Bedrag (€)"
     },
     "scopes": {
         "GLOBAL": "Globaal (Hele winkel)",

@@ -310,7 +310,7 @@ export function CouponsClient({ initialData, categories, products, deals }: Coup
                               />
                               <label htmlFor={`p-${p.id}`} className="text-sm font-medium leading-none cursor-pointer flex-1">
                                 {p.name}
-                                <span className="ml-2 text-xs text-muted-foreground">${p.price}</span>
+                                <span className="ml-2 text-xs text-muted-foreground">€{p.price}</span>
                               </label>
                             </div>
                           ))}
@@ -428,7 +428,7 @@ export function CouponsClient({ initialData, categories, products, deals }: Coup
                   </TableCell>
                   <TableCell>
                     <span className="font-bold">
-                      {coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `$${coupon.value}`}
+                      {coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `€${coupon.value}`}
                     </span>
                   </TableCell>
                   <TableCell className="text-zinc-500 text-sm">

@@ -268,7 +268,7 @@ export function AdminProductsClient({
 
   const formatPrice = (price: any) => {
     const val = typeof price === 'object' ? parseFloat(price.toString()) : parseFloat(String(price));
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+    return new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(val);
   };
 
   // Dynamic Array Handlers
@@ -382,7 +382,7 @@ export function AdminProductsClient({
                         {/* Pricing & Logistics */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">{t('form.price')} ($)</label>
+                                <label className="text-sm font-medium">{t('form.price')} (€)</label>
                                 <Input 
                                     type="number" 
                                     placeholder="0.00" 
@@ -391,7 +391,7 @@ export function AdminProductsClient({
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Sale Price ($)</label>
+                                <label className="text-sm font-medium">Sale Price (€)</label>
                                 <Input 
                                     type="number" 
                                     placeholder="0.00" 

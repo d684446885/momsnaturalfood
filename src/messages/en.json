@@ -450,8 +450,8 @@
         "title": "Deal Title",
         "description": "Description",
         "discount": "Discount (%)",
-        "regularPrice": "Regular Price ($)",
-        "salePrice": "Sale Price ($)",
+        "regularPrice": "Regular Price (€)",
+        "salePrice": "Sale Price (€)",
         "endDate": "End Date",
         "isActive": "Is Active",
         "image": "Banner Image",
@@ -485,7 +485,7 @@
         "code": "Coupon Code",
         "type": "Discount Type",
         "value": "Value",
-        "minPurchase": "Min. Purchase ($)",
+        "minPurchase": "Min. Purchase (€)",
         "expiryDate": "Expiry Date",
         "usageLimit": "Usage Limit",
         "scope": "Coupon Scope",
@@ -496,7 +496,7 @@
     },
     "types": {
         "PERCENTAGE": "Percentage (%)",
-        "FIXED": "Fixed Amount ($)"
+        "FIXED": "Fixed Amount (€)"
     },
     "scopes": {
         "GLOBAL": "Global (Store-wide)",

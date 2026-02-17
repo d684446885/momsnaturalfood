@@ -292,7 +292,7 @@ export function DealsClient({
 
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Regular Price ($)</label>
+                    <label className="text-sm font-medium">Regular Price (€)</label>
                     <Input 
                       type="number"
                       step="0.01"
@@ -302,7 +302,7 @@ export function DealsClient({
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Sale Price ($)</label>
+                    <label className="text-sm font-medium">Sale Price (€)</label>
                     <Input 
                       type="number"
                       step="0.01"
@@ -349,7 +349,7 @@ export function DealsClient({
                                 className="text-sm font-medium leading-none cursor-pointer flex-1"
                               >
                                 {product.name}
-                                <span className="ml-2 text-xs text-muted-foreground">${product.price}</span>
+                                <span className="ml-2 text-xs text-muted-foreground">€{product.price}</span>
                               </label>
                             </div>
                           ))}
@@ -441,7 +441,7 @@ export function DealsClient({
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className="bg-primary/10 text-primary font-bold">
-                      {deal.discount ? `${deal.discount}% OFF` : deal.salePrice ? `$${deal.salePrice}` : "DEAL"}
+                      {deal.discount ? `${deal.discount}% OFF` : deal.salePrice ? `€${deal.salePrice}` : "DEAL"}
                     </Badge>
                   </TableCell>
                   <TableCell>

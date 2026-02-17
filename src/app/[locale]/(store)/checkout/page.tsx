@@ -286,7 +286,7 @@ export default function CheckoutPage() {
                              {t('processing')}
                            </>
                          ) : (
-                           `${t('completePurchase')} · $${cart.totalPrice().toFixed(2)}`
+                           `${t('completePurchase')} · €${cart.totalPrice().toFixed(2)}`
                          )}
                        </Button>
                        <div className="flex items-center justify-center gap-6 mt-6 text-muted-foreground">
@@ -322,7 +322,7 @@ export default function CheckoutPage() {
                                    <p className="font-serif text-sm font-bold truncate text-secondary">{item.name}</p>
                                    <p className="text-xs text-muted-foreground">{t('qty')}: {item.quantity}</p>
                                 </div>
-                                <p className="font-serif font-bold text-primary">${(item.price * item.quantity).toFixed(2)}</p>
+                                <p className="font-serif font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</p>
                              </div>
                           ))}
                        </div>
@@ -333,7 +333,7 @@ export default function CheckoutPage() {
                     <div className="space-y-3">
                        <div className="flex justify-between items-center text-sm">
                           <span className="text-muted-foreground">{t('Summary.subtotal', { defaultValue: 'Subtotal' })}</span>
-                          <span className="font-bold">${cart.totalPrice().toFixed(2)}</span>
+                          <span className="font-bold">€{cart.totalPrice().toFixed(2)}</span>
                        </div>
                        <div className="flex justify-between items-center text-sm">
                           <span className="text-muted-foreground">{t('shipping')}</span>
@@ -341,12 +341,12 @@ export default function CheckoutPage() {
                        </div>
                        <div className="flex justify-between items-center text-sm">
                           <span className="text-muted-foreground">{t('tax')}</span>
-                          <span className="font-bold">$0.00</span>
+                          <span className="font-bold">€0.00</span>
                        </div>
                        
                        <div className="pt-4 mt-4 border-t-2 border-dashed border-primary/20 flex justify-between items-center">
                           <span className="text-lg font-serif font-bold text-secondary">{t('total')}</span>
-                          <span className="text-3xl font-serif font-bold text-primary">${cart.totalPrice().toFixed(2)}</span>
+                          <span className="text-3xl font-serif font-bold text-primary">€{cart.totalPrice().toFixed(2)}</span>
                        </div>
                     </div>
                     

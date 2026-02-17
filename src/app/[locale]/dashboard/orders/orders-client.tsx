@@ -155,7 +155,7 @@ export function AdminOrdersClient({
 
   const formatPrice = (price: any) => {
     const val = typeof price === 'object' ? parseFloat(price.toString()) : parseFloat(String(price));
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR' }).format(val);
+    return new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(val);
   };
 
   const formatDate = (date: any) => {

@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { 
-  DollarSign, 
+  Euro, 
   Users, 
   CreditCard, 
   Activity,
@@ -29,49 +29,53 @@ import { cn } from "@/lib/utils";
 interface DashboardClientProps {
   stats: {
     revenue: number;
+    revenueGrowth: number;
     customers: number;
+    customerGrowth: number;
     sales: number;
+    salesGrowth: number;
     activeNow: number;
   };
   recentOrders: any[];
+  chartData: { name: string; total: number }[];
 }
 
-export function DashboardClient({ stats: initialStats, recentOrders }: DashboardClientProps) {
+export function DashboardClient({ stats: initialStats, recentOrders, chartData }: DashboardClientProps) {
   const t = useTranslations("Dashboard");
   const tOrders = useTranslations("AdminOrders");
   
   const stats = [
     {
       title: t('Stats.totalRevenue'),
-      value: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR' }).format(initialStats.revenue),
-      description: `+20.1% ${t('Stats.fromLastMonth')}`,
-      icon: DollarSign,
-      trend: "up",
+      value: new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(initialStats.revenue),
+      description: `${initialStats.revenueGrowth >= 0 ? '+' : ''}${initialStats.revenueGrowth.toFixed(1)}% ${t('Stats.fromLastMonth')}`,
+      icon: Euro,
+      trend: initialStats.revenueGrowth >= 0 ? "up" : "down",
       color: "text-emerald-500",
       bg: "bg-emerald-500/10"
     },
     {
       title: t('Stats.subscriptions'),
-      value: `+${initialStats.customers}`,
-      description: `+180.1% ${t('Stats.fromLastMonth')}`,
+      value: `${initialStats.customers}`,
+      description: `${initialStats.customerGrowth >= 0 ? '+' : ''}${initialStats.customerGrowth.toFixed(1)}% ${t('Stats.fromLastMonth')}`,
       icon: Users,
-      trend: "up",
+      trend: initialStats.customerGrowth >= 0 ? "up" : "down",
       color: "text-blue-500",
       bg: "bg-blue-500/10"
     },
     {
       title: t('Stats.sales'),
-      value: `+${initialStats.sales}`,
-      description: `+19% ${t('Stats.fromLastMonth')}`,
+      value: `${initialStats.sales}`,
+      description: `${initialStats.salesGrowth >= 0 ? '+' : ''}${initialStats.salesGrowth.toFixed(1)}% ${t('Stats.fromLastMonth')}`,
       icon: CreditCard,
-      trend: "up",
+      trend: initialStats.salesGrowth >= 0 ? "up" : "down",
       color: "text-orange-500",
       bg: "bg-orange-500/10"
     },
     {
       title: t('Stats.activeNow'),
-      value: `+${initialStats.activeNow}`,
-      description: `+201 ${t('Stats.sinceLastHour')}`,
+      value: `${initialStats.activeNow}`,
+      description: t('Stats.sinceLastHour'),
       icon: Activity,
       trend: "up",
       color: "text-rose-500",
@@ -145,7 +149,7 @@ export function DashboardClient({ stats: initialStats, recentOrders }: Dashboard
 
       {/* Main Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* Sales Chart Placeholder */}
+        {/* Sales Chart */}
         <Card className="col-span-1 md:col-span-1 lg:col-span-4 shadow-sm border-none rounded-2xl overflow-hidden flex flex-col">
           <CardHeader>
             <CardTitle>{t('Revenue.title')}</CardTitle>
@@ -154,25 +158,34 @@ export function DashboardClient({ stats: initialStats, recentOrders }: Dashboard
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 min-h-[300px] flex items-center justify-center bg-muted/20 relative group">
-             <div className="absolute inset-x-8 bottom-8 top-16 flex items-end justify-between gap-2">
-                {[45, 66, 44, 70, 55, 80, 60, 90, 75, 85, 65, 95].map((height, i) => (
-                  <motion.div 
-                    key={i}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{ delay: i * 0.05 + 0.5, duration: 1 }}
-                    className="flex-1 bg-primary/20 hover:bg-primary transition-colors rounded-t-sm relative group/bar"
-                  >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap z-10">
-                      €{height}k
-                    </div>
-                  </motion.div>
-                ))}
+             <div className="absolute inset-x-8 bottom-8 top-16 flex items-end justify-between gap-1 md:gap-2">
+                {chartData.map((data, i) => {
+                  const maxTotal = Math.max(...chartData.map(d => d.total));
+                  const heightPercent = maxTotal > 0 ? (data.total / maxTotal) * 80 + 5 : 5;
+                  return (
+                    <motion.div 
+                      key={i}
+                      initial={{ height: 0 }}
+                      animate={{ height: `${heightPercent}%` }}
+                      transition={{ delay: i * 0.05 + 0.5, duration: 1 }}
+                      className="flex-1 bg-primary/20 hover:bg-primary transition-colors rounded-t-sm relative group/bar"
+                    >
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        €{data.total.toLocaleString()}
+                      </div>
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] text-muted-foreground font-medium uppercase">
+                        {data.name}
+                      </div>
+                    </motion.div>
+                  );
+                })}
              </div>
-             <div className="flex flex-col items-center justify-center z-0">
-                <TrendingUp className="h-12 w-12 text-primary/10 mb-2" />
-                <p className="text-sm text-muted-foreground font-medium">{t('Revenue.forecast')}</p>
-             </div>
+             {chartData.every(d => d.total === 0) && (
+               <div className="flex flex-col items-center justify-center z-0">
+                  <TrendingUp className="h-12 w-12 text-primary/10 mb-2" />
+                  <p className="text-sm text-muted-foreground font-medium">No revenue data available yet</p>
+               </div>
+             )}
           </CardContent>
         </Card>
 
@@ -185,8 +198,8 @@ export function DashboardClient({ stats: initialStats, recentOrders }: Dashboard
                 Real-time updates from your store.
               </CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="h-8 text-xs underline rounded-lg">
-              {t('RecentSales.viewAll')}
+            <Button variant="ghost" size="sm" className="h-8 text-xs underline rounded-lg" asChild>
+              <a href="/dashboard/orders">{t('RecentSales.viewAll')}</a>
             </Button>
           </CardHeader>
           <CardContent>
@@ -239,17 +252,17 @@ export function DashboardClient({ stats: initialStats, recentOrders }: Dashboard
                    {t('Inventory.title')}
                 </CardTitle>
                 <CardDescription className="text-primary-foreground/80">
-                   {t('Inventory.subtitle', { count: 0 })}
+                   Real-time inventory management.
                 </CardDescription>
              </CardHeader>
              <CardContent>
                 <div className="flex items-center justify-between">
                    <div>
-                      <h4 className="text-3xl font-bold">Real-time</h4>
+                      <h4 className="text-3xl font-bold">Live Data</h4>
                       <p className="text-xs text-primary-foreground/70 mt-1">{t('Inventory.totalActive')}</p>
                    </div>
-                   <Button variant="secondary" size="sm" className="bg-white text-primary hover:bg-white/90 rounded-xl">
-                      {t('Inventory.manageStock')}
+                   <Button variant="secondary" size="sm" className="bg-white text-primary hover:bg-white/90 rounded-xl" asChild>
+                      <a href="/dashboard/products">{t('Inventory.manageStock')}</a>
                    </Button>
                 </div>
              </CardContent>
@@ -259,7 +272,7 @@ export function DashboardClient({ stats: initialStats, recentOrders }: Dashboard
              <div className="text-center group cursor-pointer">
                 <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                    <Users className="h-6 w-6" />
-                </div>
+                 </div>
                 <h4 className="font-bold">{t('QuickActions.addStaff')}</h4>
                 <p className="text-sm text-muted-foreground mt-2">{t('QuickActions.manageTeam')}</p>
              </div>

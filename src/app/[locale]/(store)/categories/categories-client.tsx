@@ -125,7 +125,7 @@ export function CategoriesClient({ categories }: CategoriesClientProps) {
                               {product.name}
                             </h4>
                             <p className="text-sm text-muted-foreground">
-                              ${typeof product.price === 'object' 
+                              €{typeof product.price === 'object' 
                                 ? parseFloat(product.price.toString()).toFixed(2) 
                                 : typeof product.price === 'string' 
                                   ? parseFloat(product.price).toFixed(2) 
