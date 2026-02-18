@@ -25,7 +25,8 @@ async function getSettings() {
       r2AccessKeyId: null,
       r2SecretAccessKey: null,
       r2BucketName: null,
-      r2PublicUrl: null
+      r2PublicUrl: null,
+      defaultLanguage: "en"
     };
   } catch (error) {
     console.error("Error fetching settings:", error);
@@ -48,7 +49,8 @@ async function getSettings() {
       r2AccessKeyId: null,
       r2SecretAccessKey: null,
       r2BucketName: null,
-      r2PublicUrl: null
+      r2PublicUrl: null,
+      defaultLanguage: "en"
     };
   }
 }
@@ -56,5 +58,5 @@ async function getSettings() {
 export default async function SettingsPage() {
   const settings = await getSettings();
 
-  return <SettingsClient initialSettings={settings} />;
+  return <SettingsClient initialSettings={settings as any} />;
 }

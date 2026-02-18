@@ -168,6 +168,7 @@ export async function PATCH(request: Request) {
       }
     });
 
+    // @ts-ignore
     revalidateTag("home-content");
 
     return NextResponse.json(homePage);
