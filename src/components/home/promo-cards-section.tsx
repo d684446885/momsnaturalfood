@@ -27,6 +27,7 @@ export default function PromoCardsSection({
             playsInline
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
+          <div className="absolute inset-0 bg-white/40 z-[1]" />
         </>
       ) : (
         <div className="absolute inset-0 bg-white z-0" />
