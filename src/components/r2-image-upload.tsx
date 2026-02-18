@@ -34,10 +34,10 @@ export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2
           break;
         }
 
-        // Vercel and some gateways have a 4.5MB - 5MB limit for body size
-        const MAX_FILE_SIZE = 4.5 * 1024 * 1024;
+        // Increase limit to 50MB
+        const MAX_FILE_SIZE = 50 * 1024 * 1024;
         if (file.size > MAX_FILE_SIZE) {
-          toast.error(`File ${file.name} is too large. Max size is 4.5MB for stability.`);
+          toast.error(`File ${file.name} is too large. Max size is 50MB.`);
           continue;
         }
 
