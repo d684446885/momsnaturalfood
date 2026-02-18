@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface CTASectionProps {
   ctaTitle: string;
@@ -44,10 +45,14 @@ export default function CTASection({
                 className="absolute right-0 top-0 bottom-0 w-1/2 object-cover"
               />
             ) : (
-              <div
-                className="absolute right-0 top-0 bottom-0 w-1/2 bg-cover bg-center"
-                style={{ backgroundImage: `url('${ctaMediaUrl}')` }}
-              />
+              <div className="absolute right-0 top-0 bottom-0 w-1/2 overflow-hidden">
+                <Image
+                  src={ctaMediaUrl}
+                  alt={ctaTitle}
+                  fill
+                  className="object-cover"
+                />
+              </div>
             )
           ) : (
             <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80')] bg-cover bg-center" />

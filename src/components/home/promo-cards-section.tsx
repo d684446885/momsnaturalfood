@@ -43,16 +43,24 @@ export default function PromoCardsSection({
               transition={{ delay: idx * 0.2 }}
               className="relative group aspect-square rounded-[3rem] overflow-hidden shadow-2xl bg-zinc-100"
             >
-              {/* Video Background */}
+              {/* Media Background */}
               {card.videoUrl ? (
-                <video
-                  src={card.videoUrl}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+                card.videoUrl.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/) || card.mediaType === 'video' ? (
+                  <video
+                    src={card.videoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                ) : (
+                  <img
+                    src={card.videoUrl}
+                    alt={card.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                )
               ) : (
                 <div className="absolute inset-0 bg-secondary/10" />
               )}

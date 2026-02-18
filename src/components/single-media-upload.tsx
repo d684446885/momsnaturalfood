@@ -25,12 +25,22 @@ export function SingleMediaUpload({ value, type, onChange, onTypeChange, classNa
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type based on selected type
-    if (type === "image" && !file.type.startsWith("image/")) {
+    // Auto-detect type if possible and update parent
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+
+    if (isVideo && type !== "video") {
+      onTypeChange("video");
+    } else if (isImage && type !== "image") {
+      onTypeChange("image");
+    }
+
+    // Still validate for the current (possibly updated) type
+    if (type === "image" && !isImage && !isVideo) {
       toast.error("Please upload an image file");
       return;
     }
-    if (type === "video" && !file.type.startsWith("video/")) {
+    if (type === "video" && !isVideo && !isImage) {
       toast.error("Please upload a video file");
       return;
     }

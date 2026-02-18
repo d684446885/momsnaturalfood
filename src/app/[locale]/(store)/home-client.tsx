@@ -47,12 +47,8 @@ export function HomeClient({ content }: HomeClientProps) {
   const heroCta1Link = content?.heroPrimaryCtaLink || "/products";
   
   const heroBg = content?.heroBackgroundUrl;
-  const isVideoExtension = typeof heroBg === 'string' && (
-    heroBg.toLowerCase().endsWith('.mp4') || 
-    heroBg.toLowerCase().endsWith('.webm') || 
-    heroBg.toLowerCase().endsWith('.ogg') ||
-    heroBg.toLowerCase().endsWith('.mov')
-  );
+  const isVideoExtension = typeof heroBg === 'string' && 
+    (heroBg.split('?')[0].toLowerCase().match(/\.(mp4|webm|ogg|mov|m4v|quicktime)$/) !== null);
   const isHeroVideo = content?.heroBackgroundType === "video" || isVideoExtension;
 
   const categoriesTitle = content?.categoriesTitle || tCat('title');

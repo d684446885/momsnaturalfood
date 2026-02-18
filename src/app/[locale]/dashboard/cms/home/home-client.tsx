@@ -54,6 +54,7 @@ interface HomePageContent {
     title: string;
     description: string;
     videoUrl: string;
+    mediaType: "image" | "video";
   }[];
   promoSectionBgUrl: string | null;
 }
@@ -351,13 +352,13 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Background Video</label>
+                        <label className="text-sm font-medium">Card Media</label>
                         <SingleMediaUpload
                           value={promo.videoUrl || ""}
-                          type="video"
+                          type={promo.mediaType || "video"}
                           onChange={(url) => updatePromoCard(index, "videoUrl", url)}
-                          onTypeChange={() => {}} // Locked to video for these specific cards
-                          label={`Promo Video ${index + 1}`}
+                          onTypeChange={(type) => updatePromoCard(index, "mediaType", type)}
+                          label={`Promo Media ${index + 1}`}
                         />
                       </div>
                     </div>

@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { revalidateTag } from "next/cache";
 
 export async function GET() {
   try {
@@ -166,6 +167,8 @@ export async function PATCH(request: Request) {
         promoSectionBgUrl: promoSectionBgUrl || null
       }
     });
+
+    revalidateTag("home-content");
 
     return NextResponse.json(homePage);
   } catch (error: any) {
