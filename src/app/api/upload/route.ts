@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const fileObject = file as File;
+    console.log(`Received file: ${fileObject.name}, size: ${fileObject.size} bytes, type: ${fileObject.type}`);
 
     // Validate file type
     if (!fileObject.type.startsWith("image/") && !fileObject.type.startsWith("video/")) {
@@ -24,11 +25,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 50MB)
-    const maxSize = 50 * 1024 * 1024;
+    // Validate file size (max 10MB - gateway/Vercel might still block at 4.5MB)
+    const maxSize = 10 * 1024 * 1024;
     if (fileObject.size > maxSize) {
       return NextResponse.json(
-        { error: "File too large. Maximum size is 50MB." },
+        { error: "File too large. Maximum size is 10MB." },
         { status: 400 }
       );
     }

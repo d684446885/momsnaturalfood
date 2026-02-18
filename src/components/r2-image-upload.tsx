@@ -34,6 +34,13 @@ export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2
           break;
         }
 
+        // Vercel and some gateways have a 4.5MB - 5MB limit for body size
+        const MAX_FILE_SIZE = 4.5 * 1024 * 1024;
+        if (file.size > MAX_FILE_SIZE) {
+          toast.error(`File ${file.name} is too large. Max size is 4.5MB for stability.`);
+          continue;
+        }
+
         // Create FormData for local upload
         const formData = new FormData();
         formData.append("file", file);
@@ -43,9 +50,24 @@ export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2
           body: formData
         });
 
+        const contentType = response.headers.get("content-type");
+        
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to upload file");
+          if (contentType && contentType.includes("application/json")) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to upload file");
+          } else {
+            // Handle HTML error pages (like 413 Request Entity Too Large)
+            const text = await response.text();
+            if (response.status === 413) {
+              throw new Error("File is too large for the server to process. Please try a smaller image (under 4MB).");
+            }
+            throw new Error(`Upload failed (${response.status}): ${response.statusText}`);
+          }
+        }
+
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Invalid server response (not JSON)");
         }
 
         const { url } = await response.json();
