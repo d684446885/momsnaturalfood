@@ -57,6 +57,12 @@ export function Navbar() {
             >
               {t('contact')}
             </Link>
+            <Link
+              className="transition-colors hover:text-foreground/80 text-foreground"
+              href="/faq"
+            >
+              {t('faq')}
+            </Link>
           </div>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
@@ -108,6 +114,9 @@ export function Navbar() {
 
                   <Link href="/contact" className="text-lg font-medium">
                     {t('contact')}
+                  </Link>
+                  <Link href="/faq" className="text-lg font-medium">
+                    {t('faq')}
                   </Link>
                 </nav>
               </SheetContent>

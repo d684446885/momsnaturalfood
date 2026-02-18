@@ -6,6 +6,7 @@
     "about": "Over Ons",
     "deals": "Aanbiedingen",
     "contact": "Contact",
+    "faq": "FAQ",
     "dashboard": "Dashboard"
   },
   "Hero": {
@@ -107,6 +108,7 @@
     "customers": "Klanten",
     "payments": "Betalingen",
     "messages": "Berichten",
+    "faqs": "FAQs",
     "settings": "Instellingen",
     "aboutPage": "Over Ons Pagina",
     "homePage": "Home Pagina",

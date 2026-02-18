@@ -19,6 +19,7 @@ import {
   Ticket,
   CreditCard,
   MessageCircle,
+  HelpCircle,
   LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ const sidebarLinks = [
   { icon: Users, label: "customers", href: "/dashboard/customers" },
   { icon: CreditCard, label: "payments", href: "/dashboard/payments" },
   { icon: MessageCircle, label: "messages", href: "/dashboard/messages" },
+  { icon: HelpCircle, label: "faqs", href: "/dashboard/faqs" },
   { icon: Settings, label: "settings", href: "/dashboard/settings" },
   { icon: Menu, label: "aboutPage", href: "/dashboard/cms/about" },
   { icon: LayoutDashboard, label: "homePage", href: "/dashboard/cms/home" },

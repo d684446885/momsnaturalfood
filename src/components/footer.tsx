@@ -102,12 +102,12 @@ export function Footer() {
             <h3 className="text-lg font-semibold">{t('customerService.title')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
                   {t('customerService.contactUs')}
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/faq" className="text-muted-foreground hover:text-foreground transition-colors">
                   {t('customerService.faq')}
                 </Link>
               </li>

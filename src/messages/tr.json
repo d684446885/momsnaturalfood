@@ -3,6 +3,7 @@
     "products": "Ürünler",
     "categories": "Kategoriler",
     "deals": "Fırsatlar",
+    "faq": "SSS",
     "dashboard": "Panel"
   },
   "Hero": {
@@ -90,6 +91,7 @@
     "customers": "Müşteriler",
     "payments": "Ödemeler",
     "messages": "Mesajlar",
+    "faqs": "SSS",
     "settings": "Ayarlar",
     "search": "Panelde ara...",
     "adminTitle": "MoM Panel",

@@ -6,6 +6,7 @@
     "about": "About",
     "deals": "Deals",
     "contact": "Contact",
+    "faq": "FAQ",
     "dashboard": "Dashboard"
   },
   "Hero": {
@@ -121,6 +122,7 @@
     "customers": "Customers",
     "payments": "Payments",
     "messages": "Messages",
+    "faqs": "FAQs",
     "settings": "Settings",
     "aboutPage": "About Page",
     "homePage": "Home Page",
