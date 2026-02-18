@@ -6,18 +6,29 @@ export interface WishlistItem {
   id: string;
   name: string;
   price: number;
-  salePrice?: number;
+  salePrice?: number | null;
   image?: string;
   category: string;
   description: string;
   stock: number;
 }
 
+export interface BaseProduct {
+  id: string;
+  name: string;
+  price: number | string | { toString: () => string };
+  salePrice?: number | string | { toString: () => string } | null;
+  images?: string[];
+  category?: { name: string };
+  description: string;
+  stock?: number;
+}
+
 interface WishlistStore {
   items: WishlistItem[];
-  addItem: (product: any) => void;
+  addItem: (product: BaseProduct) => void;
   removeItem: (id: string) => void;
-  toggleItem: (product: any) => void;
+  toggleItem: (product: BaseProduct) => void;
   isInWishlist: (id: string) => boolean;
   clearWishlist: () => void;
 }
@@ -26,7 +37,7 @@ export const useWishlist = create<WishlistStore>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (product: any) => {
+      addItem: (product: BaseProduct) => {
         const currentItems = get().items;
         const existingItem = currentItems.find((item) => item.id === product.id);
 
@@ -55,7 +66,7 @@ export const useWishlist = create<WishlistStore>()(
         });
         toast.info("Item removed from wishlist");
       },
-      toggleItem: (product: any) => {
+      toggleItem: (product: BaseProduct) => {
         const isInList = get().isInWishlist(product.id);
         if (isInList) {
           get().removeItem(product.id);

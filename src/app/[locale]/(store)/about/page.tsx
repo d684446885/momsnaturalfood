@@ -14,6 +14,12 @@ async function getAboutContent() {
 }
 
 export default async function AboutPage() {
-  const content = await getAboutContent();
-  return <AboutClient content={content} />;
+  const [content, certifications] = await Promise.all([
+    getAboutContent(),
+    db.certification.findMany({
+      orderBy: { order: "asc" }
+    })
+  ]);
+
+  return <AboutClient content={content} certifications={certifications} />;
 }

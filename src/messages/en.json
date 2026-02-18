@@ -7,6 +7,7 @@
     "deals": "Deals",
     "contact": "Contact",
     "faq": "FAQ",
+    "certifications": "Certifications",
     "dashboard": "Dashboard"
   },
   "Hero": {
@@ -132,6 +133,7 @@
     "aboutPage": "About Page",
     "homePage": "Home Page",
     "contactPage": "Contact Page",
+    "certifications": "Certifications",
     "search": "Search dashboard...",
     "adminTitle": "MoM's NaturalFood",
     "Welcome": {
@@ -523,6 +525,33 @@
         "actions": "Actions"
     },
     "noCoupons": "No coupons found"
+  },
+  "AdminCertifications": {
+    "title": "Certifications",
+    "subtitle": "Manage your business certifications and quality badges.",
+    "addCertification": "Add Certification",
+    "editCertification": "Edit Certification",
+    "newCertification": "New Certification",
+    "editDescription": "Update the certification details and image.",
+    "newDescription": "Add a new quality badge or certification.",
+    "certTitle": "Title",
+    "order": "Display Order",
+    "image": "Certification Badge",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "create": "Create",
+    "table": {
+        "image": "Badge",
+        "title": "Title",
+        "order": "Order",
+        "actions": "Actions"
+    },
+    "noCertifications": "No certifications found",
+    "successCreate": "Certification added successfully",
+    "successUpdate": "Certification updated successfully",
+    "successDelete": "Certification deleted successfully",
+    "deleteConfirm": "Are you sure you want to delete this certification?",
+    "required": "Title and image are required"
   },
   "Metadata": {
     "title": "MoM's NaturalFood",

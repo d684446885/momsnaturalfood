@@ -15,8 +15,8 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  price: any;
-  salePrice?: any;
+  price: number | string | { toString: () => string };
+  salePrice?: number | string | { toString: () => string } | null;
   stock: number;
   images: string[];
   category: {
@@ -41,11 +41,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const inWishlist = wishlist.isInWishlist(product.id);
 
   const handleAddToCart = () => {
-    const productForCart = {
-      ...product,
-      price: hasSale ? parseFloat(product.salePrice.toString()) : parseFloat(product.price.toString())
+    const p = {
+      id: product.id,
+      name: product.name,
+      price: hasSale ? parseFloat(product.salePrice!.toString()) : parseFloat(product.price.toString()),
+      images: product.images,
+      category: product.category,
+      stock: product.stock
     };
-    cart.addItem(productForCart as any);
+    cart.addItem(p);
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {

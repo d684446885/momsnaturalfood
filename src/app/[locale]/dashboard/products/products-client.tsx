@@ -636,10 +636,10 @@ export function AdminProductsClient({
                           )}
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="max-w-[200px]">
                         <div className="flex flex-col">
-                          <span className="font-medium">{product.name}</span>
-                          <span className="text-xs text-muted-foreground line-clamp-1">{product.description}</span>
+                          <span className="font-medium line-clamp-1" title={product.name}>{product.name}</span>
+                          <span className="text-xs text-muted-foreground line-clamp-1" title={product.description}>{product.description}</span>
                         </div>
                       </TableCell>
                       <TableCell>

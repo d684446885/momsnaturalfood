@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useLocale } from "next-intl";
 import { routing, usePathname, useRouter } from "@/i18n/routing";
 import {
@@ -17,6 +18,19 @@ export function LocaleSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="group">
+        <Languages className="h-5 w-5 group-hover:text-primary transition-colors" />
+      </Button>
+    );
+  }
 
   const onLocaleChange = (nextLocale: string) => {
     router.replace(

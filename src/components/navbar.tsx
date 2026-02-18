@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, ShoppingCart, Menu, Heart, User, HelpCircle, FileText } from "lucide-react";
+import { Search, ShoppingCart, Menu, Heart, User, HelpCircle, FileText, Mail } from "lucide-react";
 import { PwaInstallButton } from "./pwa-install-button";
 import { useCart } from "@/store/use-cart";
 import { useWishlist } from "@/store/use-wishlist";
@@ -47,6 +47,11 @@ export function Navbar({
 }) {
   const t = useTranslations("Navbar");
   const [isOpen, setIsOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <motion.nav
@@ -98,9 +103,9 @@ export function Navbar({
             </Link>
             <Link
               className="transition-colors hover:text-primary text-foreground font-semibold"
-              href="/contact"
+              href="/certifications"
             >
-              {t('contact')}
+              {t('certifications')}
             </Link>
             <div className="relative group">
               <button className="flex items-center gap-1 transition-colors hover:text-primary text-foreground py-2 font-semibold">
@@ -119,6 +124,15 @@ export function Navbar({
                     <div>
                       <p className="text-sm font-semibold text-secondary">{t('faq')}</p>
                       <p className="text-[10px] text-muted-foreground">Most asked questions</p>
+                    </div>
+                  </Link>
+                  <Link href="/contact" className="flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/5 transition-all group/item border border-transparent hover:border-secondary/10">
+                    <div className="p-2 bg-secondary/10 rounded-lg text-secondary group-hover/item:bg-secondary group-hover/item:text-white transition-colors">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-secondary">{t('contact')}</p>
+                      <p className="text-[10px] text-muted-foreground">Get in touch with us</p>
                     </div>
                   </Link>
                   {legalPages.map((page) => (
@@ -171,46 +185,54 @@ export function Navbar({
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <UserNav />
             </motion.div>
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="flex flex-col gap-4 mt-6 px-6">
-                  <Link href="/" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                    {t('home')}
-                  </Link>
-                  <Link href="/products" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                    {t('products')}
-                  </Link>
-                  <Link href="/about" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                    {t('about')}
-                  </Link>
-
-                  <Link href="/contact" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                    {t('contact')}
-                  </Link>
-                  <Link href="/faq" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
-                    {t('faq')}
-                  </Link>
-                  {legalPages.map((page) => (
-                    <Link 
-                      key={page.id} 
-                      href={`/legal/${page.slug}`} 
-                      className="text-lg font-medium pl-4 text-muted-foreground border-l-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {page.title}
+            {!mounted ? (
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            ) : (
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="md:hidden">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <SheetHeader>
+                    <SheetTitle>Menu</SheetTitle>
+                  </SheetHeader>
+                  <nav className="flex flex-col gap-4 mt-6 px-6">
+                    <Link href="/" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('home')}
                     </Link>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
+                    <Link href="/products" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('products')}
+                    </Link>
+                    <Link href="/about" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('about')}
+                    </Link>
+                    <Link href="/certifications" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('certifications')}
+                    </Link>
+                    <Link href="/contact" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('contact')}
+                    </Link>
+                    <Link href="/faq" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('faq')}
+                    </Link>
+                    {legalPages.map((page) => (
+                      <Link 
+                        key={page.id} 
+                        href={`/legal/${page.slug}`} 
+                        className="text-lg font-medium pl-4 text-muted-foreground border-l-2"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {page.title}
+                      </Link>
+                    ))}
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            )}
           </nav>
         </div>
       </div>

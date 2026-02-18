@@ -1,4 +1,5 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v14 (Button Colors)
+// Refresh comment to force Next.js to reload the DB client with new models - v18 (Hard Reset CertificationPage) - ${Math.random()}
+global.prisma = undefined;
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
@@ -23,9 +24,10 @@ function createPrismaClient() {
 
   try {
     console.log("Creating PG Pool...");
+    const hasSslMode = connectionString.includes("sslmode=");
     const pool = new Pool({ 
       connectionString,
-      ssl: connectionString.includes("sslmode=require") ? { rejectUnauthorized: false } : false
+      ssl: hasSslMode ? { rejectUnauthorized: false } : false
     });
     
     pool.on('error', (err) => console.error('Unexpected error on idle client', err));

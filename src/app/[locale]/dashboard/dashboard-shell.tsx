@@ -21,7 +21,8 @@ import {
   ChevronLeft,
   LogOut,
   Bell,
-  Search
+  Search,
+  Award
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,7 @@ const iconMap = {
   aboutPage: Menu,
   homePage: LayoutDashboard,
   contactPage: Mail,
+  certifications: Award,
 };
 
 const sidebarGroups = [
@@ -82,6 +84,7 @@ const sidebarGroups = [
       { iconName: "homePage" as const, label: "homePage", href: "/dashboard/cms/home" },
       { iconName: "aboutPage" as const, label: "aboutPage", href: "/dashboard/cms/about" },
       { iconName: "contactPage" as const, label: "contactPage", href: "/dashboard/cms/contact" },
+      { iconName: "certifications" as const, label: "certifications", href: "/dashboard/certifications" },
       { iconName: "faqs" as const, label: "faqs", href: "/dashboard/faqs" },
       { iconName: "legal" as const, label: "legal", href: "/dashboard/legal" },
     ]

@@ -25,6 +25,19 @@ import {
 
 export function UserNav() {
   const { data: session } = useSession();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="group">
+        <User className="h-5 w-5 group-hover:text-primary transition-colors" />
+      </Button>
+    );
+  }
 
   if (!session?.user) {
     return (

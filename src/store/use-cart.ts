@@ -13,7 +13,13 @@ export interface CartItem {
 
 interface CartStore {
   items: CartItem[];
-  addItem: (product: any) => void;
+  addItem: (product: {
+    id: string;
+    name: string;
+    price: number | string | { toString: () => string };
+    images?: string[];
+    category?: { name: string };
+  }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -25,7 +31,13 @@ export const useCart = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (product: any) => {
+      addItem: (product: {
+        id: string;
+        name: string;
+        price: number | string | { toString: () => string };
+        images?: string[];
+        category?: { name: string };
+      }) => {
         const currentItems = get().items;
         const existingItem = currentItems.find((item) => item.id === product.id);
 

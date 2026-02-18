@@ -18,10 +18,11 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/routing";
 
 interface AboutClientProps {
-  content: any; // Using any for flexibility with Prisma Json type
+  content: any;
+  certifications?: any[];
 }
 
-export function AboutClient({ content }: AboutClientProps) {
+export function AboutClient({ content, certifications = [] }: AboutClientProps) {
   const t = useTranslations("About");
   const router = useRouter();
 
@@ -215,6 +216,45 @@ export function AboutClient({ content }: AboutClientProps) {
           </div>
         </div>
       </section>
+
+      {/* Certifications Section */}
+      {certifications && certifications.length > 0 && (
+        <section className="py-24 bg-zinc-50">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16 space-y-4">
+               <h2 className="font-serif text-3xl md:text-5xl font-bold text-secondary italic">
+                  Our Certifications
+               </h2>
+               <div className="h-1 w-20 bg-accent mx-auto rounded-full" />
+               <p className="text-zinc-500 max-w-2xl mx-auto font-light italic">
+                  We take pride in our quality standards. Each badge represents our commitment to excellence and your health.
+               </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24">
+              {certifications.map((cert) => (
+                <motion.div
+                  key={cert.id}
+                  {...fadeIn}
+                  className="flex flex-col items-center group"
+                >
+                  <div className="relative h-24 w-24 md:h-32 md:w-32 mb-6 grayscale hover:grayscale-0 transition-all duration-500 group-hover:scale-110">
+                    <Image
+                      src={cert.imageUrl}
+                      alt={cert.title}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="text-sm font-bold uppercase tracking-widest text-zinc-400 group-hover:text-secondary transition-colors text-center max-w-[150px]">
+                    {cert.title}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Quality Banner (Static for now, but fits theme) */}
       <section className="py-32 relative overflow-hidden">

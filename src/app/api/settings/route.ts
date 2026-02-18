@@ -18,9 +18,9 @@ export async function GET() {
       const defaultData = { 
           id: "global", 
           primaryColor: "#8B5E3C",
-          secondaryColor: "#1E3A34",
+          secondaryColor: "#766645",
           backgroundColor: "#FAF9F6",
-          accentColor: "#D4AF37",
+          accentColor: "#D4AF3786",
           navbarColor: "#FDFCFB",
           footerColor: "#F3EFE7",
           sidebarColor: "#FAF9F6",

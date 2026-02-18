@@ -13,7 +13,8 @@ import {
   MessageCircle,
   HelpCircle,
   FileText,
-  Menu
+  Menu,
+  Award
 } from "lucide-react";
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
@@ -35,6 +36,7 @@ const sidebarLinks = [
   { icon: Menu, label: "aboutPage", href: "/dashboard/cms/about" },
   { icon: LayoutDashboard, label: "homePage", href: "/dashboard/cms/home" },
   { icon: Mail, label: "contactPage", href: "/dashboard/cms/contact" },
+  { icon: Award, label: "certifications", href: "/dashboard/cms/certifications" },
 ];
 
 export default async function DashboardLayout({
@@ -69,6 +71,7 @@ export default async function DashboardLayout({
     aboutPage: t('aboutPage'),
     homePage: t('homePage'),
     contactPage: t('contactPage'),
+    certifications: t('certifications'),
     logout: t('logout'),
     search: t('search'),
     adminTitle: t('adminTitle')

@@ -22,8 +22,10 @@ export function PwaInstallButton({ variant = "navbar" }: { variant?: "navbar" | 
   const [showBanner, setShowBanner] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     // Check if already in standalone mode (installed)
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
@@ -32,7 +34,7 @@ export function PwaInstallButton({ variant = "navbar" }: { variant?: "navbar" | 
 
     // Check if iOS
     const ua = navigator.userAgent;
-    const isiOS = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+    const isiOS = /iPad|iPhone|iPod/.test(ua) && !("MSStream" in window);
     setIsIOS(isiOS);
 
     const handler = (e: BeforeInstallPromptEvent) => {
@@ -72,6 +74,18 @@ export function PwaInstallButton({ variant = "navbar" }: { variant?: "navbar" | 
       setTimeout(() => setShowTooltip(false), 5000);
     }
   }, [deferredPrompt]);
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!isMounted) {
+    if (variant === "navbar") {
+      return (
+        <Button variant="ghost" size="icon" className="relative group">
+          <Download className="h-5 w-5" />
+        </Button>
+      );
+    }
+    return null;
+  }
 
   // Don't render if already installed
   if (isInstalled) return null;

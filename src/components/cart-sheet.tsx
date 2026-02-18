@@ -36,7 +36,13 @@ export function CartSheet() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="relative group">
+        <ShoppingBasket className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+      </Button>
+    );
+  }
 
   const total = cart.totalPrice();
   const itemCount = cart.totalItems();

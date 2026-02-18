@@ -75,10 +75,15 @@ export default function WishlistPage() {
             >
               <ProductCard 
                 product={{
-                  ...item,
+                  id: item.id,
+                  name: item.name,
+                  description: item.description,
+                  price: item.price,
+                  salePrice: item.salePrice,
+                  stock: item.stock,
                   images: [item.image || ""],
                   category: { id: "", name: item.category, slug: "" }
-                } as any} 
+                }} 
                 index={index}
               />
             </motion.div>

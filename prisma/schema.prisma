@@ -380,3 +380,23 @@ model LegalPage {
   @@map("legal_page")
 }
 
+model Certification {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("certification")
+}
+
+model CertificationPage {
+  id                 String   @id @default("global")
+  heroTitle          String
+  heroSubtitle       String?
+  heroDescription    String
+  heroBackgroundUrl  String?
+  heroBackgroundType String   @default("image")
+  updatedAt          DateTime @updatedAt
+}
