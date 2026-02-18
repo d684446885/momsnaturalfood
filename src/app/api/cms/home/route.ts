@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -170,6 +170,8 @@ export async function PATCH(request: Request) {
 
     // @ts-ignore
     revalidateTag("home-content");
+    revalidatePath("/", "layout");
+    revalidatePath("/[locale]", "layout");
 
     return NextResponse.json(homePage);
   } catch (error: any) {
