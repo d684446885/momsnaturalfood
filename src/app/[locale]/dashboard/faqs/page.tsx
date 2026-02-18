@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { FaqsClient } from "./faqs-client";
 
+// Trigger HMR - v2
 export default async function FaqsPage() {
   const categories = await db.faqCategory.findMany({
     include: {

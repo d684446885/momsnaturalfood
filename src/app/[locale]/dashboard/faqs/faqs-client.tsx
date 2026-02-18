@@ -145,9 +145,12 @@ export function FaqsClient({ initialCategories, initialFaqs }: FaqsClientProps) 
   };
 
   const resetCategoryForm = () => {
+    const nextOrder = categories.length > 0 
+      ? Math.max(...categories.map(c => c.order)) + 1 
+      : 0;
     setEditingCategory(null);
     setCategoryName("");
-    setCategoryOrder(0);
+    setCategoryOrder(nextOrder);
   };
 
   const openEditCategory = (category: FaqCategory) => {
@@ -220,11 +223,14 @@ export function FaqsClient({ initialCategories, initialFaqs }: FaqsClientProps) 
   };
 
   const resetFaqForm = () => {
+    const nextOrder = faqs.length > 0 
+      ? Math.max(...faqs.map(f => f.order)) + 1 
+      : 0;
     setEditingFaq(null);
     setFaqQuestion("");
     setFaqAnswer("");
     setFaqCategoryId("");
-    setFaqOrder(0);
+    setFaqOrder(nextOrder);
   };
 
   const openEditFaq = (faq: Faq) => {

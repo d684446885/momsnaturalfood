@@ -75,6 +75,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ url: publicUrl });
     }
     
+    if (provider === "local") {
+      const uploadDir = path.join(process.cwd(), "public", "uploads");
+      try {
+        await mkdir(uploadDir, { recursive: true });
+      } catch (err) {
+        // Directory already exists or other error
+      }
+      
+      const fileName = `${Date.now()}-${fileObject.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+      const filePath = path.join(uploadDir, fileName);
+      await writeFile(filePath, buffer);
+      
+      const publicUrl = `/uploads/${fileName}`;
+      return NextResponse.json({ url: publicUrl });
+    }
+    
     if (provider === "vercel") {
       if (!settings?.vercelBlobToken) {
         throw new Error("Vercel Blob token missing in settings");

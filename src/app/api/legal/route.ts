@@ -1,24 +1,19 @@
 import { db } from "@/lib/db";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import slugify from "slugify"; // v2 rebuild
+import slugify from "slugify";
 
 export async function GET() {
   try {
-    const categories = await db.faqCategory.findMany({
-      include: {
-        _count: {
-          select: { faqs: true }
-        }
-      },
+    const pages = await db.legalPage.findMany({
       orderBy: {
-        order: "asc"
+        createdAt: "desc"
       }
     });
 
-    return NextResponse.json(categories);
+    return NextResponse.json(pages);
   } catch (error) {
-    console.error("[FAQ_CATEGORIES_GET]", error);
+    console.error("[LEGAL_PAGES_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -32,25 +27,25 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, order } = body;
+    const { title, content } = body;
 
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
+    if (!title || !content) {
+      return new NextResponse("Title and content are required", { status: 400 });
     }
 
-    const slug = slugify(name, { lower: true });
+    const slug = slugify(title, { lower: true, strict: true });
 
-    const category = await db.faqCategory.create({
+    const page = await db.legalPage.create({
       data: {
-        name,
+        title,
         slug,
-        order: order || 0
+        content
       }
     });
 
-    return NextResponse.json(category);
+    return NextResponse.json(page);
   } catch (error) {
-    console.error("[FAQ_CATEGORIES_POST]", error);
+    console.error("[LEGAL_PAGES_POST]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -508,6 +508,26 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     </div>
                     {settings.uploadProvider === 'vercel' && <CheckCircle2 className="h-5 w-5 text-primary" />}
                   </div>
+
+                  <div 
+                    onClick={() => setSettings({ ...settings, uploadProvider: 'local' })}
+                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                      settings.uploadProvider === 'local' 
+                        ? 'border-primary bg-primary/5 shadow-md' 
+                        : 'border-muted hover:border-muted-foreground'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'local' ? 'bg-primary text-white' : 'bg-muted'}`}>
+                        <Cloud className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold">Local Storage</p>
+                        <p className="text-xs text-muted-foreground">Server file system</p>
+                      </div>
+                    </div>
+                    {settings.uploadProvider === 'local' && <CheckCircle2 className="h-5 w-5 text-primary" />}
+                  </div>
                 </div>
               </div>
 

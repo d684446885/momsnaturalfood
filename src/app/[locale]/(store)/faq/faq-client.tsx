@@ -2,8 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { 
   Accordion, 
   AccordionContent, 
@@ -45,9 +43,7 @@ export function FAQClient({ categories }: FAQClientProps) {
   })).filter(category => category.faqs.length > 0);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6]">
-      <Navbar />
-
+    <div className="bg-[#FAF9F6]">
       <main className="pt-32 pb-24">
         {/* Hero Section */}
         <section className="container mx-auto px-6 mb-16">
@@ -165,8 +161,6 @@ export function FAQClient({ categories }: FAQClientProps) {
           </motion.div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }
