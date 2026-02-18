@@ -468,7 +468,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               {/* Provider Selection */}
               <div className="space-y-4">
                 <label className="text-sm font-semibold">Active Upload Provider</label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div 
                     onClick={() => setSettings({ ...settings, uploadProvider: 'r2' })}
                     className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
@@ -487,26 +487,6 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       </div>
                     </div>
                     {settings.uploadProvider === 'r2' && <CheckCircle2 className="h-5 w-5 text-primary" />}
-                  </div>
-
-                  <div 
-                    onClick={() => setSettings({ ...settings, uploadProvider: 'local' })}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
-                      settings.uploadProvider === 'local' 
-                        ? 'border-primary bg-primary/5 shadow-md' 
-                        : 'border-muted hover:border-muted-foreground'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'local' ? 'bg-primary text-white' : 'bg-muted'}`}>
-                        <Cloud className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold">Local Storage</p>
-                        <p className="text-xs text-muted-foreground">Internal container storage (Persistent)</p>
-                      </div>
-                    </div>
-                    {settings.uploadProvider === 'local' && <CheckCircle2 className="h-5 w-5 text-primary" />}
                   </div>
 
                   <div 

@@ -91,17 +91,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ url: blob.url });
     }
 
-    // Local storage fallback
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadsDir, { recursive: true });
-
-    const ext = fileObject.name.split(".").pop() || "jpg";
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
-    const filePath = path.join(uploadsDir, uniqueName);
-
-    await writeFile(filePath, buffer);
-
-    return NextResponse.json({ url: `/uploads/${uniqueName}` });
+    throw new Error(`Upload provider "${provider}" is not configured or supported.`);
   } catch (error: any) {
     console.error("Upload error:", error);
     return NextResponse.json(

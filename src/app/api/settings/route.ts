@@ -21,7 +21,8 @@ export async function GET() {
           primaryColor: "#8B5E3C",
           secondaryColor: "#1E3A34",
           backgroundColor: "#FAF9F6",
-          accentColor: "#D4AF37"
+          accentColor: "#D4AF37",
+          uploadProvider: "vercel"
         }
       });
       return NextResponse.json(defaultSettings);
@@ -69,7 +70,7 @@ export async function PATCH(request: NextRequest) {
       secondaryColor: secondaryColor || "#1E3A34",
       backgroundColor: backgroundColor || "#FAF9F6",
       accentColor: accentColor || "#D4AF37",
-      uploadProvider: uploadProvider || "r2",
+      uploadProvider: uploadProvider || "vercel",
       r2AccountId,
       r2AccessKeyId,
       r2SecretAccessKey,

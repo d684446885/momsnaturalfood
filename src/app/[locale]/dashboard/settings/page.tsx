@@ -11,7 +11,7 @@ async function getSettings() {
       secondaryColor: "#1E3A34",
       backgroundColor: "#FAF9F6",
       accentColor: "#D4AF37",
-      uploadProvider: "local",
+      uploadProvider: "vercel",
       businessName: null,
       logoUrl: null,
       businessEmail: null,
