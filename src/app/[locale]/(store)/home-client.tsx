@@ -9,22 +9,11 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
-// Dynamic imports for sections below the fold
-const WhyUsSection = dynamic(() => import("@/components/home/why-us-section"), {
-  loading: () => <div className="min-h-screen animate-pulse bg-muted" />,
-});
+import WhyUsSection from "@/components/home/why-us-section";
+import PromoCardsSection from "@/components/home/promo-cards-section";
+import FeaturesSection from "@/components/home/features-section";
+import CTASection from "@/components/home/cta-section";
 
-const PromoCardsSection = dynamic(() => import("@/components/home/promo-cards-section"), {
-  loading: () => <div className="min-h-[500px] animate-pulse bg-muted" />,
-});
-
-const FeaturesSection = dynamic(() => import("@/components/home/features-section"), {
-  loading: () => <div className="py-20 animate-pulse bg-muted" />,
-});
-
-const CTASection = dynamic(() => import("@/components/home/cta-section"), {
-  loading: () => <div className="h-[500px] animate-pulse bg-muted" />,
-});
 
 interface HomeClientProps {
   content: any;
@@ -100,6 +89,7 @@ export function HomeClient({ content }: HomeClientProps) {
                   loop 
                   muted 
                   playsInline 
+                  preload="auto"
                   className="w-full h-full object-cover object-center"
                 />
               ) : (

@@ -42,6 +42,7 @@ export default function CTASection({
                 loop
                 muted
                 playsInline
+                preload="auto"
                 className="absolute right-0 top-0 bottom-0 w-1/2 object-cover"
               />
             ) : (
