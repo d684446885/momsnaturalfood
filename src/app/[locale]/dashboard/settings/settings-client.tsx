@@ -17,7 +17,8 @@ import {
   Mail,
   Phone,
   MapPin,
-  Upload
+  Upload,
+  Globe
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -47,6 +48,7 @@ interface Settings {
   businessPhone: string | null;
   businessAddress: string | null;
   vercelBlobToken: string | null;
+  defaultLanguage: string;
 }
 
 interface SettingsClientProps {
@@ -368,6 +370,51 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     value={settings.businessAddress || ""}
                     onChange={(e) => setSettings({ ...settings, businessAddress: e.target.value })}
                   />
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Regional Settings */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  Regional Settings
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold">Default Language</label>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                      {[
+                        { code: 'en', name: 'English' },
+                        { code: 'nl', name: 'Dutch' },
+                        { code: 'tr', name: 'Turkish' },
+                        { code: 'ar', name: 'Arabic' }
+                      ].map((lang) => (
+                        <div 
+                          key={lang.code}
+                          onClick={() => setSettings({ ...settings, defaultLanguage: lang.code })}
+                          className={cn(
+                            "cursor-pointer p-3 rounded-xl border-2 transition-all flex flex-col items-center justify-center text-center gap-1 relative",
+                            settings.defaultLanguage === lang.code 
+                              ? "border-primary bg-primary/5 shadow-sm" 
+                              : "border-muted hover:border-muted-foreground"
+                          )}
+                        >
+                          <span className="text-sm font-bold">{lang.name}</span>
+                          <span className="text-[10px] uppercase text-muted-foreground">{lang.code}</span>
+                          {settings.defaultLanguage === lang.code && (
+                            <div className="absolute top-1 right-1">
+                               <CheckCircle2 className="h-3 w-3 text-primary" />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      This determines the fallback language when a visitor's locale isn't detected.
+                    </p>
+                  </div>
                 </div>
               </div>
 

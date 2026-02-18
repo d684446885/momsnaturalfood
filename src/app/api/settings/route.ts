@@ -22,7 +22,8 @@ export async function GET() {
           secondaryColor: "#1E3A34",
           backgroundColor: "#FAF9F6",
           accentColor: "#D4AF37",
-          uploadProvider: "vercel"
+          uploadProvider: "vercel",
+          defaultLanguage: "en"
         }
       });
       return NextResponse.json(defaultSettings);
@@ -62,7 +63,8 @@ export async function PATCH(request: NextRequest) {
       businessEmail,
       businessPhone,
       businessAddress,
-      vercelBlobToken
+      vercelBlobToken,
+      defaultLanguage
     } = body;
 
     const data = {
@@ -84,7 +86,8 @@ export async function PATCH(request: NextRequest) {
       businessEmail,
       businessPhone,
       businessAddress,
-      vercelBlobToken
+      vercelBlobToken,
+      defaultLanguage: defaultLanguage || "en"
     };
 
     console.log("Saving settings to DB:", JSON.stringify(data, (k, v) => k.includes('Token') || k.includes('Secret') || k.includes('Key') ? '***' : v));

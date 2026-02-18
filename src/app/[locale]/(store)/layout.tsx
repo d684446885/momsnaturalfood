@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { MobileBottomNav } from "@/components/mobile-nav";
 import { db } from "@/lib/db";
 
 export default async function StoreLayout({
@@ -27,7 +28,8 @@ export default async function StoreLayout({
         logoUrl={settings?.logoUrl}
         businessName={settings?.businessName}
       />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+      <MobileBottomNav />
       <Footer 
         legalPages={legalPages} 
         businessName={settings?.businessName}

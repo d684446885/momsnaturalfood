@@ -172,6 +172,9 @@ model Settings {
   googleClientSecret String?
   authSecret          String?
   
+  // Localization Settings
+  defaultLanguage String   @default("en")
+  
   updatedAt       DateTime @updatedAt
 }
 
