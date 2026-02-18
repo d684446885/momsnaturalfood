@@ -95,7 +95,7 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
     
     // Initialize if needed
     for (let i = 0; i <= index; i++) {
-        if (!newPromoCards[i]) newPromoCards[i] = { title: "", description: "", videoUrl: "" };
+        if (!newPromoCards[i]) newPromoCards[i] = { title: "", description: "", videoUrl: "", mediaType: "image" };
     }
     
     (newPromoCards[index] as any)[field] = value;
@@ -328,7 +328,7 @@ export function HomeCMSClient({ initialContent }: HomeCMSClientProps) {
             </CardHeader>
             <CardContent className="space-y-6">
               {[0, 1].map((index) => {
-                const promo = (content.promoCards || [])[index] || { title: "", description: "", videoUrl: "" };
+                const promo = (content.promoCards || [])[index] || { title: "", description: "", videoUrl: "", mediaType: "image" };
                 return (
                   <div key={index} className="p-6 border rounded-[1.5rem] space-y-4 bg-muted/20">
                     <h3 className="font-bold text-lg">Promo Card {index + 1}</h3>
