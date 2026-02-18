@@ -100,6 +100,7 @@
   },
   "Dashboard": {
     "overview": "Overzicht",
+    "logout": "Uitloggen",
     "products": "Producten",
     "orders": "Bestellingen",
     "categories": "Categorieën",
@@ -109,6 +110,7 @@
     "payments": "Betalingen",
     "messages": "Berichten",
     "faqs": "FAQs",
+    "legal": "Juridische Pagina's",
     "settings": "Instellingen",
     "aboutPage": "Over Ons Pagina",
     "homePage": "Home Pagina",
