@@ -147,13 +147,7 @@ export function HomeClient({ content }: HomeClientProps) {
                 {heroDesc}
               </p>
               
-              <div className="pt-4">
-                 <Link href={heroCta1Link}>
-                    <Button size="lg" className="h-14 px-8 rounded-full bg-accent text-secondary hover:bg-white transition-all font-bold text-lg">
-                       {heroCta1Text}
-                    </Button>
-                 </Link>
-              </div>
+
             </motion.div>
           </div>
         </div>
