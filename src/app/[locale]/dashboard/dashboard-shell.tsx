@@ -111,13 +111,13 @@ export function DashboardShell({
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
 
   return (
-    <div className="flex h-screen bg-gray-50/50 dark:bg-zinc-950 overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar - Desktop */}
       <motion.aside
         initial={false}
         animate={{ width: isSidebarOpen ? 260 : 80 }}
         className={cn(
-          "relative hidden md:flex flex-col h-full border-r bg-white dark:bg-zinc-900 transition-all duration-300 ease-in-out z-40 overflow-hidden",
+          "relative hidden md:flex flex-col h-full border-r bg-sidebar transition-all duration-300 ease-in-out z-40 overflow-hidden",
           !isSidebarOpen && "items-center"
         )}
       >

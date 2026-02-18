@@ -19,7 +19,8 @@ import {
   Settings, 
   LogOut, 
   LayoutDashboard,
-  ShoppingBag
+  ShoppingBag,
+  Heart
 } from "lucide-react";
 
 export function UserNav() {
@@ -83,6 +84,12 @@ export function UserNav() {
             <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
               <ShoppingBag className="h-4 w-4 text-secondary" />
               <span>My Orders</span>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/wishlist">
+            <DropdownMenuItem className="cursor-pointer gap-2 focus:bg-primary/5">
+              <Heart className="h-4 w-4 text-secondary" />
+              <span>Wishlist</span>
             </DropdownMenuItem>
           </Link>
           <Link href="/account/settings">

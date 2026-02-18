@@ -15,16 +15,26 @@ export async function GET() {
     });
     
     if (!settings) {
-      const defaultSettings = await db.settings.create({
-        data: { 
+      const defaultData = { 
           id: "global", 
           primaryColor: "#8B5E3C",
           secondaryColor: "#1E3A34",
           backgroundColor: "#FAF9F6",
           accentColor: "#D4AF37",
+          navbarColor: "#1E3A34",
+          footerColor: "#1E3A34",
+          sidebarColor: "#FAF9F6",
+          textColor: "#1E3A34",
+          buttonColor: "#8B5E3C",
+          buttonTextColor: "#FAF9F6",
+          buttonHoverColor: "#7d6036",
+          buttonHoverTextColor: "#FAF9F6",
           uploadProvider: "vercel",
           defaultLanguage: "en"
-        }
+        };
+
+      const defaultSettings = await db.settings.create({
+        data: defaultData
       });
       return NextResponse.json(defaultSettings);
     }
@@ -49,6 +59,14 @@ export async function PATCH(request: NextRequest) {
       secondaryColor, 
       backgroundColor, 
       accentColor,
+      navbarColor,
+      footerColor,
+      sidebarColor,
+      textColor,
+      buttonColor,
+      buttonTextColor,
+      buttonHoverColor,
+      buttonHoverTextColor,
       uploadProvider,
       r2AccountId,
       r2AccessKeyId,
@@ -72,6 +90,14 @@ export async function PATCH(request: NextRequest) {
       secondaryColor: secondaryColor || "#1E3A34",
       backgroundColor: backgroundColor || "#FAF9F6",
       accentColor: accentColor || "#D4AF37",
+      navbarColor: navbarColor || "#1E3A34",
+      footerColor: footerColor || "#1E3A34",
+      sidebarColor: sidebarColor || "#FAF9F6",
+      textColor: textColor || "#1E3A34",
+      buttonColor: buttonColor || "#8B5E3C",
+      buttonTextColor: buttonTextColor || "#FAF9F6",
+      buttonHoverColor: buttonHoverColor || "#7d6036",
+      buttonHoverTextColor: buttonHoverTextColor || "#FAF9F6",
       uploadProvider: uploadProvider || "vercel",
       r2AccountId,
       r2AccessKeyId,
@@ -91,13 +117,15 @@ export async function PATCH(request: NextRequest) {
     };
 
     console.log("Saving settings to DB:", JSON.stringify(data, (k, v) => k.includes('Token') || k.includes('Secret') || k.includes('Key') ? '***' : v));
+    const createData = {
+        id: "global",
+        ...data
+    };
+
     const settings = await db.settings.upsert({
       where: { id: "global" },
-      update: data as any,
-      create: {
-        id: "global",
-        ...(data as any)
-      }
+      update: data,
+      create: createData
     });
 
     return NextResponse.json(settings);

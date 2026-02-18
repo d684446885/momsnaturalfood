@@ -6,9 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Search, ShoppingCart, Menu, Heart, User, HelpCircle, FileText } from "lucide-react";
+import { PwaInstallButton } from "./pwa-install-button";
+import { useCart } from "@/store/use-cart";
+import { useWishlist } from "@/store/use-wishlist";
 import { CartSheet } from "./cart-sheet";
 import { UserNav } from "./user-nav";
 import { LocaleSwitcher } from "./locale-switcher";
+
+function WishlistCount() {
+  const wishlist = useWishlist();
+  const count = wishlist.items.length;
+  
+  if (count === 0) return null;
+  
+  return (
+    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+      {count}
+    </span>
+  );
+}
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
@@ -36,7 +52,7 @@ export function Navbar({
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-50 w-full border-b bg-navbar backdrop-blur supports-[backdrop-filter]:bg-navbar/60"
     >
       <div className="container flex h-16 items-center px-4">
         {/* Left: Logo */}
@@ -138,10 +154,14 @@ export function Navbar({
           </div>
           <nav className="flex items-center gap-1">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="ghost" size="icon" className="hidden sm:flex">
-                <Heart className="h-5 w-5" />
-              </Button>
+              <Link href="/wishlist">
+                <Button variant="ghost" size="icon" className="hidden sm:flex relative">
+                  <Heart className="h-5 w-5" />
+                  <WishlistCount />
+                </Button>
+              </Link>
             </motion.div>
+            <PwaInstallButton variant="navbar" />
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <LocaleSwitcher />
             </motion.div>

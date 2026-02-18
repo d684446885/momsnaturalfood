@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/store/use-cart";
+import { useWishlist } from "@/store/use-wishlist";
 import { ShoppingCart, Heart } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -31,10 +33,12 @@ interface ProductCardProps {
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const cart = useCart();
+  const wishlist = useWishlist();
   const t = useTranslations("Common");
   
   const displayPrice = product.salePrice || product.price;
   const hasSale = !!product.salePrice;
+  const inWishlist = wishlist.isInWishlist(product.id);
 
   const handleAddToCart = () => {
     const productForCart = {
@@ -42,6 +46,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       price: hasSale ? parseFloat(product.salePrice.toString()) : parseFloat(product.price.toString())
     };
     cart.addItem(productForCart as any);
+  };
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    wishlist.toggleItem(product);
   };
 
   return (
@@ -73,11 +83,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="p-2 rounded-full bg-white/90 shadow-md hover:bg-white transition-colors"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
+                onClick={handleToggleWishlist}
               >
-                <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                <Heart className={cn("h-4 w-4 transition-colors", inWishlist ? "text-red-500 fill-red-500" : "text-gray-600 hover:text-red-500")} />
               </motion.button>
             </div>
             <Badge 

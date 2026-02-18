@@ -16,6 +16,8 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-navbar: var(--navbar);
+  --color-footer: var(--footer);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -43,44 +45,70 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
+  --color-button: var(--button);
+  --color-button-foreground: var(--button-foreground);
+  --color-button-hover: var(--button-hover);
+  --color-button-hover-foreground: var(--button-hover-foreground);
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
 :root {
   --radius: 0.5rem;
-  --background: var(--background-color, oklch(0.99 0.005 70)); /* Default: #FAF9F6 */
-  --foreground: oklch(0.2 0.02 45); /* Deep Charcoal with warm tint */
-  
+  --background: var(
+    --background-color,
+    oklch(0.99 0.005 70)
+  ); /* Default: #FAF9F6 */
+  --foreground: var(
+    --text-color,
+    oklch(0.2 0.02 45)
+  ); /* Deep Charcoal with warm tint */
+
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 45);
-  
+  --card-foreground: var(--text-color, oklch(0.2 0.02 45));
+
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 45);
-  
+  --popover-foreground: var(--text-color, oklch(0.2 0.02 45));
+
   --primary: var(--primary-color, oklch(0.48 0.08 65)); /* Default: #8B5E3C */
   --primary-foreground: oklch(0.98 0.01 70);
-  
-  --secondary: var(--secondary-color, oklch(0.3 0.08 160)); /* Default: #1E3A34 (Forest Green) */
+
+  --secondary: var(
+    --secondary-color,
+    oklch(0.3 0.08 160)
+  ); /* Default: #1E3A34 (Forest Green) */
   --secondary-foreground: oklch(0.98 0.01 70);
-  
+
   --muted: oklch(0.94 0.02 70); /* Soft Beige */
   --muted-foreground: oklch(0.45 0.05 45);
-  
-  --accent: var(--accent-color, oklch(0.75 0.15 85)); /* Default: #D4AF37 (Gold / Honey) */
+
+  --accent: var(
+    --accent-color,
+    oklch(0.75 0.15 85)
+  ); /* Default: #D4AF37 (Gold / Honey) */
   --accent-foreground: oklch(0.2 0.02 45);
-  
+
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  
+
   --border: oklch(0.9 0.02 70);
   --input: oklch(0.9 0.02 70);
   --ring: var(--primary-color, oklch(0.48 0.08 65));
-  
+
   --chart-1: var(--primary-color, oklch(0.48 0.08 65));
   --chart-2: oklch(0.3 0.08 160);
   --chart-3: oklch(0.75 0.15 85);
   --chart-4: oklch(0.65 0.12 60);
   --chart-5: oklch(0.85 0.1 90);
+
+  /* Granular Controls */
+  --navbar: var(--navbar-color, var(--secondary));
+  --footer: var(--footer-color, var(--secondary));
+  --sidebar: var(--sidebar-color, var(--background));
+  /* Button Controls */
+  --button: var(--button-color, var(--primary));
+  --button-foreground: var(--button-text-color, var(--primary-foreground));
+  --button-hover: var(--button-hover-color, oklch(0.40 0.08 65)); /* Darker primary */
+  --button-hover-foreground: var(--button-hover-text-color, var(--primary-foreground));
 }
 
 .dark {

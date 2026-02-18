@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1E3A34"/>
+  <text x="256" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="200" font-weight="bold" fill="#FAF9F6">M</text>
+  <path d="M 180 290 Q 256 250 332 290 Q 370 310 380 350 Q 340 330 300 320 Q 256 310 212 320 Q 172 330 132 350 Q 142 310 180 290Z" fill="#D4AF37" opacity="0.9"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="55" font-weight="600" fill="#D4AF37" letter-spacing="8">FOOD</text>
+</svg>

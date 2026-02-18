@@ -147,6 +147,14 @@ model Settings {
   secondaryColor  String   @default("#1E3A34")
   backgroundColor String   @default("#FAF9F6")
   accentColor     String   @default("#D4AF37")
+  navbarColor     String   @default("#1E3A34")
+  footerColor     String   @default("#1E3A34")
+  sidebarColor    String   @default("#FAF9F6")
+  textColor       String   @default("#1E3A34")
+  buttonColor     String   @default("#8B5E3C")
+  buttonTextColor String   @default("#FAF9F6")
+  buttonHoverColor String  @default("#7d6036")
+  buttonHoverTextColor String @default("#FAF9F6")
   
   // Business Settings
   businessName    String?

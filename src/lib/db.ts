@@ -1,4 +1,4 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v12 (LEGAL MODELS)
+// Refresh comment to force Next.js to reload the DB client with new models - v14 (Button Colors)
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";

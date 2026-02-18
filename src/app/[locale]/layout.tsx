@@ -42,6 +42,8 @@ import { db } from "@/lib/db";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { headers } from "next/headers";
+import { PwaRegister } from "@/components/pwa-register";
+import { PwaInstallButton } from "@/components/pwa-install-button";
 
 async function getSettings() {
   try {
@@ -85,13 +87,23 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={isRtl ? 'rtl' : 'ltr'} suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="theme-color" content="#1E3A34" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="MoM's Food" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans antialiased`}
       >
         <DynamicTheme settings={settings as any} />
+        <PwaRegister />
         <NextIntlClientProvider messages={messages}>
           <Providers>
             {children}
+            <PwaInstallButton variant="banner" />
             <Toaster />
           </Providers>
         </NextIntlClientProvider>

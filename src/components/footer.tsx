@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Twitter, Instagram, Youtube, Mail } from "lucide-react";
+import { PwaInstallButton } from "./pwa-install-button";
 import { useTranslations } from "next-intl";
 
 interface LegalPage {
@@ -43,7 +44,7 @@ export function Footer({
       whileInView="visible"
       viewport={{ once: true }}
       variants={containerVariants}
-      className="bg-muted/30 border-t"
+      className="bg-footer border-t"
     >
       <div className="container px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -132,6 +133,9 @@ export function Footer({
                   </Link>
                 </li>
               ))}
+              <li>
+                <PwaInstallButton variant="footer" />
+              </li>
             </ul>
           </motion.div>
 

@@ -34,6 +34,14 @@ interface Settings {
   secondaryColor: string;
   backgroundColor: string;
   accentColor: string;
+  navbarColor: string;
+  footerColor: string;
+  sidebarColor: string;
+  textColor: string;
+  buttonColor: string;
+  buttonTextColor: string;
+  buttonHoverColor: string;
+  buttonHoverTextColor: string;
   uploadProvider: string;
   r2AccountId: string | null;
   r2AccessKeyId: string | null;
@@ -99,6 +107,14 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       root.style.setProperty('--secondary-color', settings.secondaryColor);
       root.style.setProperty('--background-color', settings.backgroundColor);
       root.style.setProperty('--accent-color', settings.accentColor);
+      root.style.setProperty('--navbar-color', settings.navbarColor);
+      root.style.setProperty('--footer-color', settings.footerColor);
+      root.style.setProperty('--sidebar-color', settings.sidebarColor);
+      root.style.setProperty('--text-color', settings.textColor);
+      root.style.setProperty('--button-color', settings.buttonColor);
+      root.style.setProperty('--button-text-color', settings.buttonTextColor);
+      root.style.setProperty('--button-hover-color', settings.buttonHoverColor);
+      root.style.setProperty('--button-hover-text-color', settings.buttonHoverTextColor);
     } catch (error: any) {
       toast.error(error.message || "Error saving settings");
     } finally {
@@ -112,13 +128,29 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
       primaryColor: "#8B5E3C",
       secondaryColor: "#1E3A34",
       backgroundColor: "#FAF9F6",
-      accentColor: "#D4AF37"
+      accentColor: "#D4AF37",
+      navbarColor: "#1E3A34",
+      footerColor: "#1E3A34",
+      sidebarColor: "#FAF9F6",
+      textColor: "#1E3A34",
+      buttonColor: "#8B5E3C",
+      buttonTextColor: "#FAF9F6",
+      buttonHoverColor: "#7d6036", 
+      buttonHoverTextColor: "#FAF9F6"
     });
     const root = document.documentElement;
     root.style.setProperty('--primary-color', "#8B5E3C");
     root.style.setProperty('--secondary-color', "#1E3A34");
     root.style.setProperty('--background-color', "#FAF9F6");
     root.style.setProperty('--accent-color', "#D4AF37");
+    root.style.setProperty('--navbar-color', "#1E3A34");
+    root.style.setProperty('--footer-color', "#1E3A34");
+    root.style.setProperty('--sidebar-color', "#FAF9F6");
+    root.style.setProperty('--text-color', "#1E3A34");
+    root.style.setProperty('--button-color', "#8B5E3C");
+    root.style.setProperty('--button-text-color', "#FAF9F6");
+    root.style.setProperty('--button-hover-color', "#7d6036");
+    root.style.setProperty('--button-hover-text-color', "#FAF9F6");
   };
 
   const ColorInput = ({ label, value, keyName, description }: { label: string, value: string, keyName: keyof Settings, description: string }) => (
@@ -472,6 +504,60 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   value={settings.accentColor} 
                   keyName="accentColor"
                   description="Used for highlights, badges, and gold/honey details."
+                />
+                
+                <h3 className="col-span-full text-lg font-semibold pt-4">Granular Controls</h3>
+                
+                <ColorInput 
+                  label="Navigation Bar Color" 
+                  value={settings.navbarColor} 
+                  keyName="navbarColor"
+                  description="Background color for the top navigation bar."
+                />
+                <ColorInput 
+                  label="Footer Color" 
+                  value={settings.footerColor} 
+                  keyName="footerColor"
+                  description="Background color for the website footer."
+                />
+                <ColorInput 
+                  label="Sidebar Color" 
+                  value={settings.sidebarColor} 
+                  keyName="sidebarColor"
+                  description="Background color for the admin sidebar."
+                />
+                 <ColorInput 
+                  label="Text Color" 
+                  value={settings.textColor} 
+                  keyName="textColor"
+                  description="Main text color for content."
+                />
+                
+                <h3 className="col-span-full text-lg font-semibold pt-4">Button Styling</h3>
+
+                <ColorInput 
+                  label="Button Color" 
+                  value={settings.buttonColor} 
+                  keyName="buttonColor"
+                  description="Background color for primary buttons."
+                />
+                <ColorInput 
+                  label="Button Text Color" 
+                  value={settings.buttonTextColor} 
+                  keyName="buttonTextColor"
+                  description="Text color for primary buttons."
+                />
+                <ColorInput 
+                  label="Button Hover Color" 
+                  value={settings.buttonHoverColor} 
+                  keyName="buttonHoverColor"
+                  description="Background color when hovering over buttons."
+                />
+                <ColorInput 
+                  label="Button Hover Text" 
+                  value={settings.buttonHoverTextColor} 
+                  keyName="buttonHoverTextColor"
+                  description="Text color when hovering over buttons."
                 />
               </div>
 
