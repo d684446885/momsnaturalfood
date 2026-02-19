@@ -11,9 +11,10 @@ interface R2ImageUploadProps {
   onChange: (images: string[]) => void;
   maxImages?: number;
   className?: string;
+  folder?: string;
 }
 
-export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2ImageUploadProps) {
+export function R2ImageUpload({ images, onChange, maxImages = 5, className, folder }: R2ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +45,9 @@ export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2
         // Create FormData for local upload
         const formData = new FormData();
         formData.append("file", file);
+        if (folder) {
+          formData.append("folder", folder);
+        }
 
         const response = await fetch("/api/upload", {
           method: "POST",
@@ -88,9 +92,30 @@ export function R2ImageUpload({ images, onChange, maxImages = 5, className }: R2
     }
   };
 
-  const removeImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index);
-    onChange(newImages);
+  const removeImage = async (index: number) => {
+    const urlToRemove = images[index];
+    
+    try {
+      // Move to trash in R2
+      const response = await fetch("/api/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: urlToRemove })
+      });
+
+      if (!response.ok) {
+        console.warn("Failed to move file to trash in bucket, but removing from UI anyway.");
+      }
+
+      const newImages = images.filter((_, i) => i !== index);
+      onChange(newImages);
+      toast.success("Image removed and moved to trash");
+    } catch (error) {
+      console.error("Error trashing image:", error);
+      // Still remove from UI even if trashing fails
+      const newImages = images.filter((_, i) => i !== index);
+      onChange(newImages);
+    }
   };
 
   return (

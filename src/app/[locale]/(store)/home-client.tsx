@@ -82,16 +82,29 @@ export function HomeClient({ content }: HomeClientProps) {
         <div className="absolute inset-0 z-0 overflow-hidden">
           {heroBg ? (
               isHeroVideo ? (
-                <video 
-                  key={heroBg}
-                  src={heroBg}
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline 
-                  preload="auto"
-                  className="w-full h-full object-cover object-center"
-                />
+                <>
+                  {/* Loading placeholder - shows instantly while video buffers */}
+                  <div className="absolute inset-0 bg-secondary z-[1] transition-opacity duration-700 peer-[:not([data-loading])]/video:opacity-0">
+                    <div className="absolute inset-0 opacity-20 bg-[url('/grain_texture.png')] bg-repeat" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-secondary via-secondary/80 to-secondary" />
+                  </div>
+                  <video 
+                    key={heroBg}
+                    src={heroBg}
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    preload="metadata"
+                    className="w-full h-full object-cover object-center"
+                    style={{ willChange: 'auto' }}
+                    onCanPlay={(e) => {
+                      // Hide the loading placeholder once video is ready
+                      const placeholder = e.currentTarget.previousElementSibling;
+                      if (placeholder) (placeholder as HTMLElement).style.opacity = '0';
+                    }}
+                  />
+                </>
               ) : (
                 <Image 
                   src={heroBg} 
@@ -108,8 +121,8 @@ export function HomeClient({ content }: HomeClientProps) {
             </div>
           )}
           {/* Centered Gradient Overlay for Readability */}
-          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-black/40 pointer-events-none z-[2]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none z-[2]" />
         </div>
         
         <div className="relative z-20 container mx-auto px-6 pt-20 flex flex-col items-center justify-center text-center">

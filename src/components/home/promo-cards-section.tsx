@@ -25,7 +25,7 @@ export default function PromoCardsSection({
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
           <div className="absolute inset-0 bg-white/40 z-[1]" />
@@ -53,7 +53,7 @@ export default function PromoCardsSection({
                     loop
                     muted
                     playsInline
-                    preload="auto"
+                    preload="metadata"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 ) : (

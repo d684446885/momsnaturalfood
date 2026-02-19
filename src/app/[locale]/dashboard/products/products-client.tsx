@@ -347,6 +347,7 @@ export function AdminProductsClient({
                               images={formData.images}
                               onChange={(urls) => setFormData({ ...formData, images: urls })}
                               maxImages={5}
+                              folder="products"
                            />
                         </div>
 

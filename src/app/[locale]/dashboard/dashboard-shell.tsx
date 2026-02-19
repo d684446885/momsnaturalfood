@@ -22,7 +22,8 @@ import {
   LogOut,
   Bell,
   Search,
-  Award
+  Award,
+  Megaphone
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ const iconMap = {
   homePage: LayoutDashboard,
   contactPage: Mail,
   certifications: Award,
+  marketing: Megaphone,
 };
 
 const sidebarGroups = [
@@ -69,6 +71,7 @@ const sidebarGroups = [
       { iconName: "categories" as const, label: "categories", href: "/dashboard/categories" },
       { iconName: "orders" as const, label: "orders", href: "/dashboard/orders" },
       { iconName: "customers" as const, label: "customers", href: "/dashboard/customers" },
+      { iconName: "marketing" as const, label: "marketing", href: "/dashboard/marketing" },
     ]
   },
   {

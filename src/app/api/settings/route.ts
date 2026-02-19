@@ -29,7 +29,6 @@ export async function GET() {
           buttonTextColor: "#FAF9F6",
           buttonHoverColor: "#7d6036",
           buttonHoverTextColor: "#FAF9F6",
-          uploadProvider: "vercel",
           defaultLanguage: "en"
         };
 
@@ -67,7 +66,7 @@ export async function PATCH(request: NextRequest) {
       buttonTextColor,
       buttonHoverColor,
       buttonHoverTextColor,
-      uploadProvider,
+
       r2AccountId,
       r2AccessKeyId,
       r2SecretAccessKey,
@@ -81,51 +80,61 @@ export async function PATCH(request: NextRequest) {
       businessEmail,
       businessPhone,
       businessAddress,
-      vercelBlobToken,
-      defaultLanguage
+      defaultLanguage,
+      whatsappNumber,
+      instagramUrl,
+      messengerUrl,
+      chatWidgetEnabled
     } = body;
 
-    const data = {
-      primaryColor: primaryColor || "#8B5E3C",
-      secondaryColor: secondaryColor || "#1E3A34",
-      backgroundColor: backgroundColor || "#FAF9F6",
-      accentColor: accentColor || "#D4AF37",
-      navbarColor: navbarColor || "#1E3A34",
-      footerColor: footerColor || "#1E3A34",
-      sidebarColor: sidebarColor || "#FAF9F6",
-      textColor: textColor || "#1E3A34",
-      buttonColor: buttonColor || "#8B5E3C",
-      buttonTextColor: buttonTextColor || "#FAF9F6",
-      buttonHoverColor: buttonHoverColor || "#7d6036",
-      buttonHoverTextColor: buttonHoverTextColor || "#FAF9F6",
-      uploadProvider: uploadProvider || "vercel",
-      r2AccountId,
-      r2AccessKeyId,
-      r2SecretAccessKey,
-      r2BucketName,
-      r2PublicUrl,
-      googleClientId,
-      googleClientSecret,
-      authSecret,
-      businessName,
-      logoUrl,
-      businessEmail,
-      businessPhone,
-      businessAddress,
-      vercelBlobToken,
-      defaultLanguage: defaultLanguage || "en"
+    const data: any = {};
+    
+    // List all fields we want to handle
+    const fields = [
+      'primaryColor', 'secondaryColor', 'backgroundColor', 'accentColor',
+      'navbarColor', 'footerColor', 'sidebarColor', 'textColor',
+      'buttonColor', 'buttonTextColor', 'buttonHoverColor', 'buttonHoverTextColor',
+      'r2AccountId', 'r2AccessKeyId', 'r2SecretAccessKey', 'r2BucketName', 'r2PublicUrl',
+      'googleClientId', 'googleClientSecret', 'authSecret',
+      'businessName', 'logoUrl', 'businessEmail', 'businessPhone', 'businessAddress',
+      'defaultLanguage', 'whatsappNumber', 'instagramUrl', 'messengerUrl', 'chatWidgetEnabled'
+    ];
+
+    // Only add to data if the field exists in body
+    fields.forEach(field => {
+      if (body[field] !== undefined) {
+        data[field] = body[field];
+      }
+    });
+
+    // Special handling for defaults if the record doesn't exist yet
+    const defaults = {
+      primaryColor: "#8B5E3C",
+      secondaryColor: "#1E3A34",
+      backgroundColor: "#FAF9F6",
+      accentColor: "#D4AF37",
+      navbarColor: "#1E3A34",
+      footerColor: "#1E3A34",
+      sidebarColor: "#FAF9F6",
+      textColor: "#1E3A34",
+      buttonColor: "#8B5E3C",
+      buttonTextColor: "#FAF9F6",
+      buttonHoverColor: "#7d6036",
+      buttonHoverTextColor: "#FAF9F6",
+      defaultLanguage: "en",
+      chatWidgetEnabled: true
     };
 
     console.log("Saving settings to DB:", JSON.stringify(data, (k, v) => k.includes('Token') || k.includes('Secret') || k.includes('Key') ? '***' : v));
-    const createData = {
-        id: "global",
-        ...data
-    };
 
     const settings = await db.settings.upsert({
       where: { id: "global" },
       update: data,
-      create: createData
+      create: {
+        id: "global",
+        ...defaults,
+        ...data
+      }
     });
 
     return NextResponse.json(settings);

@@ -162,18 +162,12 @@ model Settings {
   businessEmail   String?
   businessPhone   String?
   businessAddress String?
-  // File Upload Settings
-  uploadProvider  String   @default("r2") // "r2", "local", or "vercel"
-  
-  // Cloudflare R2 Storage Settings
+  // Cloudflare R2 Storage Settings (only supported provider)
   r2AccountId     String?
   r2AccessKeyId   String?
   r2SecretAccessKey String?
   r2BucketName    String?
   r2PublicUrl     String?
-  
-  // Vercel Blob Settings
-  vercelBlobToken          String?
   
   // NextAuth / Google OAuth Settings
   googleClientId     String?
@@ -183,7 +177,27 @@ model Settings {
   // Localization Settings
   defaultLanguage String   @default("en")
   
+  // Marketing & Chat Widget Settings
+  whatsappNumber    String?
+  instagramUrl      String?
+  messengerUrl      String?
+  chatWidgetEnabled Boolean  @default(true)
+  
   updatedAt       DateTime @updatedAt
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  message     String
+  location    String?
+  ipAddress   String?
+  userAgent   String?
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model AboutPage {

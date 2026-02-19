@@ -42,7 +42,7 @@ interface Settings {
   buttonTextColor: string;
   buttonHoverColor: string;
   buttonHoverTextColor: string;
-  uploadProvider: string;
+
   r2AccountId: string | null;
   r2AccessKeyId: string | null;
   r2SecretAccessKey: string | null;
@@ -56,7 +56,7 @@ interface Settings {
   businessEmail: string | null;
   businessPhone: string | null;
   businessAddress: string | null;
-  vercelBlobToken: string | null;
+
   defaultLanguage: string;
 }
 
@@ -73,18 +73,15 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [showDriveSecret, setShowDriveSecret] = useState(false);
   const [showDriveRefresh, setShowDriveRefresh] = useState(false);
-  const [showBlobToken, setShowBlobToken] = useState(false);
+
   const [showGoogleSecret, setShowGoogleSecret] = useState(false);
   const [showAuthSecret, setShowAuthSecret] = useState(false);
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
-  const isBlobConfigured = !!settings.vercelBlobToken;
+
   const isAuthConfigured = settings.googleClientId && settings.googleClientSecret && settings.authSecret;
 
-  const isUploadConfigured = 
-    settings.uploadProvider === 'r2' ? isR2Configured : 
-    settings.uploadProvider === 'vercel' ? isBlobConfigured :
-    true; // Local is always considered configured
+  const isUploadConfigured = !!isR2Configured;
 
   const onSave = async () => {
     try {
@@ -250,9 +247,9 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               Connected
             </Badge>
           ) : (
-            <Badge variant="secondary" className="ml-1 bg-amber-100 text-amber-700">
+            <Badge variant="secondary" className="ml-1 bg-red-100 text-red-700">
               <AlertCircle className="h-3 w-3 mr-1" />
-              Not Set
+              Not Configured
             </Badge>
           )}
         </Button>
@@ -593,87 +590,23 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               <div className="flex items-center gap-2">
                 <Cloud className="h-5 w-5 text-blue-500" />
                 <div>
-                  <CardTitle>File Storage Configuration</CardTitle>
-                  <CardDescription>Select and configure your preferred cloud storage provider for media uploads.</CardDescription>
+                  <CardTitle>Cloudflare R2 Storage</CardTitle>
+                  <CardDescription>Configure your Cloudflare R2 credentials for all media uploads (images, videos).</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="pt-6 space-y-8">
-              {/* Provider Selection */}
-              <div className="space-y-4">
-                <label className="text-sm font-semibold">Active Upload Provider</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div 
-                    onClick={() => setSettings({ ...settings, uploadProvider: 'r2' })}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
-                      settings.uploadProvider === 'r2' 
-                        ? 'border-primary bg-primary/5 shadow-md' 
-                        : 'border-muted hover:border-muted-foreground'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'r2' ? 'bg-primary text-white' : 'bg-muted'}`}>
-                        <Cloud className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold">Cloudflare R2</p>
-                        <p className="text-xs text-muted-foreground">S3-compatible object storage</p>
-                      </div>
-                    </div>
-                    {settings.uploadProvider === 'r2' && <CheckCircle2 className="h-5 w-5 text-primary" />}
-                  </div>
-
-                  <div 
-                    onClick={() => setSettings({ ...settings, uploadProvider: 'vercel' })}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
-                      settings.uploadProvider === 'vercel' 
-                        ? 'border-primary bg-primary/5 shadow-md' 
-                        : 'border-muted hover:border-muted-foreground'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'vercel' ? 'bg-primary text-white' : 'bg-muted'}`}>
-                        <Cloud className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold">Vercel Blob</p>
-                        <p className="text-xs text-muted-foreground">Fast & simple edge storage</p>
-                      </div>
-                    </div>
-                    {settings.uploadProvider === 'vercel' && <CheckCircle2 className="h-5 w-5 text-primary" />}
-                  </div>
-
-                  <div 
-                    onClick={() => setSettings({ ...settings, uploadProvider: 'local' })}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
-                      settings.uploadProvider === 'local' 
-                        ? 'border-primary bg-primary/5 shadow-md' 
-                        : 'border-muted hover:border-muted-foreground'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${settings.uploadProvider === 'local' ? 'bg-primary text-white' : 'bg-muted'}`}>
-                        <Cloud className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold">Local Storage</p>
-                        <p className="text-xs text-muted-foreground">Server file system</p>
-                      </div>
-                    </div>
-                    {settings.uploadProvider === 'local' && <CheckCircle2 className="h-5 w-5 text-primary" />}
+              {!isUploadConfigured && (
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-red-700">Cloudflare R2 is not configured</p>
+                    <p className="text-sm text-red-600 mt-1">File uploads will not work until you enter your R2 credentials below. Go to your Cloudflare dashboard → R2 → Manage API Tokens to get your credentials.</p>
                   </div>
                 </div>
-              </div>
+              )}
 
-              <Separator />
-
-              {/* R2 Section */}
-              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'r2' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={settings.uploadProvider === 'r2' ? "bg-primary/10" : ""}>Option 1</Badge>
-                  <h3 className="font-bold">Cloudflare R2 Settings</h3>
-                </div>
-                
+              <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold">Account ID</label>
@@ -681,8 +614,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       placeholder="Your Cloudflare Account ID"
                       value={settings.r2AccountId || ""}
                       onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
-                      disabled={settings.uploadProvider !== 'r2'}
                     />
+                    <p className="text-xs text-muted-foreground">Found on your Cloudflare dashboard sidebar.</p>
                   </div>
 
                   <div className="space-y-2">
@@ -691,8 +624,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       placeholder="my-bucket"
                       value={settings.r2BucketName || ""}
                       onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
-                      disabled={settings.uploadProvider !== 'r2'}
                     />
+                    <p className="text-xs text-muted-foreground">The name of your R2 bucket.</p>
                   </div>
 
                   <div className="space-y-2">
@@ -701,8 +634,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       placeholder="R2 Access Key ID"
                       value={settings.r2AccessKeyId || ""}
                       onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
-                      disabled={settings.uploadProvider !== 'r2'}
                     />
+                    <p className="text-xs text-muted-foreground">From R2 → Manage API Tokens.</p>
                   </div>
 
                   <div className="space-y-2">
@@ -714,7 +647,6 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                         value={settings.r2SecretAccessKey || ""}
                         onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
                         className="pr-10"
-                        disabled={settings.uploadProvider !== 'r2'}
                       />
                       <Button
                         type="button"
@@ -722,11 +654,11 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                         size="icon"
                         className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
                         onClick={() => setShowSecretKey(!showSecretKey)}
-                        disabled={settings.uploadProvider !== 'r2'}
                       >
                         {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
+                    <p className="text-xs text-muted-foreground">Shown only once when creating the API token.</p>
                   </div>
                 </div>
 
@@ -736,59 +668,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     placeholder="https://cdn.yourdomain.com"
                     value={settings.r2PublicUrl || ""}
                     onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
-                    disabled={settings.uploadProvider !== 'r2'}
                   />
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Local Storage Section */}
-              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'local' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={settings.uploadProvider === 'local' ? "bg-primary/10" : ""}>Option 2</Badge>
-                  <h3 className="font-bold">Local Storage Settings</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Local storage uses the server&apos;s file system. No additional configuration is typically needed here.
-                  Ensure your server has sufficient disk space and appropriate file permissions for uploads.
-                </p>
-              </div>
-
-              <Separator />
-
-              {/* Vercel Blob Section */}
-              <div className={`space-y-6 transition-opacity ${settings.uploadProvider !== 'vercel' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={settings.uploadProvider === 'vercel' ? "bg-primary/10" : ""}>Option 4</Badge>
-                  <h3 className="font-bold">Vercel Blob Settings</h3>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Blob Read/Write Token</label>
-                  <div className="relative">
-                    <Input 
-                      type={showBlobToken ? "text" : "password"}
-                      placeholder="BLOB_READ_WRITE_TOKEN"
-                      value={settings.vercelBlobToken || ""}
-                      onChange={(e) => setSettings({ ...settings, vercelBlobToken: e.target.value })}
-                      className="pr-10"
-                      disabled={settings.uploadProvider !== 'vercel'}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                      onClick={() => setShowBlobToken(!showBlobToken)}
-                      disabled={settings.uploadProvider !== 'vercel'}
-                    >
-                      {showBlobToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Copy the &quot;Read/Write Token&quot; from your Vercel Blob dashboard.
-                  </p>
+                  <p className="text-xs text-muted-foreground">Custom domain or R2.dev subdomain for serving files publicly.</p>
                 </div>
               </div>
 
@@ -799,16 +680,12 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   {isUploadConfigured ? (
                     <>
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>{settings.uploadProvider.toUpperCase().replace('_', ' ')} is configured and active</span>
+                      <span>Cloudflare R2 is configured and active</span>
                     </>
                   ) : (
                     <>
-                      <AlertCircle className="h-4 w-4 text-amber-500" />
-                      <span>Fill in credentials for {
-                        settings.uploadProvider === 'r2' ? 'Cloudflare R2' : 
-                        settings.uploadProvider === 'vercel' ? 'Vercel Blob' :
-                        'Local Storage'
-                      }</span>
+                      <AlertCircle className="h-4 w-4 text-red-500" />
+                      <span>Fill in all required credentials to enable file uploads</span>
                     </>
                   )}
                 </div>

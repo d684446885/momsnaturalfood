@@ -34,7 +34,7 @@ export default function WhyUsSection({
             loop 
             muted 
             playsInline 
-            preload="auto"
+            preload="metadata"
             className="w-full h-full object-cover opacity-30 grayscale-[0.2]"
           />
         ) : (
@@ -94,7 +94,7 @@ export default function WhyUsSection({
                         loop 
                         muted 
                         playsInline 
-                        preload="auto"
+                        preload="metadata"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (

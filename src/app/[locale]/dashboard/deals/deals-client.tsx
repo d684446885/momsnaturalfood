@@ -46,7 +46,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ImageUpload } from "@/components/image-upload";
+import { R2ImageUpload } from "@/components/r2-image-upload";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
@@ -254,10 +254,10 @@ export function DealsClient({
               <div className="grid gap-6 py-4">
                 <div className="space-y-4">
                   <label className="text-sm font-bold text-zinc-700">Deal Images</label>
-                  <ImageUpload 
-                    value={formData.images}
+                  <R2ImageUpload 
+                    images={formData.images}
                     onChange={(urls) => setFormData({ ...formData, images: urls })}
-                    onRemove={(url) => setFormData({ ...formData, images: formData.images.filter(i => i !== url) })}
+                    folder="deals"
                   />
                 </div>
 

@@ -56,7 +56,7 @@ export function CertificationsClient({ certifications }: CertificationsClientPro
                   onClick={() => setSelectedImage(cert.imageUrl)}
                   className="group relative aspect-square rounded-[2rem] overflow-hidden bg-white border border-zinc-100 hover:shadow-2xl hover:shadow-accent/10 transition-all duration-500 cursor-zoom-in"
                 >
-                  <div className="relative w-full h-full p-6 md:p-10 grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                  <div className="relative w-full h-full p-6 md:p-10 transition-all duration-500 transform group-hover:scale-110">
                     <Image
                       src={cert.imageUrl}
                       alt={cert.title}
@@ -65,10 +65,10 @@ export function CertificationsClient({ certifications }: CertificationsClientPro
                     />
                   </div>
                   
-                  {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/40 transition-all duration-500 flex items-center justify-center">
+                  {/* Overlay on hover (removed background, kept zoom icon) */}
+                  <div className="absolute inset-0 transition-all duration-500 flex items-center justify-center">
                     <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                      <div className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg">
+                      <div className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg border border-zinc-100">
                         <ZoomIn className="h-6 w-6 text-secondary" />
                       </div>
                     </div>

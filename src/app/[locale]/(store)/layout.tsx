@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { MobileBottomNav } from "@/components/mobile-nav";
+import { FloatingChatWidget } from "@/components/floating-chat-widget";
 import { db } from "@/lib/db";
 
 export default async function StoreLayout({
@@ -34,6 +35,7 @@ export default async function StoreLayout({
         legalPages={legalPages} 
         businessName={settings?.businessName}
       />
+      <FloatingChatWidget />
     </>
   );
 }

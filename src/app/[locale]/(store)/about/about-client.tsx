@@ -238,7 +238,7 @@ export function AboutClient({ content, certifications = [] }: AboutClientProps) 
                   {...fadeIn}
                   className="flex flex-col items-center group"
                 >
-                  <div className="relative h-24 w-24 md:h-32 md:w-32 mb-6 grayscale hover:grayscale-0 transition-all duration-500 group-hover:scale-110">
+                  <div className="relative h-24 w-24 md:h-32 md:w-32 mb-6 transition-all duration-500 group-hover:scale-110">
                     <Image
                       src={cert.imageUrl}
                       alt={cert.title}

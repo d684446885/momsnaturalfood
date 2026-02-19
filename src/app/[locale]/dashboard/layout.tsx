@@ -14,7 +14,8 @@ import {
   HelpCircle,
   FileText,
   Menu,
-  Award
+  Award,
+  Megaphone
 } from "lucide-react";
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
@@ -30,6 +31,7 @@ const sidebarLinks = [
   { icon: Users, label: "customers", href: "/dashboard/customers" },
   { icon: CreditCard, label: "payments", href: "/dashboard/payments" },
   { icon: MessageCircle, label: "messages", href: "/dashboard/messages" },
+  { icon: Megaphone, label: "marketing", href: "/dashboard/marketing" },
   { icon: HelpCircle, label: "faqs", href: "/dashboard/faqs" },
   { icon: FileText, label: "legal", href: "/dashboard/legal" },
   { icon: SettingsIcon, label: "settings", href: "/dashboard/settings" },
@@ -65,6 +67,7 @@ export default async function DashboardLayout({
     customers: t('customers'),
     payments: t('payments'),
     messages: t('messages'),
+    marketing: t('marketing') || 'Marketing',
     faqs: t('faqs'),
     legal: t('legal'),
     settings: t('settings'),

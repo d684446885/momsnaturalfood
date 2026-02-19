@@ -1,4 +1,4 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v18 (Hard Reset CertificationPage) - ${Math.random()}
+// Refresh comment to force Next.js to reload the DB client with new models - v19 (Added Marketing & Chat Models) - ${Math.random()}
 global.prisma = undefined;
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
