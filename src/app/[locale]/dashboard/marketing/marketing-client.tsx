@@ -24,7 +24,7 @@ interface ChatMessage {
   ipAddress: string | null;
   userAgent: string | null;
   isRead: boolean;
-  createdAt: string;
+  createdAt: string | Date;
 }
 
 interface MarketingSettings {
@@ -112,9 +112,9 @@ export function MarketingClient({ initialData }: MarketingClientProps) {
 
   const filteredMessages = filter === "unread" ? messages.filter((m) => !m.isRead) : messages;
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
+  const formatDate = (date: string | Date) => {
+    const d = new Date(date);
+    return d.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
