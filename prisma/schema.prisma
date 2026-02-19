@@ -142,62 +142,52 @@ model CartItem {
 }
 
 model Settings {
-  id              String   @id @default("global")
-  primaryColor    String   @default("#8B5E3C")
-  secondaryColor  String   @default("#1E3A34")
-  backgroundColor String   @default("#FAF9F6")
-  accentColor     String   @default("#D4AF37")
-  navbarColor     String   @default("#1E3A34")
-  footerColor     String   @default("#1E3A34")
-  sidebarColor    String   @default("#FAF9F6")
-  textColor       String   @default("#1E3A34")
-  buttonColor     String   @default("#8B5E3C")
-  buttonTextColor String   @default("#FAF9F6")
-  buttonHoverColor String  @default("#7d6036")
-  buttonHoverTextColor String @default("#FAF9F6")
-  
-  // Business Settings
-  businessName    String?
-  logoUrl         String?
-  businessEmail   String?
-  businessPhone   String?
-  businessAddress String?
-  // Cloudflare R2 Storage Settings (only supported provider)
-  r2AccountId     String?
-  r2AccessKeyId   String?
-  r2SecretAccessKey String?
-  r2BucketName    String?
-  r2PublicUrl     String?
-  
-  // NextAuth / Google OAuth Settings
-  googleClientId     String?
-  googleClientSecret String?
-  authSecret          String?
-  
-  // Localization Settings
-  defaultLanguage String   @default("en")
-  
-  // Marketing & Chat Widget Settings
-  whatsappNumber    String?
-  instagramUrl      String?
-  messengerUrl      String?
-  chatWidgetEnabled Boolean  @default(true)
-  
-  updatedAt       DateTime @updatedAt
+  id                   String   @id @default("global")
+  primaryColor         String   @default("#8B5E3C")
+  secondaryColor       String   @default("#1E3A34")
+  backgroundColor      String   @default("#FAF9F6")
+  accentColor          String   @default("#D4AF37")
+  r2AccountId          String?
+  r2AccessKeyId        String?
+  r2SecretAccessKey    String?
+  r2BucketName         String?
+  r2PublicUrl          String?
+  updatedAt            DateTime @updatedAt
+  authSecret           String?
+  googleClientId       String?
+  googleClientSecret   String?
+  businessAddress      String?
+  businessEmail        String?
+  businessName         String?
+  businessPhone        String?
+  logoUrl              String?
+  defaultLanguage      String   @default("en")
+  footerColor          String   @default("#1E3A34")
+  navbarColor          String   @default("#1E3A34")
+  sidebarColor         String   @default("#FAF9F6")
+  textColor            String   @default("#1E3A34")
+  buttonColor          String   @default("#8B5E3C")
+  buttonHoverColor     String   @default("#7d6036")
+  buttonHoverTextColor String   @default("#FAF9F6")
+  buttonTextColor      String   @default("#FAF9F6")
+  chatWidgetEnabled    Boolean  @default(true)
+  instagramUrl         String?
+  messengerUrl         String?
+  whatsappNumber       String?
 }
 
 model ChatMessage {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  message     String
-  location    String?
-  ipAddress   String?
-  userAgent   String?
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  location  String?
+  ipAddress String?
+  userAgent String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AboutPage {
@@ -333,39 +323,14 @@ model ContactMessage {
   createdAt  DateTime  @default(now())
 }
 
-enum CouponType {
-  PERCENTAGE
-  FIXED
-}
-
-enum CouponScope {
-  GLOBAL
-  PRODUCT
-  CATEGORY
-  DEAL
-}
-
-enum Role {
-  ADMIN
-  CUSTOMER
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
-
 model FaqCategory {
   id        String   @id @default(cuid())
   name      String   @unique
   slug      String   @unique
   order     Int      @default(0)
-  faqs      Faq[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  faqs      Faq[]
 
   @@map("faq_category")
 }
@@ -376,9 +341,9 @@ model Faq {
   answer     String
   order      Int         @default(0)
   categoryId String
-  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@map("faq")
 }
@@ -387,7 +352,7 @@ model LegalPage {
   id        String   @id @default(cuid())
   title     String
   slug      String   @unique
-  content   String   @db.Text
+  content   String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
@@ -413,4 +378,29 @@ model CertificationPage {
   heroBackgroundUrl  String?
   heroBackgroundType String   @default("image")
   updatedAt          DateTime @updatedAt
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+}
+
+enum CouponScope {
+  GLOBAL
+  PRODUCT
+  CATEGORY
+  DEAL
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
