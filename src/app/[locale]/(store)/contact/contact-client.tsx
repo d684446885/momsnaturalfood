@@ -315,7 +315,7 @@ export function ContactClient({ content }: ContactClientProps) {
                     className="group flex items-center md:items-start gap-4 md:gap-6 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-secondary/5 border border-secondary/10 hover:bg-white hover:shadow-2xl transition-all duration-500"
                   >
                     <div className="h-12 w-12 md:h-14 md:w-14 shrink-0 rounded-xl md:rounded-2xl bg-secondary text-white flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all duration-500 shadow-lg">
-                      {React.cloneElement(info.icon as React.ReactElement, { className: "h-5 w-5 md:h-6 md:w-6" })}
+                      {React.cloneElement(info.icon as any, { className: "h-5 w-5 md:h-6 md:w-6" })}
                     </div>
                     <div className="space-y-0.5 md:space-y-1 min-w-0">
                       <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-widest">{info.label}</p>
@@ -345,7 +345,7 @@ export function ContactClient({ content }: ContactClientProps) {
                       href={social.href} 
                       className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white hover:text-accent transition-all duration-500"
                     >
-                      {React.cloneElement(social.icon as React.ReactElement, { className: "h-5 w-5 md:h-6 md:w-6" })}
+                      {React.cloneElement(social.icon as any, { className: "h-5 w-5 md:h-6 md:w-6" })}
                     </a>
                   ))}
                 </div>
