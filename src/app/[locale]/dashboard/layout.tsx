@@ -18,7 +18,8 @@ import {
   Megaphone
 } from "lucide-react";
 import { db } from "@/lib/db";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 import { DashboardShell } from "./dashboard-shell";
 
 const sidebarLinks = [
@@ -32,6 +33,7 @@ const sidebarLinks = [
   { icon: CreditCard, label: "payments", href: "/dashboard/payments" },
   { icon: MessageCircle, label: "messages", href: "/dashboard/messages" },
   { icon: Megaphone, label: "marketing", href: "/dashboard/marketing" },
+  { icon: Mail, label: "newsletter", href: "/dashboard/newsletter" },
   { icon: HelpCircle, label: "faqs", href: "/dashboard/faqs" },
   { icon: FileText, label: "legal", href: "/dashboard/legal" },
   { icon: SettingsIcon, label: "settings", href: "/dashboard/settings" },
@@ -50,11 +52,20 @@ export default async function DashboardLayout({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Dashboard" });
+  const messages = await getMessages();
   
   // Fetch settings for logo and business name
-  const settings = await db.settings.findUnique({
+  const rawSettings = await db.settings.findUnique({
     where: { id: "global" }
   });
+
+  // Sanitize settings for Client Component serialization
+  const settings = rawSettings ? {
+    ...rawSettings,
+    shippingFee: Number(rawSettings.shippingFee) || 0,
+    freeShippingThreshold: Number(rawSettings.freeShippingThreshold) || 0,
+    updatedAt: rawSettings.updatedAt.toISOString(),
+  } : null;
 
   // Prepare translations for client component
   const translations = {
@@ -68,6 +79,7 @@ export default async function DashboardLayout({
     payments: t('payments'),
     messages: t('messages'),
     marketing: t('marketing') || 'Marketing',
+    newsletter: t('newsletter') || 'Newsletter',
     faqs: t('faqs'),
     legal: t('legal'),
     settings: t('settings'),
@@ -81,11 +93,13 @@ export default async function DashboardLayout({
   };
 
   return (
-    <DashboardShell 
-      translations={translations}
-      settings={settings}
-    >
-      {children}
-    </DashboardShell>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <DashboardShell 
+        translations={translations}
+        settings={settings}
+      >
+        {children}
+      </DashboardShell>
+    </NextIntlClientProvider>
   );
 }

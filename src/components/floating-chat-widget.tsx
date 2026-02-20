@@ -30,6 +30,15 @@ export function FloatingChatWidget() {
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
+
+    // Listen for custom trigger from mobile nav
+    const handleOpenWidget = () => {
+      setIsOpen(true);
+      setActiveTab("channels");
+    };
+
+    window.addEventListener('open-chat-widget', handleOpenWidget);
+    return () => window.removeEventListener('open-chat-widget', handleOpenWidget);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,7 +90,7 @@ export function FloatingChatWidget() {
       {/* Floating Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl hidden md:flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none"
         style={{ background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
         whileTap={{ scale: 0.9 }}
         aria-label="Open chat widget"
@@ -116,7 +125,7 @@ export function FloatingChatWidget() {
 
       {/* Pulse animation ring */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-40 w-14 h-14 md:w-16 md:h-16 rounded-full animate-ping opacity-20" style={{ background: "#25D366" }} />
+        <div className="fixed bottom-6 right-6 z-40 w-14 h-14 md:w-16 md:h-16 rounded-full animate-ping opacity-20 hidden md:block" style={{ background: "#25D366" }} />
       )}
 
       {/* Chat Popup */}
@@ -135,14 +144,22 @@ export function FloatingChatWidget() {
               className="px-5 py-4 text-white"
               style={{ background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                  <MessageCircle className="h-5 w-5 text-white" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base">{settings?.businessName || "Chat with us"}</h3>
+                    <p className="text-xs text-white/80">We typically reply within minutes</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-base">{settings?.businessName || "Chat with us"}</h3>
-                  <p className="text-xs text-white/80">We typically reply within minutes</p>
-                </div>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                >
+                  <X className="h-4 w-4 text-white" />
+                </button>
               </div>
 
               {/* Tab Switcher */}

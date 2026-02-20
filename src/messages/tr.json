@@ -162,6 +162,8 @@
     "cityPlaceholder": "Şehriniz",
     "postalCode": "Posta Kodu",
     "postalCodePlaceholder": "Posta kodu",
+    "contactNumber": "İletişim Numarası",
+    "contactNumberPlaceholder": "ör. +90 5XX XXX XX XX",
     "card": "Kredi veya Banka Kartı",
     "cardDesc": "Stripe üzerinden güvenli ödeme",
     "paypal": "PayPal",

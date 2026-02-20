@@ -17,9 +17,10 @@ import CTASection from "@/components/home/cta-section";
 
 interface HomeClientProps {
   content: any;
+  settings: any;
 }
 
-export function HomeClient({ content }: HomeClientProps) {
+export function HomeClient({ content, settings }: HomeClientProps) {
   const t = useTranslations("Hero");
   const tc = useTranslations("Common");
   const tCat = useTranslations("Categories");
@@ -246,14 +247,16 @@ export function HomeClient({ content }: HomeClientProps) {
 
       <FeaturesSection featuresList={featuresList} />
 
-      <CTASection 
-        ctaTitle={ctaTitle}
-        ctaSubtitle={ctaSubtitle}
-        ctaMediaUrl={ctaMediaUrl}
-        ctaMediaType={ctaMediaType}
-        placeholderText={tCta('placeholder')}
-        subscribeText={tCta('subscribe')}
-      />
+      {settings.newsletterEnabled !== false && (
+        <CTASection 
+          ctaTitle={ctaTitle}
+          ctaSubtitle={ctaSubtitle}
+          ctaMediaUrl={ctaMediaUrl}
+          ctaMediaType={ctaMediaType}
+          placeholderText={tCta('placeholder')}
+          subscribeText={tCta('subscribe')}
+        />
+      )}
     </div>
   );
 }

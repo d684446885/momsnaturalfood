@@ -64,6 +64,9 @@ const getHomeContent = unstable_cache(
 
 export default async function Home() {
   const content = await getHomeContent();
+  const settings = await db.settings.findUnique({
+    where: { id: "global" }
+  });
   
   // Serialize Date objects and ensure plain object
   const serializedContent = content ? {
@@ -71,5 +74,5 @@ export default async function Home() {
     updatedAt: content.updatedAt ? new Date(content.updatedAt).toISOString() : new Date().toISOString(),
   } : null;
 
-  return <HomeClient content={serializedContent} />;
+  return <HomeClient content={serializedContent} settings={JSON.parse(JSON.stringify(settings))} />;
 }

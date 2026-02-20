@@ -101,16 +101,24 @@ model Category {
 }
 
 model Order {
-  id           String      @id @default(cuid())
-  userId       String
-  total        Decimal
-  status       OrderStatus @default(PENDING)
-  courierName  String?
-  trackingLink String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  user         User        @relation(fields: [userId], references: [id])
-  items        OrderItem[]
+  id            String      @id @default(cuid())
+  userId        String?
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  address       String?
+  city          String?
+  postalCode    String?
+  shippingFee   Decimal     @default(0)
+  total         Decimal
+  paymentMethod String      @default("CARD")
+  status        OrderStatus @default(PENDING)
+  courierName   String?
+  trackingLink  String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  user          User?       @relation(fields: [userId], references: [id])
+  items         OrderItem[]
 }
 
 model OrderItem {
@@ -174,6 +182,10 @@ model Settings {
   instagramUrl         String?
   messengerUrl         String?
   whatsappNumber       String?
+  shippingFee          Decimal  @default(0)
+  freeShippingThreshold Decimal @default(0)
+  cashOnDeliveryEnabled Boolean  @default(true)
+  newsletterEnabled     Boolean  @default(true)
 }
 
 model ChatMessage {
@@ -403,4 +415,12 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscription")
 }

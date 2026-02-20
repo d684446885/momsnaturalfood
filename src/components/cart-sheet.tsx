@@ -15,7 +15,8 @@ import {
   SheetHeader, 
   SheetTitle, 
   SheetTrigger,
-  SheetFooter
+  SheetFooter,
+  SheetClose
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -59,8 +60,8 @@ export function CartSheet() {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg border-l-primary/10 bg-background/95 backdrop-blur-xl">
-        <SheetHeader className="px-6 border-b pb-4">
+      <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg border-l-primary/10 bg-background/95 backdrop-blur-xl gap-0">
+        <SheetHeader className="px-6 border-b pb-4 pt-6 shrink-0">
           <SheetTitle className="font-serif text-2xl flex items-center gap-2 text-secondary">
             {t('title')}
             <span className="text-sm font-sans font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full mt-1">
@@ -70,9 +71,9 @@ export function CartSheet() {
         </SheetHeader>
         
         {itemCount > 0 ? (
-          <>
-            <ScrollArea className="flex-1 pr-6 pb-4">
-              <div className="flex flex-col gap-5 p-6">
+          <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+            <ScrollArea className="flex-1 px-6 min-h-0">
+              <div className="flex flex-col gap-5 py-6">
                 <AnimatePresence mode="popLayout">
                   {cart.items.map((item) => (
                     <motion.div
@@ -131,7 +132,7 @@ export function CartSheet() {
                 </AnimatePresence>
               </div>
             </ScrollArea>
-            <div className="px-6 py-6 bg-muted/20 mt-auto border-t space-y-4">
+            <div className="px-6 py-6 bg-muted/20 shrink-0 border-t space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-muted-foreground text-sm uppercase tracking-widest font-semibold">
                   <span>Subtotal</span>
@@ -148,18 +149,20 @@ export function CartSheet() {
                 </div>
               </div>
               <SheetFooter className="pt-2">
-                <Link href="/checkout" className="w-full">
-                  <Button className="w-full py-6 text-lg font-bold gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform">
-                    {t('checkout')}
-                    <ArrowRight className="h-5 w-5" />
-                  </Button>
-                </Link>
+                <SheetClose asChild>
+                  <Link href="/checkout" className="w-full">
+                    <Button className="w-full py-6 text-lg font-bold gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform">
+                      {t('checkout')}
+                      <ArrowRight className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                </SheetClose>
               </SheetFooter>
               <p className="text-center text-xs text-muted-foreground mt-4 italic">
                 * Taxes calculated at checkout
               </p>
             </div>
-          </>
+            </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center space-y-6 pt-12">
             <div className="h-40 w-40 rounded-full bg-muted/50 flex items-center justify-center relative">

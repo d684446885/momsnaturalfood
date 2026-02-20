@@ -2,7 +2,6 @@ import NextAuth, { type DefaultSession, type NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
 import { authConfig } from "./auth.config";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
@@ -33,10 +32,6 @@ const config: NextAuthConfig = {
   session: { strategy: "jwt" as const },
   ...authConfig,
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
     Credentials({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;

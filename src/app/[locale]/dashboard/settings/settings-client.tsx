@@ -18,7 +18,10 @@ import {
   Phone,
   MapPin,
   Upload,
-  Globe
+  Globe,
+  Truck,
+  CreditCard,
+  Megaphone
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -48,8 +51,6 @@ interface Settings {
   r2SecretAccessKey: string | null;
   r2BucketName: string | null;
   r2PublicUrl: string | null;
-  googleClientId: string | null;
-  googleClientSecret: string | null;
   authSecret: string | null;
   businessName: string | null;
   logoUrl: string | null;
@@ -58,6 +59,10 @@ interface Settings {
   businessAddress: string | null;
 
   defaultLanguage: string;
+  shippingFee: number;
+  freeShippingThreshold: number;
+  cashOnDeliveryEnabled: boolean;
+  newsletterEnabled: boolean;
 }
 
 interface SettingsClientProps {
@@ -69,17 +74,16 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
   const [settings, setSettings] = useState(initialSettings);
   const [isLoading, setIsLoading] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
-  const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth' | 'business'>('business');
+  const [activeTab, setActiveTab] = useState<'appearance' | 'storage' | 'auth' | 'business' | 'logistics' | 'marketing'>('business');
   const [isUploading, setIsUploading] = useState(false);
   const [showDriveSecret, setShowDriveSecret] = useState(false);
   const [showDriveRefresh, setShowDriveRefresh] = useState(false);
 
-  const [showGoogleSecret, setShowGoogleSecret] = useState(false);
   const [showAuthSecret, setShowAuthSecret] = useState(false);
 
   const isR2Configured = settings.r2AccountId && settings.r2AccessKeyId && settings.r2SecretAccessKey && settings.r2BucketName;
 
-  const isAuthConfigured = settings.googleClientId && settings.googleClientSecret && settings.authSecret;
+  const isAuthConfigured = !!settings.authSecret;
 
   const isUploadConfigured = !!isR2Configured;
 
@@ -272,6 +276,24 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               Incomplete
             </Badge>
           )}
+        </Button>
+        <Button 
+          variant={activeTab === 'logistics' ? 'default' : 'ghost'} 
+          size="sm"
+          onClick={() => setActiveTab('logistics')}
+          className="gap-2"
+        >
+          <Truck className="h-4 w-4" />
+          Logistics & Payments
+        </Button>
+        <Button 
+          variant={activeTab === 'marketing' ? 'default' : 'ghost'} 
+          size="sm"
+          onClick={() => setActiveTab('marketing')}
+          className="gap-2"
+        >
+          <Megaphone className="h-4 w-4" />
+          Marketing
         </Button>
       </div>
 
@@ -709,51 +731,14 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-emerald-500" />
                 <div>
-                  <CardTitle>Authentication Settings</CardTitle>
-                  <CardDescription>Manage Google OAuth credentials and NextAuth security tokens.</CardDescription>
+                  <CardTitle>Authentication Security</CardTitle>
+                  <CardDescription>Manage your NextAuth security tokens.</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold">Google Client ID</label>
-                  <Input 
-                    placeholder="xxxx-xxxx.apps.googleusercontent.com"
-                    value={settings.googleClientId || ""}
-                    onChange={(e) => setSettings({ ...settings, googleClientId: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    From Google Cloud Console → APIs & Services → Credentials
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Google Client Secret</label>
-                  <div className="relative">
-                    <Input 
-                      type={showGoogleSecret ? "text" : "password"}
-                      placeholder="GOCSPX-xxxxxxxxxxxx"
-                      value={settings.googleClientSecret || ""}
-                      onChange={(e) => setSettings({ ...settings, googleClientSecret: e.target.value })}
-                      className="pr-10"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                      onClick={() => setShowGoogleSecret(!showGoogleSecret)}
-                    >
-                      {showGoogleSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Keep this secret! Paired with Client ID
-                  </p>
-                </div>
-
-                <div className="md:col-span-2 space-y-2">
                   <label className="text-sm font-semibold">Authentication Secret (AUTH_SECRET)</label>
                   <div className="relative">
                     <Input 
@@ -802,6 +787,199 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 >
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                     Save Auth Settings
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Logistics Tab */}
+        {activeTab === 'logistics' && (
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="bg-muted/50 pb-6">
+              <div className="flex items-center gap-2">
+                <Truck className="h-5 w-5 text-primary" />
+                <div>
+                  <CardTitle>Logistics & Payments</CardTitle>
+                  <CardDescription>Control your shipping rates, thresholds, and available payment methods.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Standard Shipping Fee (€)</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
+                      <Input 
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        className="pl-8"
+                        value={settings.shippingFee}
+                        onChange={(e) => setSettings({ ...settings, shippingFee: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground italic">Applied to all orders below the free shipping threshold.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Free Shipping Threshold (€)</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
+                      <Input 
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        className="pl-8"
+                        value={settings.freeShippingThreshold}
+                        onChange={(e) => setSettings({ ...settings, freeShippingThreshold: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground italic">Orders above this amount will have zero shipping charges.</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <CreditCard className="h-4 w-4" />
+                  Available Payment Methods
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className={cn(
+                    "p-6 rounded-3xl border-2 transition-all cursor-pointer group flex items-center justify-between",
+                    settings.cashOnDeliveryEnabled 
+                      ? "border-primary bg-primary/5 ring-4 ring-primary/5" 
+                      : "border-muted bg-muted/20 opacity-60 hover:opacity-100 hover:border-muted-foreground/30"
+                  )}
+                  onClick={() => setSettings({ ...settings, cashOnDeliveryEnabled: !settings.cashOnDeliveryEnabled })}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={cn(
+                        "h-12 w-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
+                        settings.cashOnDeliveryEnabled ? "bg-white text-primary" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Truck className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-secondary">Cash on Delivery</p>
+                        <p className="text-xs text-muted-foreground">Customers pay when they receive the order.</p>
+                      </div>
+                    </div>
+                    
+                    <div className={cn(
+                      "h-6 w-11 rounded-full relative transition-colors duration-200 ease-in-out",
+                      settings.cashOnDeliveryEnabled ? "bg-primary" : "bg-zinc-300"
+                    )}>
+                      <div className={cn(
+                        "absolute top-1 left-1 h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in-out",
+                        settings.cashOnDeliveryEnabled ? "translate-x-5" : "translate-x-0"
+                      )} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10 flex gap-4 items-start">
+                <div className="h-10 w-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+                  <Truck className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                   <p className="text-sm font-bold text-secondary">Customer Experience Preview</p>
+                   <p className="text-xs text-muted-foreground mt-1">
+                     Customers will see: {settings.freeShippingThreshold > 0 
+                      ? `Free shipping on orders over €${settings.freeShippingThreshold.toFixed(2)}, otherwise €${settings.shippingFee.toFixed(2)}.` 
+                      : `Flat shipping rate of €${settings.shippingFee.toFixed(2)} for all orders.`}
+                   </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-end">
+                <Button 
+                    className="gap-2 px-8" 
+                    onClick={onSave}
+                    disabled={isLoading}
+                >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    Save Shipping Rules
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'marketing' && (
+          <Card className="overflow-hidden border-none shadow-sm">
+            <CardHeader className="bg-muted/50 pb-6">
+              <div className="flex items-center gap-2">
+                <Megaphone className="h-5 w-5 text-primary" />
+                <div>
+                  <CardTitle>Marketing & Newsletter</CardTitle>
+                  <CardDescription>Manage your customer engagement and subscription features.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <div className="space-y-4">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  Newsletter Settings
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className={cn(
+                    "p-6 rounded-3xl border-2 transition-all cursor-pointer group flex items-center justify-between",
+                    settings.newsletterEnabled 
+                      ? "border-primary bg-primary/5 ring-4 ring-primary/5" 
+                      : "border-muted bg-muted/20 opacity-60 hover:opacity-100 hover:border-muted-foreground/30"
+                  )}
+                  onClick={() => setSettings({ ...settings, newsletterEnabled: !settings.newsletterEnabled })}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={cn(
+                        "h-12 w-12 rounded-2xl flex items-center justify-center transition-colors shadow-sm",
+                        settings.newsletterEnabled ? "bg-white text-primary" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Mail className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-secondary">Enable Newsletter Section</p>
+                        <p className="text-xs text-muted-foreground">Show the subscription form on the home page.</p>
+                      </div>
+                    </div>
+                    
+                    <div className={cn(
+                      "h-6 w-11 rounded-full relative transition-colors duration-200 ease-in-out",
+                      settings.newsletterEnabled ? "bg-primary" : "bg-zinc-300"
+                    )}>
+                      <div className={cn(
+                        "absolute top-1 left-1 h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in-out",
+                        settings.newsletterEnabled ? "translate-x-5" : "translate-x-0"
+                      )} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-end">
+                <Button 
+                    className="gap-2 px-8" 
+                    onClick={onSave}
+                    disabled={isLoading}
+                >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    Save Marketing Settings
                 </Button>
               </div>
             </CardContent>

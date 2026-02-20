@@ -151,7 +151,7 @@ export function ContactClient({ content }: ContactClientProps) {
     <div className="min-h-screen bg-transparent">
 
       {/* Hero Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-20 md:py-32 overflow-hidden">
         {/* Dynamic Background */}
         {content?.heroBackgroundUrl ? (
           <>
@@ -192,10 +192,10 @@ export function ContactClient({ content }: ContactClientProps) {
               <MessageCircle className="h-4 w-4" />
               {heroSubtitle}
             </div>
-            <h1 className="text-5xl md:text-8xl font-serif font-bold italic tracking-tight leading-[1.1]">
+            <h1 className="text-4xl md:text-6xl lg:text-8xl font-serif font-bold italic tracking-tight leading-[1.1]">
               {heroTitle}
             </h1>
-            <p className="text-xl md:text-2xl font-light text-white/80 font-serif italic max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl font-light text-white/80 font-serif italic max-w-2xl mx-auto">
               {heroDesc}
             </p>
           </motion.div>
@@ -203,14 +203,14 @@ export function ContactClient({ content }: ContactClientProps) {
       </section>
 
       {/* Contact Content */}
-      <section className="py-24 relative">
+      <section className="py-12 md:py-24 relative">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             
             {/* Contact Form */}
             <motion.div {...fadeIn} className="lg:col-span-7">
-              <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-zinc-100">
-                <h2 className="text-3xl font-serif font-bold text-secondary italic mb-8">
+              <div className="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-zinc-100">
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-secondary italic mb-8">
                   {t('form.send')}
                 </h2>
                 
@@ -312,19 +312,19 @@ export function ContactClient({ content }: ContactClientProps) {
                 {contactInfo.map((info, idx) => (
                   <div 
                     key={idx}
-                    className="group flex items-start gap-6 p-8 rounded-[2.5rem] bg-secondary/5 border border-secondary/10 hover:bg-white hover:shadow-2xl transition-all duration-500"
+                    className="group flex items-center md:items-start gap-4 md:gap-6 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-secondary/5 border border-secondary/10 hover:bg-white hover:shadow-2xl transition-all duration-500"
                   >
-                    <div className="h-14 w-14 rounded-2xl bg-secondary text-white flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all duration-500 shadow-lg">
-                      {info.icon}
+                    <div className="h-12 w-12 md:h-14 md:w-14 shrink-0 rounded-xl md:rounded-2xl bg-secondary text-white flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all duration-500 shadow-lg">
+                      {React.cloneElement(info.icon as React.ReactElement, { className: "h-5 w-5 md:h-6 md:w-6" })}
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-xs font-bold text-accent uppercase tracking-widest">{info.label}</p>
+                    <div className="space-y-0.5 md:space-y-1 min-w-0">
+                      <p className="text-[10px] md:text-xs font-bold text-accent uppercase tracking-widest">{info.label}</p>
                       {info.href ? (
-                        <a href={info.href} className="text-xl font-serif font-bold text-secondary hover:text-accent transition-colors italic">
+                        <a href={info.href} className="text-lg md:text-xl font-serif font-bold text-secondary hover:text-accent transition-colors italic break-words line-clamp-2 md:line-clamp-none">
                           {info.value}
                         </a>
                       ) : (
-                        <p className="text-xl font-serif font-bold text-secondary italic">{info.value}</p>
+                        <p className="text-lg md:text-xl font-serif font-bold text-secondary italic break-words line-clamp-2 md:line-clamp-none">{info.value}</p>
                       )}
                     </div>
                   </div>
@@ -332,8 +332,8 @@ export function ContactClient({ content }: ContactClientProps) {
               </div>
 
               {/* Social Links */}
-              <div className="p-10 rounded-[3rem] bg-accent text-secondary">
-                <h3 className="text-2xl font-serif font-bold italic mb-6">Follow Our Journey</h3>
+              <div className="p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-accent text-secondary">
+                <h3 className="text-xl md:text-2xl font-serif font-bold italic mb-6">Follow Our Journey</h3>
                 <div className="flex gap-4">
                   {[
                     { icon: <Instagram />, href: "#" },
@@ -343,9 +343,9 @@ export function ContactClient({ content }: ContactClientProps) {
                     <a 
                       key={i} 
                       href={social.href} 
-                      className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white hover:text-accent transition-all duration-500"
+                      className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-white hover:text-accent transition-all duration-500"
                     >
-                      {social.icon}
+                      {React.cloneElement(social.icon as React.ReactElement, { className: "h-5 w-5 md:h-6 md:w-6" })}
                     </a>
                   ))}
                 </div>

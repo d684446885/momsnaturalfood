@@ -3,12 +3,18 @@ import { Footer } from "@/components/footer";
 import { MobileBottomNav } from "@/components/mobile-nav";
 import { FloatingChatWidget } from "@/components/floating-chat-widget";
 import { db } from "@/lib/db";
+import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 export default async function StoreLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const messages = await getMessages();
   const legalPages = await db.legalPage.findMany({
     select: {
       id: true,
@@ -23,7 +29,7 @@ export default async function StoreLayout({
   const settings = await db.settings.findUnique({ where: { id: "global" } });
 
   return (
-    <>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <Navbar 
         legalPages={legalPages} 
         logoUrl={settings?.logoUrl}
@@ -34,8 +40,9 @@ export default async function StoreLayout({
       <Footer 
         legalPages={legalPages} 
         businessName={settings?.businessName}
+        newsletterEnabled={settings?.newsletterEnabled ?? true}
       />
       <FloatingChatWidget />
-    </>
+    </NextIntlClientProvider>
   );
 }

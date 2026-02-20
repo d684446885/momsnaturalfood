@@ -68,48 +68,46 @@ export function PwaInstallButton({ variant = "navbar" }: { variant?: "navbar" | 
         setShowBanner(false);
       }
       setDeferredPrompt(null);
-    } else {
-      // Show tooltip with manual instructions
+    } else if (isIOS) {
+      // For iOS, manual instructions are mandatory as Apple doesn't support auto-install
       setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 5000);
+      setTimeout(() => setShowTooltip(false), 8000);
+    } else {
+      // On other platforms, if prompt isn't ready yet, show manual instructions
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 8000);
     }
-  }, [deferredPrompt]);
+  }, [deferredPrompt, isIOS]);
 
   // Don't render until mounted to avoid hydration mismatch
-  if (!isMounted) {
-    if (variant === "navbar") {
-      return (
-        <Button variant="ghost" size="icon" className="relative group">
-          <Download className="h-5 w-5" />
-        </Button>
-      );
-    }
-    return null;
-  }
+  if (!isMounted) return null;
 
   // Don't render if already installed
   if (isInstalled) return null;
 
-  // Navbar variant - always visible icon button
+  // For non-iOS platforms, check if native prompt is available
+  const isReady = !!deferredPrompt || isIOS;
+  // Only hide for banner variant when not ready; navbar/footer always show
+  if (!isReady && variant === "banner") return null;
+
+  // Navbar variant - visible when ready
   if (variant === "navbar") {
     return (
       <div className="relative">
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleInstall}
-            className="relative group"
+            className="relative group text-primary h-9 w-9 rounded-full bg-primary/10 hover:bg-primary/20"
             title="Install App"
             id="pwa-install-navbar"
           >
-            <Download className="h-5 w-5" />
-            {deferredPrompt && (
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/60 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
-              </span>
-            )}
+            <Download className="h-4 w-4" />
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500/60 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            </span>
           </Button>
         </motion.div>
 
@@ -156,7 +154,7 @@ export function PwaInstallButton({ variant = "navbar" }: { variant?: "navbar" | 
     );
   }
 
-  // Footer variant - always visible text button
+  // Footer variant - visible when ready
   if (variant === "footer") {
     return (
       <div className="relative">

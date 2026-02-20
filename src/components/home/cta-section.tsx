@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import Image from "next/image";
 
+import { toast } from "sonner";
+
 interface CTASectionProps {
   ctaTitle: string;
   ctaSubtitle: string;
@@ -23,6 +25,36 @@ export default function CTASection({
   placeholderText,
   subscribeText,
 }: CTASectionProps) {
+  const [email, setEmail] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to subscribe");
+      }
+
+      toast.success("Successfully subscribed to our newsletter!");
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="py-12 md:py-24 container mx-auto px-4 md:px-6">
       <motion.div
@@ -76,17 +108,29 @@ export default function CTASection({
           </p>
           
           {/* Email Input + Subscribe */}
-          <div className="space-y-3 sm:space-y-0 sm:flex sm:gap-3 max-w-lg">
+          <form onSubmit={onSubscribe} className="space-y-3 sm:space-y-0 sm:flex sm:gap-3 max-w-lg">
             <input
               type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder={placeholderText}
-              className="w-full sm:flex-1 h-12 sm:h-14 md:h-16 px-5 md:px-6 rounded-xl md:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all text-sm md:text-base"
+              disabled={isLoading}
+              className="w-full sm:flex-1 h-12 sm:h-14 md:h-16 px-5 md:px-6 rounded-xl md:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all text-sm md:text-base disabled:opacity-50"
             />
-            <Button className="w-full sm:w-auto h-12 sm:h-14 md:h-16 px-6 md:px-10 rounded-xl md:rounded-2xl bg-accent hover:bg-white text-secondary transition-all font-bold text-sm md:text-lg shadow-xl shadow-accent/20 gap-2">
-              <Send className="h-4 w-4 md:h-5 md:w-5" />
-              {subscribeText}
+            <Button 
+              type="submit"
+              disabled={isLoading}
+              className="w-full sm:w-auto h-12 sm:h-14 md:h-16 px-6 md:px-10 rounded-xl md:rounded-2xl bg-accent hover:bg-white text-secondary transition-all font-bold text-sm md:text-lg shadow-xl shadow-accent/20 gap-2 disabled:opacity-70"
+            >
+              {isLoading ? (
+                <div className="h-5 w-5 border-2 border-secondary/30 border-t-secondary animate-spin rounded-full" />
+              ) : (
+                <Send className="h-4 w-4 md:h-5 md:w-5" />
+              )}
+              {isLoading ? "Subscribing..." : subscribeText}
             </Button>
-          </div>
+          </form>
         </div>
       </motion.div>
     </section>

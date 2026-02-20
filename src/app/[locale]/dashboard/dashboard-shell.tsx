@@ -55,6 +55,7 @@ const iconMap = {
   contactPage: Mail,
   certifications: Award,
   marketing: Megaphone,
+  newsletter: Mail,
 };
 
 const sidebarGroups = [
@@ -72,6 +73,7 @@ const sidebarGroups = [
       { iconName: "orders" as const, label: "orders", href: "/dashboard/orders" },
       { iconName: "customers" as const, label: "customers", href: "/dashboard/customers" },
       { iconName: "marketing" as const, label: "marketing", href: "/dashboard/marketing" },
+      { iconName: "newsletter" as const, label: "newsletter", href: "/dashboard/newsletter" },
     ]
   },
   {

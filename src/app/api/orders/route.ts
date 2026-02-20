@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+// Trigger re-typecheck after prisma generate
 import { auth } from "@/auth";
 
 export async function GET(request: Request) {
@@ -39,38 +40,70 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const session = await auth();
-
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const userId = session.user.id;
+  const userId = session?.user?.id;
 
   try {
     const body = await request.json();
-    const { items } = body;
+    const { items, shippingInfo, paymentMethod } = body;
 
-    // Calculate total
-    let total = 0;
+    if (!items || items.length === 0) {
+      return NextResponse.json({ error: "No items in order" }, { status: 400 });
+    }
+
+    // Calculate subtotal and prepare order items with verified prices
+    let subtotal = 0;
+    const verifiedOrderItems: { productId: string; quantity: number; price: number }[] = [];
+
     for (const item of items) {
       const product = await db.product.findUnique({
         where: { id: item.productId },
       });
-      if (product) {
-        total += Number(product.price) * item.quantity;
+
+      if (!product) {
+        return NextResponse.json(
+          { error: `Product not found: ${item.productId}` },
+          { status: 400 }
+        );
       }
+
+      const price = Number(product.price);
+      subtotal += price * item.quantity;
+      
+      verifiedOrderItems.push({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: price, // Use the price from the database, not the client
+      });
     }
+
+    // Fetch shipping settings for verification
+    const settings = await db.settings.findUnique({
+      where: { id: "global" }
+    });
+
+    const freeShippingThreshold = settings?.freeShippingThreshold ? Number(settings.freeShippingThreshold) : 0;
+    const shippingFee = settings?.shippingFee ? Number(settings.shippingFee) : 0;
+
+    const serverShippingFee = (freeShippingThreshold > 0 && subtotal >= freeShippingThreshold) 
+      ? 0 
+      : shippingFee;
+
+    const total = subtotal + serverShippingFee;
 
     const order = await db.order.create({
       data: {
-        userId,
+        userId: userId || undefined,
+        customerName: shippingInfo?.fullName || undefined,
+        customerEmail: shippingInfo?.email || undefined,
+        customerPhone: shippingInfo?.contactNumber || undefined,
+        address: shippingInfo?.address || undefined,
+        city: shippingInfo?.city || undefined,
+        postalCode: shippingInfo?.postalCode || undefined,
+        shippingFee: serverShippingFee,
         total,
+        paymentMethod: (paymentMethod as string) || "CARD",
         items: {
-          create: items.map((item: { productId: string; quantity: number; price: number }) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price,
-          })),
+          create: verifiedOrderItems,
         },
       },
       include: {
@@ -82,15 +115,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // Clear the user's cart after placing order
-    const cart = await db.cart.findUnique({
-      where: { userId },
-    });
-
-    if (cart) {
-      await db.cartItem.deleteMany({
-        where: { cartId: cart.id },
+    // Clear the user's cart after placing order (only for logged in users)
+    if (userId) {
+      const cart = await db.cart.findUnique({
+        where: { userId },
       });
+
+      if (cart) {
+        await db.cartItem.deleteMany({
+          where: { cartId: cart.id },
+        });
+      }
     }
 
     return NextResponse.json(order, { status: 201 });

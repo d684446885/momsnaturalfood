@@ -162,6 +162,8 @@
     "cityPlaceholder": "مدينتك",
     "postalCode": "الرمز البريدي",
     "postalCodePlaceholder": "الرمز البريدي",
+    "contactNumber": "رقم التواصل",
+    "contactNumberPlaceholder": "مثال: 90XXXXXXXXXX+",
     "card": "بطاقة ائتمان أو دفع",
     "cardDesc": "دفع آمن عبر Stripe",
     "paypal": "بايبال",

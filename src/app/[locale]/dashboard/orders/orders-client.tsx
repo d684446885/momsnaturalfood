@@ -66,6 +66,9 @@ interface Order {
   items: any[];
   courierName?: string | null;
   trackingLink?: string | null;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  customerPhone?: string | null;
 }
 
 interface AdminOrdersClientProps {
@@ -502,19 +505,28 @@ export function AdminOrdersClient({
                                   </div>
                               </Card>
 
-                              <Card className="border-none shadow-sm rounded-3xl p-6 bg-white overflow-hidden relative">
-                                  <div className="absolute top-0 left-0 w-1.5 h-full bg-accent" />
-                                  <div className="space-y-4">
-                                      <div className="flex items-center gap-2 text-zinc-400">
-                                          <User className="h-4 w-4" />
-                                          <span className="text-[10px] font-bold uppercase tracking-widest">Customer</span>
-                                      </div>
-                                      <div className="flex flex-col">
-                                           <span className="text-lg font-bold text-secondary">{selectedOrder.user.name || "Guest Account"}</span>
-                                           <span className="text-sm text-zinc-500 font-light truncate">{selectedOrder.user.email}</span>
-                                      </div>
-                                  </div>
-                              </Card>
+                               <Card className="border-none shadow-sm rounded-3xl p-6 bg-white overflow-hidden relative">
+                                   <div className="absolute top-0 left-0 w-1.5 h-full bg-accent" />
+                                   <div className="space-y-4">
+                                       <div className="flex items-center gap-2 text-zinc-400">
+                                           <User className="h-4 w-4" />
+                                           <span className="text-[10px] font-bold uppercase tracking-widest">Customer Information</span>
+                                       </div>
+                                       <div className="flex flex-col space-y-1">
+                                            <span className="text-lg font-bold text-secondary">
+                                                {selectedOrder.customerName || selectedOrder.user.name || "Guest Account"}
+                                            </span>
+                                            <span className="text-sm text-zinc-500 font-medium">
+                                                {selectedOrder.customerEmail || selectedOrder.user.email}
+                                            </span>
+                                            {selectedOrder.customerPhone && (
+                                                <span className="text-sm text-primary font-bold flex items-center gap-1">
+                                                    <span className="text-zinc-400 font-normal">Phone:</span> {selectedOrder.customerPhone}
+                                                </span>
+                                            )}
+                                       </div>
+                                   </div>
+                               </Card>
                           </div>
 
                           {/* Order Items */}

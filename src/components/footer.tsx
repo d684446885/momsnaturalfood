@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { Facebook, Twitter, Instagram, Youtube, Mail } from "lucide-react";
 import { PwaInstallButton } from "./pwa-install-button";
 import { useTranslations } from "next-intl";
+import React from "react";
+import { toast } from "sonner";
 
 interface LegalPage {
   id: string;
@@ -18,11 +20,43 @@ interface LegalPage {
 export function Footer({ 
   legalPages = [],
   businessName,
+  newsletterEnabled = true,
 }: { 
   legalPages?: LegalPage[];
   businessName?: string | null;
+  newsletterEnabled?: boolean;
 }) {
   const t = useTranslations("Footer");
+  const [email, setEmail] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to subscribe");
+      }
+
+      toast.success(t('newsletter.success') || "Successfully subscribed!");
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -139,18 +173,32 @@ export function Footer({
             </ul>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('newsletter.title')}</h3>
-            <p className="text-sm text-muted-foreground">
-              {t('newsletter.description')}
-            </p>
-            <div className="flex gap-2">
-              <Input type="email" placeholder={t('newsletter.placeholder')} className="flex-1" />
-              <Button size="icon">
-                <Mail className="h-4 w-4" />
-              </Button>
-            </div>
-          </motion.div>
+          {newsletterEnabled && (
+            <motion.div variants={itemVariants} className="space-y-4">
+              <h3 className="text-lg font-semibold">{t('newsletter.title')}</h3>
+              <p className="text-sm text-muted-foreground">
+                {t('newsletter.description')}
+              </p>
+              <form onSubmit={onSubscribe} className="flex gap-2">
+                <Input 
+                  type="email" 
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                  placeholder={t('newsletter.placeholder')} 
+                  className="flex-1 rounded-xl bg-white/5 border-zinc-200 focus:ring-primary h-11" 
+                />
+                <Button size="icon" type="submit" disabled={isLoading} className="rounded-xl h-11 w-11 shrink-0">
+                  {isLoading ? (
+                    <div className="h-4 w-4 border-2 border-primary/30 border-t-primary animate-spin rounded-full" />
+                  ) : (
+                    <Mail className="h-4 w-4" />
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+          )}
         </div>
 
         <Separator className="my-8" />

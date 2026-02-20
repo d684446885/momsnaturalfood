@@ -128,6 +128,7 @@
     "payments": "Payments",
     "messages": "Messages",
     "marketing": "Marketing",
+    "newsletter": "Newsletter",
     "faqs": "FAQs",
     "legal": "Legal Pages",
     "settings": "Settings",
@@ -195,10 +196,14 @@
     "cityPlaceholder": "Your city",
     "postalCode": "Postal Code",
     "postalCodePlaceholder": "Zip code",
+    "contactNumber": "Contact Number",
+    "contactNumberPlaceholder": "e.g. +1 234 567 890",
     "card": "Credit or Debit Card",
     "cardDesc": "Secure payment via Stripe",
     "paypal": "PayPal",
     "paypalDesc": "Coming soon",
+    "cod": "Cash on Delivery",
+    "codDesc": "Pay when you receive your order",
     "completePurchase": "Complete Purchase",
     "processing": "Processing Order...",
     "securePayments": "Secure Payments",
@@ -353,7 +358,8 @@
     "newsletter": {
       "title": "Newsletter",
       "description": "Subscribe to get special offers, free giveaways, and exclusive deals.",
-      "placeholder": "Enter your email"
+      "placeholder": "Enter your email",
+      "success": "Successfully subscribed to our newsletter!"
     },
     "rights": "© 2024 MoM's NaturalFood. All rights reserved.",
     "privacy": "Privacy Policy",
@@ -555,7 +561,7 @@
     "required": "Title and image are required"
   },
   "Metadata": {
-    "title": "MoM's NaturalFood",
+    "title": "Mom's Natural Foods",
     "description": "Premium natural foods for a healthy lifestyle"
   }
 }

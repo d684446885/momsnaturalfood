@@ -177,6 +177,8 @@
     "cityPlaceholder": "Uw stad",
     "postalCode": "Postcode",
     "postalCodePlaceholder": "Postcode",
+    "contactNumber": "Contactnummer",
+    "contactNumberPlaceholder": "bijv. +31 6 12345678",
     "card": "Credit of Debit Kaart",
     "cardDesc": "Veilige betaling via Stripe",
     "paypal": "PayPal",

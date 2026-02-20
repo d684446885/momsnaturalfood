@@ -1,5 +1,5 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v19 (Added Marketing & Chat Models) - ${Math.random()}
-global.prisma = undefined;
+// Refresh comment to force Next.js to reload the DB client with new models - v24 (Added NewsletterSubscription) - ${Math.random()}
+
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
@@ -8,10 +8,7 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// Force a reset of the global prisma instance to pick up new models
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = undefined;
-}
+
 
 function createPrismaClient() {
   console.log("Initializing Prisma Client...");

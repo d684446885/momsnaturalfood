@@ -84,7 +84,9 @@ export async function PATCH(request: NextRequest) {
       whatsappNumber,
       instagramUrl,
       messengerUrl,
-      chatWidgetEnabled
+      chatWidgetEnabled,
+      shippingFee,
+      freeShippingThreshold
     } = body;
 
     const data: any = {};
@@ -97,7 +99,8 @@ export async function PATCH(request: NextRequest) {
       'r2AccountId', 'r2AccessKeyId', 'r2SecretAccessKey', 'r2BucketName', 'r2PublicUrl',
       'googleClientId', 'googleClientSecret', 'authSecret',
       'businessName', 'logoUrl', 'businessEmail', 'businessPhone', 'businessAddress',
-      'defaultLanguage', 'whatsappNumber', 'instagramUrl', 'messengerUrl', 'chatWidgetEnabled'
+      'defaultLanguage', 'whatsappNumber', 'instagramUrl', 'messengerUrl', 'chatWidgetEnabled',
+      'shippingFee', 'freeShippingThreshold', 'cashOnDeliveryEnabled', 'newsletterEnabled'
     ];
 
     // Only add to data if the field exists in body
@@ -122,7 +125,11 @@ export async function PATCH(request: NextRequest) {
       buttonHoverColor: "#7d6036",
       buttonHoverTextColor: "#FAF9F6",
       defaultLanguage: "en",
-      chatWidgetEnabled: true
+      chatWidgetEnabled: true,
+      shippingFee: 0,
+      freeShippingThreshold: 0,
+      cashOnDeliveryEnabled: true,
+      newsletterEnabled: true
     };
 
     console.log("Saving settings to DB:", JSON.stringify(data, (k, v) => k.includes('Token') || k.includes('Secret') || k.includes('Key') ? '***' : v));
