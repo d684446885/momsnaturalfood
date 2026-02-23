@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     // 2. Migrate Products
     const products = await db.product.findMany();
     for (const product of products) {
-      const newImages = [];
+      const newImages: string[] = [];
       let changed = false;
       for (const imgUrl of product.images) {
         const newUrl = await downloadAndSave(imgUrl);
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     // 3. Migrate Deals
     const deals = await db.deal.findMany();
     for (const deal of deals) {
-      const newImages = [];
+      const newImages: string[] = [];
       let changed = false;
       for (const imgUrl of deal.images) {
         const newUrl = await downloadAndSave(imgUrl);
