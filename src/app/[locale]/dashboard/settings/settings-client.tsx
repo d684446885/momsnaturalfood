@@ -621,6 +621,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
               </div>
             </CardHeader>
+            <CardContent className="pt-6 space-y-6">
               <div className="space-y-6 animate-in fade-in slide-in-from-top-4">
                 {!isR2Configured && (
                   <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
