@@ -1,15 +1,13 @@
 [variables]
 NODE_ENV = 'production'
 NEXT_TELEMETRY_DISABLED = '1'
-
-[phases.setup]
-nixPkgs = ['nodejs_23']
+NIXPACKS_NODE_VERSION = '22'
 
 [phases.install]
-cmds = ['npm install']
+cmds = ['npm install --ignore-scripts']
 
 [phases.build]
-cmds = ['npm run build']
+cmds = ['npx prisma generate', 'npm run build']
 
 [start]
 cmd = 'npm run start'
