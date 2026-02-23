@@ -211,6 +211,25 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     }
   };
 
+  const handleMigrate = async () => {
+    if (!confirm("This will download all images from R2 and save them locally on your VPS. This might take a few moments. Proceed?")) return;
+
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/storage/migrate", { method: "POST" });
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || "Migration failed");
+
+      toast.success(`Success! Migrated ${data.stats.downloaded} files and updated ${data.stats.updated} records.`);
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -748,6 +767,33 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                   </div>
                 </div>
               )}
+
+              <Separator />
+
+              {/* Migration Tool */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <RotateCcw className="h-5 w-5 text-amber-600" />
+                  <div>
+                    <h4 className="font-bold text-amber-900">Migration Tool</h4>
+                    <p className="text-sm text-amber-700">Move all existing media from Cloudflare R2 to your local VPS storage.</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-xs text-amber-600 max-w-2xl">
+                    This tool will scan your entire database (products, deals, settings, etc.), download every external image it finds, save it to your VPS disk, and update the links automatically.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    className="shrink-0 border-amber-300 text-amber-700 hover:bg-amber-100"
+                    onClick={handleMigrate}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RotateCcw className="h-4 w-4 mr-2" />}
+                    Migrate R2 to Local
+                  </Button>
+                </div>
+              </div>
 
               <Separator />
 
