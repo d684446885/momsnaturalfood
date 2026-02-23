@@ -18,6 +18,7 @@ import {
   Phone,
   MapPin,
   Upload,
+  FolderOpen,
   Globe,
   Truck,
   CreditCard,
@@ -228,7 +229,56 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     } finally {
       setIsLoading(false);
     }
+  const [localFiles, setLocalFiles] = React.useState<any[]>([]);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+
+  const refreshMedia = async () => {
+    try {
+      setIsRefreshing(true);
+      const res = await fetch("/api/storage/explorer");
+      const data = await res.json();
+      if (data.files) setLocalFiles(data.files);
+    } catch (err) {
+      console.error("Failed to load media", err);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
+
+  const testUpload = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e: any) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'tests');
+
+      try {
+        setIsLoading(true);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.url) {
+          toast.success(`Upload successful! URL: ${data.url}`);
+          refreshMedia();
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err: any) {
+        toast.error("Upload test failed: " + err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    input.click();
+  };
+
+  React.useEffect(() => {
+    if (activeTab === 'storage') refreshMedia();
+  }, [activeTab]);
 
   return (
     <div className="space-y-6">
@@ -792,6 +842,57 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RotateCcw className="h-4 w-4 mr-2" />}
                     Migrate R2 to Local
                   </Button>
+                </div>
+              </div>
+
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Media Explorer */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FolderOpen className="h-5 w-5 text-primary" />
+                    <div>
+                      <h4 className="font-bold">Local Media Explorer</h4>
+                      <p className="text-sm text-muted-foreground">Browse files currently stored on your VPS.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={testUpload}>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Test Upload
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={refreshMedia} disabled={isRefreshing}>
+                      <RotateCcw className={cn("h-4 w-4 mr-2", isRefreshing && "animate-spin")} />
+                      Refresh
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 border rounded-xl p-4 bg-muted/20 max-h-[400px] overflow-y-auto">
+                  {localFiles.length === 0 ? (
+                    <div className="col-span-full py-12 text-center text-muted-foreground italic">
+                      No local files found. Run migration or upload a new file.
+                    </div>
+                  ) : (
+                    localFiles.map((file, i) => (
+                      <div key={i} className="group relative aspect-square rounded-lg overflow-hidden border bg-white shadow-sm hover:ring-2 ring-primary transition-all">
+                        <img 
+                          src={file.url} 
+                          alt={file.name} 
+                          className="w-full h-full object-cover" 
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 text-[10px] text-white text-center">
+                          <p className="truncate w-full font-bold">{file.name}</p>
+                          <p>{(file.size / 1024).toFixed(0)} KB</p>
+                          <a href={file.url} target="_blank" className="mt-2 px-2 py-1 bg-primary rounded-md">View</a>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
