@@ -5,6 +5,9 @@ NIXPACKS_NODE_VERSION = '22'
 PORT = '3000'
 HOSTNAME = '0.0.0.0'
 
+[phases.setup]
+cmds = ['mkdir -p public/uploads', 'chmod -R 777 public/uploads']
+
 [phases.install]
 cmds = ['npm install --ignore-scripts']
 
@@ -12,9 +15,16 @@ cmds = ['npm install --ignore-scripts']
 cmds = [
     'npx prisma generate',
     'npm run build',
+    'mkdir -p .next/standalone/public/uploads',
     'cp -r public .next/standalone/public',
     'cp -r .next/static .next/standalone/.next/static'
 ]
+
+# Note: For Persistent Storage in Coolify:
+# 1. Go to your Service Settings -> Storage
+# 2. Add a new "Directory Mount"
+# 3. Mount Path: /app/public/uploads (or /app/.next/standalone/public/uploads)
+# 4. Host Path: /data/moms-uploads (or similar on your VPS)
 
 [start]
 cmd = 'node .next/standalone/server.js'
