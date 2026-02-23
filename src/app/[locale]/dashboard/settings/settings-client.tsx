@@ -212,75 +212,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     }
   };
 
-  const handleMigrate = async () => {
-    if (!confirm("This will download all images from R2 and save them locally on your VPS. This might take a few moments. Proceed?")) return;
 
-    try {
-      setIsLoading(true);
-      const response = await fetch("/api/storage/migrate", { method: "POST" });
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || "Migration failed");
-
-      toast.success(`Success! Migrated ${data.stats.downloaded} files and updated ${data.stats.updated} records.`);
-      window.location.reload();
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const [localFiles, setLocalFiles] = React.useState<any[]>([]);
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
-
-  const refreshMedia = async () => {
-    try {
-      setIsRefreshing(true);
-      const res = await fetch("/api/storage/explorer");
-      const data = await res.json();
-      if (data.files) setLocalFiles(data.files);
-    } catch (err) {
-      console.error("Failed to load media", err);
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
-
-  const testUpload = async () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = async (e: any) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('folder', 'tests');
-
-      try {
-        setIsLoading(true);
-        const res = await fetch('/api/upload', { method: 'POST', body: formData });
-        const data = await res.json();
-        if (data.url) {
-          toast.success(`Upload successful! URL: ${data.url}`);
-          refreshMedia();
-        } else {
-          throw new Error(data.error);
-        }
-      } catch (err: any) {
-        toast.error("Upload test failed: " + err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    input.click();
-  };
-
-  React.useEffect(() => {
-    if (activeTab === 'storage') refreshMedia();
-  }, [activeTab]);
 
   return (
     <div className="space-y-6">
@@ -317,7 +249,7 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
         >
           <Cloud className="h-4 w-4" />
           File Storage
-          {isUploadConfigured ? (
+          {isR2Configured ? (
             <Badge variant="secondary" className="ml-1 bg-emerald-100 text-emerald-700">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Connected
@@ -689,209 +621,75 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6 space-y-8">
-              {/* Storage Type Selector */}
-              <div className="space-y-4">
-                <label className="text-sm font-semibold">Storage Provider</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div 
-                    onClick={() => setSettings({ ...settings, storageType: "LOCAL" })}
-                    className={cn(
-                      "cursor-pointer p-4 rounded-xl border-2 transition-all flex items-start gap-4",
-                      settings.storageType === "LOCAL" 
-                        ? "border-primary bg-primary/5 shadow-sm" 
-                        : "border-muted hover:border-muted-foreground"
-                    )}
-                  >
-                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-primary flex items-center justify-center">
-                      {settings.storageType === "LOCAL" && <div className="h-2.5 w-2.5 rounded-full bg-primary" />}
-                    </div>
+              <div className="space-y-6 animate-in fade-in slide-in-from-top-4">
+                {!isR2Configured && (
+                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
                     <div>
-                      <p className="font-bold">Local VPS Storage</p>
-                      <p className="text-xs text-muted-foreground">Saves media directly to your server's hard drive. Requires Directory Mount in Coolify.</p>
-                      <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200">Recommended for Coolify</Badge>
+                      <p className="font-semibold text-red-700">Cloudflare R2 is not configured</p>
+                      <p className="text-sm text-red-600 mt-1">File uploads will not work until you enter your R2 credentials below.</p>
                     </div>
                   </div>
+                )}
 
-                  <div 
-                    onClick={() => setSettings({ ...settings, storageType: "R2" })}
-                    className={cn(
-                      "cursor-pointer p-4 rounded-xl border-2 transition-all flex items-start gap-4",
-                      settings.storageType === "R2" 
-                        ? "border-primary bg-primary/5 shadow-sm" 
-                        : "border-muted hover:border-muted-foreground"
-                    )}
-                  >
-                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-primary flex items-center justify-center">
-                      {settings.storageType === "R2" && <div className="h-2.5 w-2.5 rounded-full bg-primary" />}
-                    </div>
-                    <div>
-                      <p className="font-bold">Cloudflare R2 (S3)</p>
-                      <p className="text-xs text-muted-foreground">High-performance external object storage. Best for scaling across multiple servers.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {settings.storageType === "LOCAL" ? (
-                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-blue-500 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-blue-700">Local Storage is Active</p>
-                    <p className="text-sm text-blue-600 mt-1">
-                      Media will be saved to <code className="bg-blue-100 px-1 rounded">/app/public/uploads</code>. 
-                      Make sure you have configured a <b>Directory Mount</b> in Coolify to keep your files safe during updates.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6 animate-in fade-in slide-in-from-top-4">
-                  {!isR2Configured && (
-                    <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
-                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
-                      <div>
-                        <p className="font-semibold text-red-700">Cloudflare R2 is not configured</p>
-                        <p className="text-sm text-red-600 mt-1">File uploads will not work until you enter your R2 credentials below.</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Account ID</label>
-                      <Input 
-                        placeholder="Your Cloudflare Account ID"
-                        value={settings.r2AccountId || ""}
-                        onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Bucket Name</label>
-                      <Input 
-                        placeholder="my-bucket"
-                        value={settings.r2BucketName || ""}
-                        onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Access Key ID</label>
-                      <Input 
-                        placeholder="R2 Access Key ID"
-                        value={settings.r2AccessKeyId || ""}
-                        onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Secret Access Key</label>
-                      <div className="relative">
-                        <Input 
-                          type={showSecretKey ? "text" : "password"}
-                          placeholder="R2 Secret Access Key"
-                          value={settings.r2SecretAccessKey || ""}
-                          onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
-                          className="pr-10"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                          onClick={() => setShowSecretKey(!showSecretKey)}
-                        >
-                          {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Account ID</label>
+                    <Input 
+                      placeholder="Your Cloudflare Account ID"
+                      value={settings.r2AccountId || ""}
+                      onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold">Public URL (Optional)</label>
+                    <label className="text-sm font-semibold">Bucket Name</label>
                     <Input 
-                      placeholder="https://cdn.yourdomain.com"
-                      value={settings.r2PublicUrl || ""}
-                      onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
+                      placeholder="my-bucket"
+                      value={settings.r2BucketName || ""}
+                      onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
                     />
                   </div>
-                </div>
-              )}
 
-              <Separator />
-
-              {/* Migration Tool */}
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <RotateCcw className="h-5 w-5 text-amber-600" />
-                  <div>
-                    <h4 className="font-bold text-amber-900">Migration Tool</h4>
-                    <p className="text-sm text-amber-700">Move all existing media from Cloudflare R2 to your local VPS storage.</p>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Access Key ID</label>
+                    <Input 
+                      placeholder="R2 Access Key ID"
+                      value={settings.r2AccessKeyId || ""}
+                      onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
+                    />
                   </div>
-                </div>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-xs text-amber-600 max-w-2xl">
-                    This tool will scan your entire database (products, deals, settings, etc.), download every external image it finds, save it to your VPS disk, and update the links automatically.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    className="shrink-0 border-amber-300 text-amber-700 hover:bg-amber-100"
-                    onClick={handleMigrate}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RotateCcw className="h-4 w-4 mr-2" />}
-                    Migrate R2 to Local
-                  </Button>
-                </div>
-              </div>
 
-              <Separator />
-
-              {/* Media Explorer */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FolderOpen className="h-5 w-5 text-primary" />
-                    <div>
-                      <h4 className="font-bold">Local Media Explorer</h4>
-                      <p className="text-sm text-muted-foreground">Browse files currently stored on your VPS.</p>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Secret Access Key</label>
+                    <div className="relative">
+                      <Input 
+                        type={showSecretKey ? "text" : "password"}
+                        placeholder="R2 Secret Access Key"
+                        value={settings.r2SecretAccessKey || ""}
+                        onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                        onClick={() => setShowSecretKey(!showSecretKey)}
+                      >
+                        {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={testUpload}>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Test Upload
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={refreshMedia} disabled={isRefreshing}>
-                      <RotateCcw className={cn("h-4 w-4 mr-2", isRefreshing && "animate-spin")} />
-                      Refresh
-                    </Button>
-                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 border rounded-xl p-4 bg-muted/20 max-h-[400px] overflow-y-auto">
-                  {localFiles.length === 0 ? (
-                    <div className="col-span-full py-12 text-center text-muted-foreground italic">
-                      No local files found. Run migration or upload a new file.
-                    </div>
-                  ) : (
-                    localFiles.map((file, i) => (
-                      <div key={i} className="group relative aspect-square rounded-lg overflow-hidden border bg-white shadow-sm hover:ring-2 ring-primary transition-all">
-                        <img 
-                          src={file.url} 
-                          alt={file.name} 
-                          className="w-full h-full object-cover" 
-                        />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 text-[10px] text-white text-center">
-                          <p className="truncate w-full font-bold">{file.name}</p>
-                          <p>{(file.size / 1024).toFixed(0)} KB</p>
-                          <a href={file.url} target="_blank" className="mt-2 px-2 py-1 bg-primary rounded-md">View</a>
-                        </div>
-                      </div>
-                    ))
-                  )}
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Public URL (Optional)</label>
+                  <Input 
+                    placeholder="https://cdn.yourdomain.com"
+                    value={settings.r2PublicUrl || ""}
+                    onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
+                  />
                 </div>
               </div>
 
