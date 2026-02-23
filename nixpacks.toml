@@ -2,12 +2,18 @@
 NODE_ENV = 'production'
 NEXT_TELEMETRY_DISABLED = '1'
 NIXPACKS_NODE_VERSION = '22'
+PORT = '3000'
 
 [phases.install]
 cmds = ['npm install --ignore-scripts']
 
 [phases.build]
-cmds = ['npx prisma generate', 'npm run build']
+cmds = [
+    'npx prisma generate',
+    'npm run build',
+    'cp -r public .next/standalone/public',
+    'cp -r .next/static .next/standalone/.next/static'
+]
 
 [start]
-cmd = 'npm run start'
+cmd = 'node .next/standalone/server.js'
