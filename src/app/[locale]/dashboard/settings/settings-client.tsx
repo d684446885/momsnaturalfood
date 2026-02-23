@@ -229,6 +229,8 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
   const [localFiles, setLocalFiles] = React.useState<any[]>([]);
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
@@ -842,9 +844,6 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RotateCcw className="h-4 w-4 mr-2" />}
                     Migrate R2 to Local
                   </Button>
-                </div>
-              </div>
-
                 </div>
               </div>
 
