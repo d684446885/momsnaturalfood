@@ -63,6 +63,7 @@ interface Settings {
   freeShippingThreshold: number;
   cashOnDeliveryEnabled: boolean;
   newsletterEnabled: boolean;
+  storageType: string;
 }
 
 interface SettingsClientProps {
@@ -612,105 +613,145 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
               <div className="flex items-center gap-2">
                 <Cloud className="h-5 w-5 text-blue-500" />
                 <div>
-                  <CardTitle>Cloudflare R2 Storage</CardTitle>
-                  <CardDescription>Configure your Cloudflare R2 credentials for all media uploads (images, videos).</CardDescription>
+                  <CardTitle>Media Storage Configuration</CardTitle>
+                  <CardDescription>Choose where your images and videos are stored.</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="pt-6 space-y-8">
-              {!isUploadConfigured && (
-                <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-red-700">Cloudflare R2 is not configured</p>
-                    <p className="text-sm text-red-600 mt-1">File uploads will not work until you enter your R2 credentials below. Go to your Cloudflare dashboard → R2 → Manage API Tokens to get your credentials.</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">Account ID</label>
-                    <Input 
-                      placeholder="Your Cloudflare Account ID"
-                      value={settings.r2AccountId || ""}
-                      onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
-                    />
-                    <p className="text-xs text-muted-foreground">Found on your Cloudflare dashboard sidebar.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">Bucket Name</label>
-                    <Input 
-                      placeholder="my-bucket"
-                      value={settings.r2BucketName || ""}
-                      onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
-                    />
-                    <p className="text-xs text-muted-foreground">The name of your R2 bucket.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">Access Key ID</label>
-                    <Input 
-                      placeholder="R2 Access Key ID"
-                      value={settings.r2AccessKeyId || ""}
-                      onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
-                    />
-                    <p className="text-xs text-muted-foreground">From R2 → Manage API Tokens.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold">Secret Access Key</label>
-                    <div className="relative">
-                      <Input 
-                        type={showSecretKey ? "text" : "password"}
-                        placeholder="R2 Secret Access Key"
-                        value={settings.r2SecretAccessKey || ""}
-                        onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
-                        className="pr-10"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                        onClick={() => setShowSecretKey(!showSecretKey)}
-                      >
-                        {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
+              {/* Storage Type Selector */}
+              <div className="space-y-4">
+                <label className="text-sm font-semibold">Storage Provider</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div 
+                    onClick={() => setSettings({ ...settings, storageType: "LOCAL" })}
+                    className={cn(
+                      "cursor-pointer p-4 rounded-xl border-2 transition-all flex items-start gap-4",
+                      settings.storageType === "LOCAL" 
+                        ? "border-primary bg-primary/5 shadow-sm" 
+                        : "border-muted hover:border-muted-foreground"
+                    )}
+                  >
+                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-primary flex items-center justify-center">
+                      {settings.storageType === "LOCAL" && <div className="h-2.5 w-2.5 rounded-full bg-primary" />}
                     </div>
-                    <p className="text-xs text-muted-foreground">Shown only once when creating the API token.</p>
+                    <div>
+                      <p className="font-bold">Local VPS Storage</p>
+                      <p className="text-xs text-muted-foreground">Saves media directly to your server's hard drive. Requires Directory Mount in Coolify.</p>
+                      <Badge variant="outline" className="mt-2 bg-blue-50 text-blue-700 border-blue-200">Recommended for Coolify</Badge>
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Public URL (Optional)</label>
-                  <Input 
-                    placeholder="https://cdn.yourdomain.com"
-                    value={settings.r2PublicUrl || ""}
-                    onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground">Custom domain or R2.dev subdomain for serving files publicly.</p>
+                  <div 
+                    onClick={() => setSettings({ ...settings, storageType: "R2" })}
+                    className={cn(
+                      "cursor-pointer p-4 rounded-xl border-2 transition-all flex items-start gap-4",
+                      settings.storageType === "R2" 
+                        ? "border-primary bg-primary/5 shadow-sm" 
+                        : "border-muted hover:border-muted-foreground"
+                    )}
+                  >
+                    <div className="mt-1 h-5 w-5 rounded-full border-2 border-primary flex items-center justify-center">
+                      {settings.storageType === "R2" && <div className="h-2.5 w-2.5 rounded-full bg-primary" />}
+                    </div>
+                    <div>
+                      <p className="font-bold">Cloudflare R2 (S3)</p>
+                      <p className="text-xs text-muted-foreground">High-performance external object storage. Best for scaling across multiple servers.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <Separator />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  {isUploadConfigured ? (
-                    <>
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>Cloudflare R2 is configured and active</span>
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle className="h-4 w-4 text-red-500" />
-                      <span>Fill in all required credentials to enable file uploads</span>
-                    </>
-                  )}
+              {settings.storageType === "LOCAL" ? (
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-blue-500 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-blue-700">Local Storage is Active</p>
+                    <p className="text-sm text-blue-600 mt-1">
+                      Media will be saved to <code className="bg-blue-100 px-1 rounded">/app/public/uploads</code>. 
+                      Make sure you have configured a <b>Directory Mount</b> in Coolify to keep your files safe during updates.
+                    </p>
+                  </div>
                 </div>
+              ) : (
+                <div className="space-y-6 animate-in fade-in slide-in-from-top-4">
+                  {!isR2Configured && (
+                    <div className="p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3">
+                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-red-700">Cloudflare R2 is not configured</p>
+                        <p className="text-sm text-red-600 mt-1">File uploads will not work until you enter your R2 credentials below.</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Account ID</label>
+                      <Input 
+                        placeholder="Your Cloudflare Account ID"
+                        value={settings.r2AccountId || ""}
+                        onChange={(e) => setSettings({ ...settings, r2AccountId: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Bucket Name</label>
+                      <Input 
+                        placeholder="my-bucket"
+                        value={settings.r2BucketName || ""}
+                        onChange={(e) => setSettings({ ...settings, r2BucketName: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Access Key ID</label>
+                      <Input 
+                        placeholder="R2 Access Key ID"
+                        value={settings.r2AccessKeyId || ""}
+                        onChange={(e) => setSettings({ ...settings, r2AccessKeyId: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Secret Access Key</label>
+                      <div className="relative">
+                        <Input 
+                          type={showSecretKey ? "text" : "password"}
+                          placeholder="R2 Secret Access Key"
+                          value={settings.r2SecretAccessKey || ""}
+                          onChange={(e) => setSettings({ ...settings, r2SecretAccessKey: e.target.value })}
+                          className="pr-10"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                          onClick={() => setShowSecretKey(!showSecretKey)}
+                        >
+                          {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">Public URL (Optional)</label>
+                    <Input 
+                      placeholder="https://cdn.yourdomain.com"
+                      value={settings.r2PublicUrl || ""}
+                      onChange={(e) => setSettings({ ...settings, r2PublicUrl: e.target.value })}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <Separator />
+
+              <div className="flex items-center justify-end">
                 <Button 
                     className="gap-2 px-8" 
                     onClick={onSave}

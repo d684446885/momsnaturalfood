@@ -160,6 +160,7 @@ model Settings {
   r2SecretAccessKey    String?
   r2BucketName         String?
   r2PublicUrl          String?
+  storageType          String   @default("R2")
   updatedAt            DateTime @updatedAt
   authSecret           String?
   googleClientId       String?
