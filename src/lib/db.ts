@@ -15,6 +15,11 @@ function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
   
   if (!connectionString) {
+    if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+      console.warn("DATABASE_URL is missing. This is expected during build time if not provided, but will cause errors if database access is attempted.");
+      // Return a dummy client to avoid crashing on import
+      return new PrismaClient() as any;
+    }
     console.error("DATABASE_URL is missing!");
     throw new Error("DATABASE_URL environment variable is not set");
   }
