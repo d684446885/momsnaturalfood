@@ -73,11 +73,11 @@ export default async function Home() {
     ctaMediaUrl: formatMediaUrl(content.ctaMediaUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
     whyBackgroundUrl: formatMediaUrl(content.whyBackgroundUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
     promoSectionBgUrl: formatMediaUrl(content.promoSectionBgUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
-    whyCards: content.whyCards?.map((card: any) => ({
+    whyCards: (content.whyCards as any[])?.map((card: any) => ({
       ...card,
       url: formatMediaUrl(card.url, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
     })),
-    promoCards: content.promoCards?.map((card: any) => ({
+    promoCards: (content.promoCards as any[])?.map((card: any) => ({
       ...card,
       videoUrl: formatMediaUrl(card.videoUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
     })),
