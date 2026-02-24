@@ -12,17 +12,27 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function CertificationsPage() {
-  const certifications = await db.certification.findMany({
-    orderBy: {
-      order: "asc",
-    },
-  });
+  const [certifications, settings] = await Promise.all([
+    db.certification.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    }),
+    db.settings.findUnique({ where: { id: "global" } })
+  ]);
+
+  const formattedCertifications = certifications.map((cert) => ({
+    ...cert,
+    imageUrl: formatMediaUrl(cert.imageUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+  }));
 
   return (
     <div className="pt-8">
       <CertificationsClient 
-        certifications={certifications}
+        certifications={formattedCertifications}
       />
     </div>
   );

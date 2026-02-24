@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function StoreLayout({
   children,
   params,
@@ -27,12 +29,13 @@ export default async function StoreLayout({
   });
 
   const settings = await db.settings.findUnique({ where: { id: "global" } });
+  const logoUrl = settings ? formatMediaUrl(settings.logoUrl, settings.r2PublicUrl, settings.r2BucketName as string, settings.r2AccountId as string) : "";
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <Navbar 
         legalPages={legalPages} 
-        logoUrl={settings?.logoUrl}
+        logoUrl={logoUrl}
         businessName={settings?.businessName}
       />
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
