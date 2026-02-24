@@ -13,13 +13,29 @@ async function getAboutContent() {
   }
 }
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function AboutPage() {
-  const [content, certifications] = await Promise.all([
+  const [content, certifications, settings] = await Promise.all([
     getAboutContent(),
     db.certification.findMany({
       orderBy: { order: "asc" }
-    })
+    }),
+    db.settings.findUnique({ where: { id: "global" } })
   ]);
 
-  return <AboutClient content={content} certifications={certifications} />;
+  const formattedContent = content ? {
+    ...content,
+    heroBackgroundUrl: formatMediaUrl(content.heroBackgroundUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+    storyImageUrl: formatMediaUrl(content.storyImageUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+    missionImageUrl: formatMediaUrl(content.missionImageUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+    qualityBackgroundUrl: formatMediaUrl(content.qualityBackgroundUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+  } : null;
+
+  const formattedCertifications = certifications.map((cert) => ({
+    ...cert,
+    imageUrl: formatMediaUrl(cert.imageUrl, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string),
+  }));
+
+  return <AboutClient content={formattedContent} certifications={formattedCertifications} />;
 }

@@ -1,18 +1,28 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { formatMediaUrl } from "@/lib/media";
 
 export async function GET() {
   try {
-    const products = await db.product.findMany({
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return NextResponse.json(products);
+    const [products, settings] = await Promise.all([
+      db.product.findMany({
+        include: {
+          category: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      db.settings.findUnique({ where: { id: "global" } })
+    ]);
+
+    const formattedProducts = products.map((product) => ({
+      ...product,
+      images: product.images.map((img: string) => formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string))
+    }));
+
+    return NextResponse.json(formattedProducts);
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(

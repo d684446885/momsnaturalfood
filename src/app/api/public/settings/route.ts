@@ -3,23 +3,36 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const settings = await db.settings.findUnique({
-      where: { id: "global" },
-      select: {
-        businessName: true,
-        businessEmail: true,
-        businessPhone: true,
-        businessAddress: true,
-        shippingFee: true,
-        freeShippingThreshold: true,
-        logoUrl: true,
-        primaryColor: true,
-        secondaryColor: true,
-        accentColor: true,
-        defaultLanguage: true,
-        cashOnDeliveryEnabled: true,
-      }
-    });
+    const [settings, globalSettings] = await Promise.all([
+      db.settings.findUnique({
+        where: { id: "global" },
+        select: {
+          businessName: true,
+          businessEmail: true,
+          businessPhone: true,
+          businessAddress: true,
+          shippingFee: true,
+          freeShippingThreshold: true,
+          logoUrl: true,
+          primaryColor: true,
+          secondaryColor: true,
+          accentColor: true,
+          defaultLanguage: true,
+          cashOnDeliveryEnabled: true,
+        }
+      }),
+      db.settings.findUnique({ where: { id: "global" } })
+    ]);
+    
+    if (settings && settings.logoUrl) {
+      const { formatMediaUrl } = await import("@/lib/media");
+      settings.logoUrl = formatMediaUrl(
+        settings.logoUrl, 
+        globalSettings?.r2PublicUrl, 
+        globalSettings?.r2BucketName as string, 
+        globalSettings?.r2AccountId as string
+      );
+    }
     
     return NextResponse.json(settings);
   } catch (error) {

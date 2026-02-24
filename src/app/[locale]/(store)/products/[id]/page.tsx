@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { ProductDetailClient } from "./product-detail-client";
 
+export const dynamic = "force-dynamic";
+
 async function getProduct(id: string) {
   try {
     const product = await db.product.findUnique({
@@ -34,13 +36,18 @@ async function getRelatedProducts(categoryId: string, currentProductId: string) 
   }
 }
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function ProductPage({
   params,
 }: {
   params: Promise<{ id: string; locale: string }>;
 }) {
   const { id } = await params;
-  const product = await getProduct(id);
+  const [product, settings] = await Promise.all([
+    getProduct(id),
+    db.settings.findUnique({ where: { id: "global" } })
+  ]);
 
   if (!product) {
     notFound();
@@ -53,6 +60,7 @@ export default async function ProductPage({
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
+    images: product.images.map((img: string) => formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string)),
     createdAt: new Date(product.createdAt).toISOString(),
     updatedAt: new Date(product.updatedAt).toISOString(),
     category: {
@@ -66,6 +74,7 @@ export default async function ProductPage({
     ...p,
     price: Number(p.price),
     salePrice: p.salePrice ? Number(p.salePrice) : null,
+    images: p.images.map((img: string) => formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string)),
     createdAt: new Date(p.createdAt).toISOString(),
     updatedAt: new Date(p.updatedAt).toISOString(),
     category: {

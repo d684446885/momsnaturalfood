@@ -2,12 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Package } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 interface Category {
   id: string;
@@ -20,6 +19,7 @@ interface Category {
     id: string;
     name: string;
     price: number | string | { toString: () => string };
+    images: string[];
   }[];
 }
 
@@ -46,8 +46,6 @@ export function CategoriesClient({ categories }: CategoriesClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-
       <main className="container px-4 py-8">
         {/* Header */}
         <motion.div
@@ -116,10 +114,19 @@ export function CategoriesClient({ categories }: CategoriesClientProps) {
                           className="p-4 rounded-lg bg-muted/50 cursor-pointer hover:bg-muted transition-colors"
                         >
                           <Link href={`/products/${product.id}`}>
-                            <div className="aspect-square rounded-md bg-muted mb-3 flex items-center justify-center">
-                              <span className="text-3xl opacity-30">
-                                {product.name.charAt(0)}
-                              </span>
+                            <div className="aspect-square rounded-md bg-muted mb-3 flex items-center justify-center overflow-hidden relative">
+                              {product.images?.[0] ? (
+                                <Image 
+                                  src={product.images[0]} 
+                                  alt={product.name} 
+                                  fill 
+                                  className="object-cover" 
+                                />
+                              ) : (
+                                <span className="text-3xl opacity-30">
+                                  {product.name.charAt(0)}
+                                </span>
+                              )}
                             </div>
                             <h4 className="font-medium text-sm line-clamp-1">
                               {product.name}
@@ -168,8 +175,6 @@ export function CategoriesClient({ categories }: CategoriesClientProps) {
           </motion.div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }

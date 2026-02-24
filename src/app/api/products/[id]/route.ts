@@ -2,18 +2,23 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
+import { formatMediaUrl } from "@/lib/media";
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const product = await db.product.findUnique({
-      where: { id },
-      include: {
-        category: true,
-      },
-    });
+    const [product, settings] = await Promise.all([
+      db.product.findUnique({
+        where: { id },
+        include: {
+          category: true,
+        },
+      }),
+      db.settings.findUnique({ where: { id: "global" } })
+    ]);
 
     if (!product) {
       return NextResponse.json(
@@ -22,7 +27,12 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(product);
+    const formattedProduct = {
+      ...product,
+      images: product.images.map((img: string) => formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string))
+    };
+
+    return NextResponse.json(formattedProduct);
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json(

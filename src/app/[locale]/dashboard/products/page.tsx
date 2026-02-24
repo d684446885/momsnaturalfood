@@ -71,6 +71,8 @@ interface PageProps {
   }>;
 }
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function AdminProductsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
@@ -78,9 +80,10 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
   const search = params.search;
   const categoryId = params.category;
 
-  const [{ products, totalCount }, categories] = await Promise.all([
+  const [{ products, totalCount }, categories, settings] = await Promise.all([
     getProducts({ page, pageSize, search, categoryId }),
     getCategories(),
+    db.settings.findUnique({ where: { id: "global" } })
   ]);
 
   // Convert to plain objects and handle Decimal/Date types for serialization
@@ -88,6 +91,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
     ...product,
     price: Number(product.price),
     salePrice: product.salePrice ? Number(product.salePrice) : null,
+    images: product.images.map((img: string) => formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string)),
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString(),
     category: {
