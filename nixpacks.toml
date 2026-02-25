@@ -10,7 +10,6 @@ cmds = ['npm install --ignore-scripts']
 
 [phases.build]
 cmds = [
-    'npx prisma generate',
     'npm run build',
     'cp -r public .next/standalone/public',
     'cp -r .next/static .next/standalone/.next/static'
