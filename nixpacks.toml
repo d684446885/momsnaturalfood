@@ -11,7 +11,7 @@ cmds = ['npm install --ignore-scripts']
 [phases.build]
 cmds = [
     'npx prisma generate',
-    'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" npm run build',
+    'npm run build',
     'cp -r public .next/standalone/public',
     'cp -r .next/static .next/standalone/.next/static'
 ]
