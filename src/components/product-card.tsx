@@ -10,6 +10,7 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { normalizeImageUrl } from "@/lib/image-utils";
 
 interface Product {
   id: string;
@@ -72,7 +73,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity z-10"
             />
             {product.images?.[0] ? (
-              <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <img src={normalizeImageUrl(product.images[0])} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
             ) : (
               <span className="opacity-20 font-bold text-6xl">
                 {product.name.charAt(0)}

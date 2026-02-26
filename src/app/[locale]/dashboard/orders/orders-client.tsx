@@ -51,6 +51,7 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import Image from "next/image";
+import { normalizeImageUrl } from "@/lib/image-utils";
 import { useRouter } from "@/i18n/routing";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -543,7 +544,7 @@ export function AdminOrdersClient({
                                           <div className="flex items-center gap-4">
                                               <div className="h-16 w-16 rounded-2xl bg-zinc-50 overflow-hidden relative border border-zinc-100 shadow-inner">
                                                   {item.product.images?.[0] ? (
-                                                      <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                      <Image src={normalizeImageUrl(item.product.images[0])} alt={item.product.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                                                   ) : (
                                                       <div className="h-full w-full flex items-center justify-center text-zinc-200">
                                                           <Package className="h-8 w-8" />

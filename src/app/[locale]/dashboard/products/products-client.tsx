@@ -22,6 +22,7 @@ import { R2ImageUpload } from "@/components/r2-image-upload";
 import { toast } from "sonner";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
+import { normalizeImageUrl } from "@/lib/image-utils";
 import { 
   Table, 
   TableBody, 
@@ -631,7 +632,7 @@ export function AdminProductsClient({
                       <TableCell className="pl-6">
                         <div className="h-12 w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden border">
                           {product.images?.[0] ? (
-                            <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+                            <img src={normalizeImageUrl(product.images[0])} alt={product.name} className="h-full w-full object-cover" />
                           ) : (
                             <ImageIcon className="h-6 w-6 text-muted-foreground/40" />
                           )}
