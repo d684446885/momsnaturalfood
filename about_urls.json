@@ -1,0 +1,23 @@
+﻿[dotenv@17.3.1] injecting env (6) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+{
+  "id": "global",
+  "heroTitle": "Taste the Love in Every Bite",
+  "heroDescription": "Authentic, homemade flavors crafted with passion and tradition.",
+  "heroBackgroundUrl": "/uploads/1771881238905-1771518517626_3f4e1d4a_e8b5_4d7a_9e33_5125d781d095.mp4",
+  "heroBackgroundType": "video",
+  "storyTitle": "Our Story",
+  "storySubtitle": "Crafted with love, rooted in nature",
+  "storyContent": "Since 1985, MoM's NaturalFood has been dedicated to bringing the purest flavors of nature straight to your home. 100% natural, healthy, and crafted with love.",
+  "storyImageUrl": "/uploads/1771881239917-1771518547114_be88b918_f93a_43ea_8ee3_f743e6d966be.mp4",
+  "storyImageType": "video",
+  "missionTitle": "Our Mission",
+  "missionContent": "To provide families with healthy, natural food options without compromising on taste or quality.",
+  "missionImageUrl": "",
+  "missionImageType": "image",
+  "qualityTitle": "Quality You Can Trust",
+  "qualityDescription": "Pure. Natural. Authentic.",
+  "qualityBackgroundUrl": "/uploads/1771881241491-1771518581784_Video_Generation_Natural_Food_Cookies.mp4",
+  "qualityBackgroundType": "video",
+  "values": [],
+  "updatedAt": "2026-02-23T16:14:01.563Z"
+}

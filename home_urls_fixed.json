@@ -1,0 +1,38 @@
+﻿[dotenv@17.3.1] injecting env (6) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+{
+  "heroBackgroundUrl": "1771516322999-MoM_s_Natural_Food_3.mp4",
+  "ctaMediaUrl": "1771518475881-35f87701_7ee9_408f_b126_bf1e61ecc2bc__1_.mp4",
+  "whyBackgroundUrl": "1771516736201-Milk_Pouring_Video_Generation.mp4",
+  "promoSectionBgUrl": "1771517104368-Milk_Pouring_Video_Generation.mp4",
+  "whyCards": [
+    {
+      "url": "1771516929113-video_dryFruit.mp4",
+      "type": "video"
+    },
+    {
+      "url": "1771517164799-GLUTEN_FREE_BLUEBERRY___CRANBERRY___STRAWBERRY_MUESLI.webp",
+      "type": "image"
+    },
+    {
+      "url": "1771517157553-GLUTEN_FREE_APPLE___CINNAMON_GRANOLA.webp",
+      "type": "image"
+    },
+    {
+      "url": "1771516939268-MoM_s_Natural_Food.mp4",
+      "type": "video"
+    }
+  ],
+  "promoCards": [
+    {
+      "title": "",
+      "videoUrl": "1771517085040-Granola_Ingredient_Video_Generation___Trim_2.mp4",
+      "mediaType": "video",
+      "description": ""
+    },
+    {
+      "title": "",
+      "videoUrl": "1771517088721-Granola_Ingredient_Video_Generation__1____Trim33.mp4",
+      "description": ""
+    }
+  ]
+}

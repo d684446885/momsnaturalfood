@@ -425,3 +425,35 @@ model NewsletterSubscription {
 
   @@map("newsletter_subscription")
 }
+
+model WholesaleInquiry {
+  id          String                    @id @default(cuid())
+  fullName    String
+  contact     String
+  email       String?
+  address     String
+  description String?
+  status      WholesaleInquiryStatus    @default(PENDING)
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  products    WholesaleInquiryProduct[]
+
+  @@map("wholesale_inquiry")
+}
+
+model WholesaleInquiryProduct {
+  id         String            @id @default(cuid())
+  inquiryId  String
+  productId  String
+  quantity   Int
+  inquiry    WholesaleInquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+
+  @@map("wholesale_inquiry_product")
+}
+
+enum WholesaleInquiryStatus {
+  PENDING
+  CONTACTED
+  COMPLETED
+  REJECTED
+}

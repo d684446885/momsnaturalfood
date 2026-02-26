@@ -1,0 +1,15 @@
+﻿[dotenv@17.3.1] injecting env (6) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+--- SETTINGS ---
+{
+  "logoUrl": "/uploads/1771357402177-mpx8wnc.png",
+  "r2PublicUrl": "https://pub-dde9b50a57b84dbaa3a24c5c60912214.r2.dev",
+  "r2BucketName": "momsnaturalfoods",
+  "r2AccountId": "0e47c06c9919a830da9609ee0aaa9a2d"
+}
+
+--- PRODUCTS ---
+ORGANIC GLUTEN-FREE GRANOLA: ["/uploads/1771881148373-1771531114963_41uor.jpg","/uploads/1771881148876-1771531118662_ahi48.jpg","/uploads/1771881149553-1771531120933_2gk2ba.jpg"]
+BANANA + WALNUT GRANOLA: ["/uploads/1771881151250-1771530783411_zn6is.jpg","/uploads/1771881152270-1771530786032_zy8b.jpg"]
+ORGANIC GLUTEN ΓÇô FREE CHERRY + CACAO NIBS GRANOLA: ["/uploads/1771881150150-1771520395709_image_1.webp"]
+3-PACK COCOA-HAZELNUT GRANOLA 360G: ["/uploads/1771881152848-1771530788062_a80vie.webp","/uploads/1771881153370-1771530791387_ra41m.webp"]
+GLUTEN FREE GRANOLA: ["/uploads/1771881153917-1771531132550_ha4g8.jpg","/uploads/1771881154579-1771531134829_kokies.webp","/uploads/1771881155221-1771531138294_z4o6l.jpg","/uploads/1771881155736-1771531141566_0hcfo5.jpg"]
