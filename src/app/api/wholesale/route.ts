@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     console.error("Wholesale inquiry error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to submit inquiry" },
+      { success: false, error: "Failed to submit inquiry. Please try again." },
       { status: 500 }
     );
   }

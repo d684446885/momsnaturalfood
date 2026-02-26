@@ -8,6 +8,7 @@
     "contact": "Contact",
     "faq": "FAQ",
     "certifications": "Certifications",
+    "wholesale": "Wholesale",
     "dashboard": "Dashboard"
   },
   "Hero": {
@@ -136,6 +137,7 @@
     "homePage": "Home Page",
     "contactPage": "Contact Page",
     "certifications": "Certifications",
+    "wholesale": "Wholesale Inquiries",
     "search": "Search dashboard...",
     "adminTitle": "MoM's NaturalFood",
     "Welcome": {
@@ -559,6 +561,29 @@
     "successDelete": "Certification deleted successfully",
     "deleteConfirm": "Are you sure you want to delete this certification?",
     "required": "Title and image are required"
+  },
+  "Wholesale": {
+    "title": "Wholesale Inquiry",
+    "subtitle": "Interested in purchasing our products at wholesale rates? Fill out the form below and we'll get back to you.",
+    "form": {
+      "fullName": "Full Name",
+      "contact": "Contact (Phone/WhatsApp)",
+      "email": "Email (Optional)",
+      "emailPlaceholder": "john@example.com",
+      "productsTitle": "Products Interested In",
+      "addProduct": "Add Product",
+      "product": "Product",
+      "selectProduct": "Select a product",
+      "quantity": "Quantity",
+      "address": "Address",
+      "addressPlaceholder": "123 Main St, City, Country",
+      "description": "Additional Information (Optional)",
+      "descriptionPlaceholder": "Tell us more about your business or specific requirements...",
+      "submit": "Submit Inquiry",
+      "submitting": "Submitting...",
+      "success": "Inquiry submitted successfully! We'll contact you soon.",
+      "error": "Failed to submit inquiry. Please try again."
+    }
   },
   "Metadata": {
     "title": "Mom's Natural Foods",

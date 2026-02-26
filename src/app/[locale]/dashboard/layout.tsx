@@ -87,6 +87,7 @@ export default async function DashboardLayout({
     homePage: t('homePage'),
     contactPage: t('contactPage'),
     certifications: t('certifications'),
+    wholesale: t('wholesale') || 'Wholesale Inquiries',
     logout: t('logout'),
     search: t('search'),
     adminTitle: t('adminTitle')

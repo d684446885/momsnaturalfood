@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Search, ShoppingCart, Menu, Heart, User, HelpCircle, FileText, Mail } from "lucide-react";
+import { Search, ShoppingCart, Menu, Heart, User, HelpCircle, FileText, Mail, Handshake } from "lucide-react";
 import { PwaInstallButton } from "./pwa-install-button";
 import { useCart } from "@/store/use-cart";
 import { useWishlist } from "@/store/use-wishlist";
@@ -106,6 +106,12 @@ export function Navbar({
               href="/certifications"
             >
               {t('certifications')}
+            </Link>
+            <Link
+              className="transition-colors hover:text-primary text-foreground font-semibold"
+              href="/wholesale"
+            >
+              {t('wholesale')}
             </Link>
             <div className="relative group">
               <button className="flex items-center gap-1 transition-colors hover:text-primary text-foreground py-2 font-semibold">
@@ -212,6 +218,9 @@ export function Navbar({
                     </Link>
                     <Link href="/certifications" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
                       {t('certifications')}
+                    </Link>
+                    <Link href="/wholesale" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
+                      {t('wholesale')}
                     </Link>
                     <Link href="/contact" className="text-lg font-medium" onClick={() => setIsOpen(false)}>
                       {t('contact')}

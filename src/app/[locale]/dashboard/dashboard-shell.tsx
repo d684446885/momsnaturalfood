@@ -23,7 +23,8 @@ import {
   Bell,
   Search,
   Award,
-  Megaphone
+  Megaphone,
+  Handshake
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/routing";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { formatMediaUrl } from "@/lib/media";
 
 const iconMap = {
   overview: LayoutDashboard,
@@ -56,6 +58,7 @@ const iconMap = {
   certifications: Award,
   marketing: Megaphone,
   newsletter: Mail,
+  wholesale: Handshake,
 };
 
 const sidebarGroups = [
@@ -72,6 +75,7 @@ const sidebarGroups = [
       { iconName: "categories" as const, label: "categories", href: "/dashboard/categories" },
       { iconName: "orders" as const, label: "orders", href: "/dashboard/orders" },
       { iconName: "customers" as const, label: "customers", href: "/dashboard/customers" },
+      { iconName: "wholesale" as const, label: "wholesale", href: "/dashboard/wholesale" },
       { iconName: "marketing" as const, label: "marketing", href: "/dashboard/marketing" },
       { iconName: "newsletter" as const, label: "newsletter", href: "/dashboard/newsletter" },
     ]
@@ -140,12 +144,12 @@ export function DashboardShell({
                   "relative transition-all duration-300",
                   isSidebarOpen ? "h-16 w-40" : "h-10 w-10"
                 )}>
-                  <Image 
-                    src={settings.logoUrl} 
-                    alt="Logo" 
-                    fill 
-                    className="object-contain"
-                  />
+                    <Image 
+                      src={formatMediaUrl(settings.logoUrl, settings.r2PublicUrl)} 
+                      alt="Logo" 
+                      fill 
+                      className="object-contain"
+                    />
                 </div>
               ) : (
                 <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform">
@@ -255,7 +259,7 @@ export function DashboardShell({
              <Link href="/" className="flex items-center justify-center w-full">
                 {settings?.logoUrl ? (
                   <div className="relative h-16 w-40">
-                    <Image src={settings.logoUrl} alt="Logo" fill className="object-contain" />
+                    <Image src={formatMediaUrl(settings.logoUrl, settings.r2PublicUrl)} alt="Logo" fill className="object-contain" />
                   </div>
                 ) : (
                   <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">

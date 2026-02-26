@@ -1,4 +1,4 @@
-// Refresh comment to force Next.js to reload the DB client with new models - v24 (Added NewsletterSubscription) - ${Math.random()}
+// Refresh comment to force Next.js to reload the DB client with new models - v25 (Added WholesaleInquiry + WholesaleInquiryProduct)
 
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
