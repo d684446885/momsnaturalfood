@@ -121,7 +121,9 @@ async function getDashboardData() {
     recentOrders: recentOrders.map(order => ({
       ...order,
       total: order.total.toString(),
-      createdAt: order.createdAt.toISOString()
+      shippingFee: order.shippingFee.toString(),
+      createdAt: order.createdAt.toISOString(),
+      updatedAt: order.updatedAt.toISOString()
     })),
     chartData: monthlyRevenue
   };
