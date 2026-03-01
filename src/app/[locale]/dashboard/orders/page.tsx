@@ -77,6 +77,8 @@ interface PageProps {
   }>;
 }
 
+import { formatMediaUrl } from "@/lib/media";
+
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
@@ -84,12 +86,16 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const search = params.search;
   const status = params.status;
 
-  const { orders, totalCount, statusCounts } = await getOrders({ page, pageSize, search, status });
+  const [{ orders, totalCount, statusCounts }, settings] = await Promise.all([
+    getOrders({ page, pageSize, search, status }),
+    db.settings.findUnique({ where: { id: "global" } })
+  ]);
 
   // Convert to plain objects and handle Decimal/Date types for serialization
   const serializedOrders = orders.map((order: any) => ({
     ...order,
     total: Number(order.total),
+    shippingFee: Number(order.shippingFee),
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
     items: order.items.map((item: any) => ({
@@ -97,6 +103,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       price: Number(item.price),
       product: item.product ? {
         ...item.product,
+        images: item.product.images?.map((img: string) => 
+          formatMediaUrl(img, settings?.r2PublicUrl, settings?.r2BucketName as string, settings?.r2AccountId as string)
+        ) || [],
         price: Number(item.product.price),
         salePrice: item.product.salePrice ? Number(item.product.salePrice) : null,
         createdAt: item.product.createdAt.toISOString(),

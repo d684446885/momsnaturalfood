@@ -40,8 +40,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
-import { useRouter } from "@/i18n/routing";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 
 interface Customer {
   id: string;

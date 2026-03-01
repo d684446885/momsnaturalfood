@@ -52,18 +52,18 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import Image from "next/image";
 import { normalizeImageUrl } from "@/lib/image-utils";
-import { useRouter } from "@/i18n/routing";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 
 interface Order {
   id: string;
   total: any;
   status: string;
   createdAt: any;
-  user: {
+  user?: {
     name: string | null;
     email: string;
-  };
+  } | null;
   items: any[];
   courierName?: string | null;
   trackingLink?: string | null;
@@ -326,11 +326,11 @@ export function AdminOrdersClient({
                       <TableCell>
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-sm shadow-md">
-                                {order.user.name?.[0] || 'U'}
+                                {order.user?.name?.[0] || 'G'}
                             </div>
                             <div className="flex flex-col">
-                              <span className="font-bold text-secondary group-hover:text-accent transition-colors">{order.user.name || "Guest User"}</span>
-                              <span className="text-xs text-zinc-400 font-light">{order.user.email}</span>
+                              <span className="font-bold text-secondary group-hover:text-accent transition-colors">{order.user?.name || order.customerName || "Guest User"}</span>
+                              <span className="text-xs text-zinc-400 font-light">{order.user?.email || order.customerEmail || "No Email"}</span>
                             </div>
                         </div>
                       </TableCell>
@@ -514,11 +514,11 @@ export function AdminOrdersClient({
                                            <span className="text-[10px] font-bold uppercase tracking-widest">Customer Information</span>
                                        </div>
                                        <div className="flex flex-col space-y-1">
-                                            <span className="text-lg font-bold text-secondary">
-                                                {selectedOrder.customerName || selectedOrder.user.name || "Guest Account"}
+                                             <span className="text-lg font-bold text-secondary">
+                                                {selectedOrder.customerName || selectedOrder.user?.name || "Guest Account"}
                                             </span>
-                                            <span className="text-sm text-zinc-500 font-medium">
-                                                {selectedOrder.customerEmail || selectedOrder.user.email}
+                                             <span className="text-sm text-zinc-500 font-medium">
+                                                {selectedOrder.customerEmail || selectedOrder.user?.email || "No Email Provided"}
                                             </span>
                                             {selectedOrder.customerPhone && (
                                                 <span className="text-sm text-primary font-bold flex items-center gap-1">

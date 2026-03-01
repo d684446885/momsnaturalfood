@@ -257,7 +257,7 @@ export default function CheckoutPage() {
                            <div 
                              onClick={() => setPaymentMethod('card')}
                              className={cn(
-                               "p-5 rounded-2xl flex items-center justify-between cursor-pointer group hover:bg-primary/10 transition-all shadow-lg shadow-primary/5",
+                               "p-5 rounded-2xl flex items-center justify-between cursor-pointer group hover:bg-primary/10 transition-all shadow-lg shadow-primary/5 col-span-2",
                                paymentMethod === 'card' ? "border-2 border-primary bg-primary/5" : "border border-border bg-white"
                              )}
                            >
@@ -278,48 +278,6 @@ export default function CheckoutPage() {
                                  paymentMethod === 'card' ? "border-primary border-[6px]" : "border-border"
                                )} />
                            </div>
-                           
-                           {shippingSettings.codEnabled && (
-                            <div 
-                              onClick={() => setPaymentMethod('cod')}
-                              className={cn(
-                                "p-5 rounded-2xl flex items-center justify-between cursor-pointer group hover:bg-primary/10 transition-all shadow-lg shadow-primary/5",
-                                paymentMethod === 'cod' ? "border-2 border-primary bg-primary/5" : "border border-border bg-white"
-                              )}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className={cn(
-                                      "h-12 w-12 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform",
-                                      paymentMethod === 'cod' ? "bg-white" : "bg-zinc-100"
-                                    )}>
-                                       <Truck className={cn("h-6 w-6", paymentMethod === 'cod' ? "text-primary" : "text-zinc-400")} />
-                                    </div>
-                                    <div>
-                                       <p className={cn("font-bold", paymentMethod === 'cod' ? "text-secondary" : "text-zinc-500")}>{t('cod')}</p>
-                                       <p className="text-[10px] uppercase tracking-wider font-bold text-primary/60">{t('codDesc')}</p>
-                                    </div>
-                                </div>
-                                <div className={cn(
-                                  "h-5 w-5 rounded-full border-2",
-                                  paymentMethod === 'cod' ? "border-primary border-[6px]" : "border-border"
-                                )} />
-                            </div>
-                           )}
-
-                           {!shippingSettings.codEnabled && (
-                            <div className="border border-border p-5 rounded-2xl flex items-center justify-between opacity-40 cursor-not-allowed grayscale bg-zinc-50/50">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-12 w-12 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                                       <ShoppingBag className="h-6 w-6 text-zinc-400" />
-                                    </div>
-                                    <div>
-                                       <p className="font-bold text-zinc-500">{t('paypal')}</p>
-                                       <p className="text-[10px] uppercase tracking-wider font-bold text-zinc-400">{t('paypalDesc')}</p>
-                                    </div>
-                                </div>
-                                <div className="h-5 w-5 rounded-full border-2 border-border" />
-                            </div>
-                           )}
                          </div>
                     </div>
                     
