@@ -76,58 +76,59 @@ export function CartSheet() {
               <div className="flex flex-col gap-5 py-6">
                 <AnimatePresence mode="popLayout">
                   {cart.items.map((item) => (
-                    <motion.div
-                      layout
-                      key={item.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="flex items-center gap-4 group"
-                    >
-                      <div className="h-20 w-20 flex-shrink-0 rounded-xl bg-muted overflow-hidden border border-primary/5 flex items-center justify-center relative shadow-sm">
-                         {item.image ? (
-                           <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
-                         ) : (
-                           <span className="font-serif text-2xl text-primary/30 uppercase">{item.name[0]}</span>
-                         )}
-                      </div>
-                      <div className="flex flex-1 flex-col self-start">
-                        <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
-                          {item.category}
-                        </span>
-                        <h4 className="font-serif text-lg leading-none mb-2 text-secondary group-hover:text-primary transition-colors">
-                          {item.name}
-                        </h4>
-                        <div className="flex items-center justify-between mt-auto">
-                           <div className="flex items-center border rounded-lg overflow-hidden bg-muted/50">
-                              <button 
-                                onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
-                                className="p-1 px-2 hover:bg-primary/10 transition-colors"
-                              >
-                                <Minus className="h-3 w-3" />
-                              </button>
-                              <span className="px-3 text-sm font-bold min-w-[30px] text-center">
-                                {item.quantity}
-                              </span>
-                              <button 
-                                onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
-                                className="p-1 px-2 hover:bg-primary/10 transition-colors"
-                              >
-                                <Plus className="h-3 w-3" />
-                              </button>
-                           </div>
-                           <p className="font-serif font-bold text-primary">
-                             €{(item.price * item.quantity).toFixed(2)}
-                           </p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => cart.removeItem(item.id)}
-                        className="p-2 text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                      <motion.div
+                        layout
+                        key={item.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="flex items-center gap-4 group relative pr-10"
                       >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </motion.div>
+                        <div className="h-20 w-20 flex-shrink-0 rounded-xl bg-muted overflow-hidden border border-primary/5 flex items-center justify-center relative shadow-sm">
+                           {item.image ? (
+                             <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                           ) : (
+                             <span className="font-serif text-2xl text-primary/30 uppercase">{item.name[0]}</span>
+                           )}
+                        </div>
+                        <div className="flex flex-1 flex-col self-start">
+                          <span className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+                            {item.category}
+                          </span>
+                          <h4 className="font-serif text-lg leading-none mb-2 text-secondary group-hover:text-primary transition-colors pr-4">
+                            {item.name}
+                          </h4>
+                          <div className="flex items-center justify-between mt-auto">
+                             <div className="flex items-center border rounded-lg overflow-hidden bg-muted/50">
+                                <button 
+                                  onClick={() => cart.updateQuantity(item.id, item.quantity - 1)}
+                                  className="p-1 px-2 hover:bg-primary/10 transition-colors"
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </button>
+                                <span className="px-3 text-sm font-bold min-w-[30px] text-center">
+                                  {item.quantity}
+                                </span>
+                                <button 
+                                  onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
+                                  className="p-1 px-2 hover:bg-primary/10 transition-colors"
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </button>
+                             </div>
+                             <p className="font-serif font-bold text-primary">
+                               €{(item.price * item.quantity).toFixed(2)}
+                             </p>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => cart.removeItem(item.id)}
+                          className="absolute right-0 top-0 p-2.5 text-muted-foreground hover:text-rose-500 transition-colors opacity-100 z-10"
+                          title="Remove item"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </motion.div>
                   ))}
                 </AnimatePresence>
               </div>
