@@ -23,11 +23,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useSearchParams, useParams } from "next/navigation";
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
   const cart = useCart();
   const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const locale = (params?.locale as string) || "en";
+  
   const t = useTranslations("Checkout");
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +52,19 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setMounted(true);
+
+    // Handle Stripe return
+    const success = searchParams.get("success");
+    const canceled = searchParams.get("canceled");
+
+    if (success === "true") {
+      setIsSuccess(true);
+      cart.clearCart();
+      toast.success("Payment successful!");
+    } else if (canceled === "true") {
+      toast.error("Payment canceled. You can try again.");
+    }
+
     if (session?.user) {
       const user = session.user;
       setFormData(prev => ({
@@ -69,7 +87,7 @@ export default function CheckoutPage() {
         }
       })
       .catch(err => console.error("Error fetching shipping settings:", err));
-  }, [session]);
+  }, [session, searchParams]);
 
   const subtotal = cart.totalPrice();
   const shippingFee = (shippingSettings.threshold > 0 && subtotal >= shippingSettings.threshold) ? 0 : shippingSettings.fee;
@@ -107,6 +125,9 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
+      console.log("Initiating checkout with method:", paymentMethod);
+
+      // 1. Create the order in the database first
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,18 +146,54 @@ export default function CheckoutPage() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to place order");
+        const errorText = await res.text();
+        throw new Error(`Order creation failed: ${errorText}`);
+      }
+
+      const orderData = await res.json();
+      console.log("Order created successfully:", orderData.id);
+      
+      // 2. If payment method is CARD, initiate Stripe Checkout
+      if (paymentMethod.toLowerCase() === 'card') {
+        console.log("Preparing Stripe session for order:", orderData.id);
+        const stripeRes = await fetch("/api/payments/stripe/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            orderId: orderData.id,
+            locale
+          }),
+        });
+
+        if (!stripeRes.ok) {
+          const errorData = await stripeRes.json();
+          console.error("Stripe session creation failed:", errorData);
+          throw new Error(errorData.error || "Failed to initiate Stripe");
+        }
+
+        const stripeData = await stripeRes.json();
+        console.log("Redirecting to Stripe:", stripeData.url);
+        
+        if (stripeData.url) {
+          window.location.href = stripeData.url;
+          return;
+        } else {
+          throw new Error("Stripe did not return a checkout URL");
+        }
       }
       
+      // 3. Fallback for other methods
       setIsSuccess(true);
       cart.clearCart();
       toast.success("Order placed successfully!");
-    } catch (error) {
-      toast.error("Failed to place order. Please try again.");
+    } catch (error: any) {
+      console.error("Checkout Final Error:", error);
+      toast.error(error.message || "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   if (isSuccess) {
     return (

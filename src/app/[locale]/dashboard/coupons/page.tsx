@@ -17,12 +17,28 @@ export default async function CouponsPage() {
     db.deal.findMany({ select: { id: true, title: true } }),
   ]);
 
+  // Serialize coupons for client component
+  const serializedCoupons = coupons.map((coupon: any) => ({
+    ...coupon,
+    value: Number(coupon.value),
+    minPurchase: coupon.minPurchase ? Number(coupon.minPurchase) : 0,
+    createdAt: coupon.createdAt.toISOString(),
+    updatedAt: coupon.updatedAt.toISOString(),
+    expiryDate: coupon.expiryDate ? coupon.expiryDate.toISOString() : null,
+  }));
+
+  // Serialize products (price is Decimal)
+  const serializedProducts = products.map((product: any) => ({
+    ...product,
+    price: Number(product.price),
+  }));
+
   return (
     <CouponsClient 
-      initialData={coupons} 
-      categories={categories}
-      products={products}
-      deals={deals}
+      initialData={serializedCoupons as any} 
+      categories={categories as any}
+      products={serializedProducts as any}
+      deals={deals as any}
     />
   );
 }

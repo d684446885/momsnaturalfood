@@ -66,7 +66,9 @@ export default async function DealsPage({ searchParams }: PageProps) {
   // Convert to plain objects and handle Decimal/Date types for serialization
   const serializedDeals = deals.map((deal: any) => ({
     ...deal,
-    discount: Number(deal.discount),
+    regularPrice: deal.regularPrice ? Number(deal.regularPrice) : null,
+    salePrice: deal.salePrice ? Number(deal.salePrice) : null,
+    discount: deal.discount ? Number(deal.discount) : null,
     endDate: deal.endDate ? deal.endDate.toISOString() : null,
     createdAt: deal.createdAt.toISOString(),
     updatedAt: deal.updatedAt.toISOString(),
