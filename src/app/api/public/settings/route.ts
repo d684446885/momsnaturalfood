@@ -13,6 +13,7 @@ export async function GET() {
           businessAddress: true,
           shippingFee: true,
           freeShippingThreshold: true,
+          vatPercentage: true,
           logoUrl: true,
           primaryColor: true,
           secondaryColor: true,

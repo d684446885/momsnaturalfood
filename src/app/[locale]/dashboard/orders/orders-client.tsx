@@ -70,6 +70,8 @@ interface Order {
   customerName?: string | null;
   customerEmail?: string | null;
   customerPhone?: string | null;
+  shippingFee: any;
+  vatAmount: any;
 }
 
 interface AdminOrdersClientProps {
@@ -570,11 +572,15 @@ export function AdminOrdersClient({
                               <div className="space-y-4 relative z-10">
                                   <div className="flex justify-between items-center text-white/50 text-sm font-medium">
                                       <span>Subtotal</span>
-                                      <span>{formatPrice(selectedOrder.total)}</span>
+                                      <span>{formatPrice(Number(selectedOrder.total) - Number(selectedOrder.shippingFee || 0) - Number(selectedOrder.vatAmount || 0))}</span>
                                   </div>
                                   <div className="flex justify-between items-center text-white/50 text-sm font-medium">
-                                      <span>Shipping</span>
-                                      <span className="text-accent font-bold uppercase tracking-widest text-[10px]">Complimentary</span>
+                                      <span>Shipping Fee</span>
+                                      <span>{Number(selectedOrder.shippingFee) > 0 ? formatPrice(selectedOrder.shippingFee) : "Free"}</span>
+                                  </div>
+                                  <div className="flex justify-between items-center text-white/50 text-sm font-medium">
+                                      <span>VAT Amount</span>
+                                      <span>{formatPrice(selectedOrder.vatAmount || 0)}</span>
                                   </div>
                                   <div className="h-[1px] bg-white/10 my-4" />
                                   <div className="flex justify-between items-center">

@@ -100,7 +100,7 @@ export async function PATCH(request: NextRequest) {
       'googleClientId', 'googleClientSecret', 'authSecret',
       'businessName', 'logoUrl', 'businessEmail', 'businessPhone', 'businessAddress',
       'defaultLanguage', 'whatsappNumber', 'instagramUrl', 'messengerUrl', 'chatWidgetEnabled',
-      'shippingFee', 'freeShippingThreshold', 'cashOnDeliveryEnabled', 'newsletterEnabled'
+      'shippingFee', 'freeShippingThreshold', 'vatPercentage', 'cashOnDeliveryEnabled', 'newsletterEnabled'
     ];
 
     // Only add to data if the field exists in body
@@ -128,6 +128,7 @@ export async function PATCH(request: NextRequest) {
       chatWidgetEnabled: true,
       shippingFee: 0,
       freeShippingThreshold: 0,
+      vatPercentage: 0,
       cashOnDeliveryEnabled: true,
       newsletterEnabled: true
     };

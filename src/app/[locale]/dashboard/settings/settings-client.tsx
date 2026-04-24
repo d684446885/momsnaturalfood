@@ -62,6 +62,7 @@ interface Settings {
   defaultLanguage: string;
   shippingFee: number;
   freeShippingThreshold: number;
+  vatPercentage: number;
   cashOnDeliveryEnabled: boolean;
   newsletterEnabled: boolean;
   storageType: string;
@@ -826,6 +827,24 @@ export function SettingsClient({ initialSettings }: SettingsClientProps) {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground italic">Orders above this amount will have zero shipping charges.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold">VAT Percentage (%)</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">%</span>
+                      <Input 
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        className="pl-8"
+                        value={settings.vatPercentage}
+                        onChange={(e) => setSettings({ ...settings, vatPercentage: parseFloat(e.target.value) || 0 })}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground italic">Dynamic VAT applied during checkout.</p>
                   </div>
                 </div>
               </div>

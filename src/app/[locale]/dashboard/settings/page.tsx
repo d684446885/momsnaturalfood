@@ -28,6 +28,7 @@ async function getSettings() {
         defaultLanguage: "en",
         shippingFee: 0,
         freeShippingThreshold: 0,
+        vatPercentage: 0,
         cashOnDeliveryEnabled: true
       };
     }
@@ -36,6 +37,7 @@ async function getSettings() {
       ...settings,
       shippingFee: Number(settings.shippingFee) || 0,
       freeShippingThreshold: Number(settings.freeShippingThreshold) || 0,
+      vatPercentage: Number(settings.vatPercentage) || 0,
       updatedAt: settings.updatedAt.toISOString(),
     };
   } catch (error) {
@@ -58,7 +60,9 @@ async function getSettings() {
       r2SecretAccessKey: null,
       r2BucketName: null,
       r2PublicUrl: null,
-      defaultLanguage: "en",
+      shippingFee: 0,
+      freeShippingThreshold: 0,
+      vatPercentage: 0,
       cashOnDeliveryEnabled: true
     };
   }

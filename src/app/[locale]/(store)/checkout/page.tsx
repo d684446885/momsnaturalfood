@@ -38,7 +38,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cod'>('card');
-  const [shippingSettings, setShippingSettings] = useState({ fee: 0, threshold: 0, codEnabled: true });
+  const [shippingSettings, setShippingSettings] = useState({ fee: 0, threshold: 0, codEnabled: true, vatPercentage: 0 });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -82,7 +82,8 @@ export default function CheckoutPage() {
           setShippingSettings({
             fee: Number(data.shippingFee) || 0,
             threshold: Number(data.freeShippingThreshold) || 0,
-            codEnabled: data.cashOnDeliveryEnabled !== false // default to true if not specified
+            codEnabled: data.cashOnDeliveryEnabled !== false, // default to true if not specified
+            vatPercentage: Number(data.vatPercentage) || 0
           });
         }
       })
@@ -91,7 +92,8 @@ export default function CheckoutPage() {
 
   const subtotal = cart.totalPrice();
   const shippingFee = (shippingSettings.threshold > 0 && subtotal >= shippingSettings.threshold) ? 0 : shippingSettings.fee;
-  const total = subtotal + shippingFee;
+  const vatAmount = (subtotal * shippingSettings.vatPercentage) / 100;
+  const total = subtotal + shippingFee + vatAmount;
 
   if (!mounted || status === "loading") return (
     <div className="min-h-screen flex items-center justify-center">
@@ -431,9 +433,9 @@ export default function CheckoutPage() {
                                  </div>
                               </div>
                               <div className="flex justify-between items-center text-sm">
-                                 <span className="text-zinc-500 font-medium">{t('tax')}</span>
-                                 <span className="font-bold text-secondary">€0.00</span>
-                              </div>
+                                  <span className="text-zinc-500 font-medium">VAT ({shippingSettings.vatPercentage}%)</span>
+                                  <span className="font-bold text-secondary">€{vatAmount.toFixed(2)}</span>
+                               </div>
                            </div>
                            
                            <div className="pt-6 border-t border-secondary/10">

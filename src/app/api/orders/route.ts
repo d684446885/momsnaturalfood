@@ -83,12 +83,14 @@ export async function POST(request: Request) {
 
     const freeShippingThreshold = settings?.freeShippingThreshold ? Number(settings.freeShippingThreshold) : 0;
     const shippingFee = settings?.shippingFee ? Number(settings.shippingFee) : 0;
+    const vatPercentage = settings?.vatPercentage ? Number(settings.vatPercentage) : 0;
 
     const serverShippingFee = (freeShippingThreshold > 0 && subtotal >= freeShippingThreshold) 
       ? 0 
       : shippingFee;
 
-    const total = subtotal + serverShippingFee;
+    const vatAmount = (subtotal * vatPercentage) / 100;
+    const total = subtotal + serverShippingFee + vatAmount;
 
     const order = await db.order.create({
       data: {
@@ -100,6 +102,7 @@ export async function POST(request: Request) {
         city: shippingInfo?.city || undefined,
         postalCode: shippingInfo?.postalCode || undefined,
         shippingFee: serverShippingFee,
+        vatAmount,
         total,
         paymentMethod: (paymentMethod as string) || "CARD",
         items: {
